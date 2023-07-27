@@ -1,6 +1,6 @@
 /** Result */
 import { None, Option, option } from './Option.ts'
-
+import { Own } from './Own.ts'
 interface Ok<T> {
   readonly _tag: 'ok'
   readonly value: T
@@ -20,6 +20,7 @@ interface Ok<T> {
   map(fn: () => T): Result<T, never>
   /** `Result<T, E>`  -->  `Result<V, E>` */
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
+  to_own(def: T): Own<T>
 }
 
 interface Err<E> {
@@ -33,6 +34,7 @@ interface Err<E> {
   to_option(): Option<never>
   map<V>(fn: () => V): Result<V, E>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
+  to_own<T>(def: T): Own<T>
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
@@ -65,6 +67,9 @@ export function Ok<T>(value: T): Result<T, never> {
     and_then(fn) {
       return fn()
     },
+    to_own(_def) {
+      return Own(this.value)
+    },
   }
 }
 
@@ -96,6 +101,9 @@ export function Err<E>(value: E): Result<never, E> {
     },
     and_then(_fn) {
       return this
+    },
+    to_own(def) {
+      return Own(def)
     },
   }
 }

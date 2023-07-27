@@ -1,4 +1,5 @@
 import { Result, result } from './Result.ts'
+import { Own } from './Own.ts'
 /** Option */
 class NullError extends Error {
   constructor(msg: string = '', cause: string = 'Null Error') {
@@ -27,6 +28,7 @@ interface Some<T> extends opt<T> {
   map<V>(callback: (value: T) => V): Option<V>
   and_then<V>(callback: (value: T) => Option<V>): Option<V>
   to_result(): Result<T, never>
+  to_own(def: T): Own<T>
 }
 interface None extends opt<never> {
   readonly _tag: 'none'
@@ -40,6 +42,7 @@ interface None extends opt<never> {
   and_then<V>(callback: (value: never) => Option<V>): Option<V>
   /** 转化为Result类型 */
   to_result(): Result<never, Error>
+  to_own<V>(def: V): Own<V>
 }
 
 export type Option<T> = Some<T> | None
@@ -82,6 +85,9 @@ export function Some<T>(
         return this.value
       })
     },
+    to_own(_def) {
+      return Own(this.value)
+    },
   }
 }
 
@@ -115,6 +121,9 @@ export const None: Option<never> = {
     return result<never, NullError>(() => {
       throw new NullError()
     })
+  },
+  to_own(_def) {
+    return Own(_def)
   },
 }
 
