@@ -114,10 +114,8 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
-/** 将一个可能throw的语句转化为Result<T, E>类型数据 | 如果是async用Promise来处理 */
-export function result<T, E = unknown>(
-  fn: () => T,
-): Result<T, E> {
+/** 将一个可能throw的语句转化为Result<T, E>类型数据 */
+export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
     return Ok(fn())
   } catch (err: any) {
