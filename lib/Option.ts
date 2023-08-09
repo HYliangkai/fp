@@ -91,7 +91,7 @@ export function Some<T>(
   }
 }
 
-export const None: Option<never> = {
+export const None: None = {
   _tag: 'none',
   is_some() {
     return false

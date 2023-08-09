@@ -1,5 +1,5 @@
 /** Result */
-import { None, Option, option } from './Option.ts'
+import { None, Option, option, Some } from './Option.ts'
 import { Own } from './Own.ts'
 interface Ok<T> {
   readonly _tag: 'ok'
@@ -39,6 +39,7 @@ interface Err<E> {
 
 export type Result<T, E> = Ok<T> | Err<E>
 
+/** 定义为正确的 */
 export function Ok<T>(value: T): Result<T, never> {
   return {
     _tag: 'ok',
@@ -59,7 +60,11 @@ export function Ok<T>(value: T): Result<T, never> {
       return this.value
     },
     to_option() {
-      return option(this.value)
+      if (typeof this.value !== undefined && this.value !== null) {
+        return Some(this.value as any)
+      } else {
+        return None
+      }
     },
     map(fn) {
       return Ok(fn())
@@ -73,6 +78,7 @@ export function Ok<T>(value: T): Result<T, never> {
   }
 }
 
+/** 定义为错误的 */
 export function Err<E>(value: E): Result<never, E> {
   return {
     _tag: 'error',
@@ -108,12 +114,13 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
-/** 将一个可能throw的语句转化为Result<T, E>类型数据 */
-export function result<T, E = unknown>(fn: () => T): Result<T, E> {
+/** 将一个可能throw的语句转化为Result<T, E>类型数据 | 如果是async用Promise来处理 */
+export function result<T, E = unknown>(
+  fn: () => T,
+): Result<T, E> {
   try {
     return Ok(fn())
-    //@ts-ignore
-  } catch (err: E) {
+  } catch (err: any) {
     return Err(err)
   }
 }
