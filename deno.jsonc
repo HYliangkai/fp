@@ -1,7 +1,8 @@
 {
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
-    "watch": "deno run -A --unstable --watch main.ts"
+    "watch": "deno run -A --unstable --watch main.ts",
+    "npm:build": "deno run -A build.ts"
   },
   "fmt": {
     "options": {

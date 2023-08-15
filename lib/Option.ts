@@ -2,10 +2,8 @@ import { Result, result } from './Result.ts'
 import { Own } from './Own.ts'
 /** Option */
 class NullError extends Error {
-  constructor(msg: string = '', cause: string = 'Null Error') {
-    super(msg, {
-      cause: cause,
-    })
+  constructor(msg: string = 'Null Error') {
+    super(msg)
   }
 }
 
