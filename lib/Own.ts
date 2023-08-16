@@ -48,7 +48,7 @@ interface OwnOther<T> {
     fn: (value: T) => V,
   ): Own<V>
   /**  全等处理 多个比较数据采用 and / or 形式 */
-  is_match: (value: T | T[], and: boolean) => Own<boolean>
+  is_match: (value: T | T[], and?: boolean) => Own<boolean>
 }
 
 export function Own<T>(value: T): Own<T> {
@@ -76,7 +76,7 @@ export function Own<T>(value: T): Own<T> {
     //@ts-ignore
     return {
       ...own,
-      match: (t = () => {}, f = () => {}) => {
+      match: (t = () => { }, f = () => { }) => {
         value ? t() : f()
         return Own(value)
       },
