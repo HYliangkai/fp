@@ -1,4 +1,5 @@
 /** Result */
+import { BackTrack } from './Error.ts'
 import { None, Option, option, Some } from './Option.ts'
 import { Own } from './Own.ts'
 interface Ok<T> {
@@ -114,11 +115,17 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
+
+
+/** 解决result()中嵌套过深无法返回的问题 */
+export function backtrack<T>(val: T) { throw new BackTrack(val) }
+
+
 /** 将一个可能throw的语句转化为Result<T, E>类型数据 */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
     return Ok(fn())
   } catch (err: any) {
-    return Err(err)
+    return err instanceof BackTrack ? Ok(err.return_val) : Err(err)
   }
 }

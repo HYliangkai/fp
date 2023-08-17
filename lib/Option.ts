@@ -1,11 +1,8 @@
 import { Result, result } from './Result.ts'
 import { Own } from './Own.ts'
+import { NullError } from './Error.ts'
 /** Option */
-class NullError extends Error {
-  constructor(msg: string = 'Null Error') {
-    super(msg)
-  }
-}
+
 
 interface opt<T> {
   readonly _tag: 'some' | 'none'

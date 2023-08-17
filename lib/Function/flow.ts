@@ -1,6 +1,7 @@
-//flow就是pipe的柯理化版本
+
 type Fn<A, B> = (a: A) => B
 
+/** flow:pipe的柯理化版本 */
 export function flow<A, B>(ab: Fn<A, B>): Fn<A, B>
 export function flow<A, B, C>(
   ab: Fn<A, B>,

@@ -1,6 +1,6 @@
 type Fn<A, B> = (a: A) => B
 
-//重载类型签名
+/** 函数运行按左到右执行 */
 export function pipe<A>(a: A): A
 export function pipe<A, B>(a: A, ab: Fn<A, B>): B
 export function pipe<A, B, C>(a: A, ab: Fn<A, B>, bc: Fn<B, C>): C

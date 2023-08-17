@@ -21,7 +21,7 @@ type OwnNumber = Omit<
 /** @boolean */
 type OwnBoolean = Omit<
   OwnOther<boolean> & {
-    /** 对true/false进行匹配但是不返回值 */
+    /** 对true/false进行匹配但是只返回原来的OwnBoolean */
     match(true_handle?: () => void, false_handle?: () => void): Own<boolean>
     /** 对true/false进行匹配返回新值 */
     match_map<T>(
@@ -47,11 +47,13 @@ interface OwnOther<T> {
   map<V>(
     fn: (value: T) => V,
   ): Own<V>
-  /**  全等处理 多个比较数据采用 and / or 形式 */
+  /**  全等处理 多个比较数据采用 and / or 形式  , 默认采用and形式*/
   is_match: (value: T | T[], and?: boolean) => Own<boolean>
+
 }
 
 export function Own<T>(value: T): Own<T> {
+  /** @allCase */
   const own = {
     value,
     take: () => value,
@@ -71,7 +73,8 @@ export function Own<T>(value: T): Own<T> {
       ...own,
       is_empty: () => Own(value.length === 0),
     } as Own<unknown>
-  } /** @BooleanCase */
+  }
+  /** @BooleanCase */
   else if (typeof value === 'boolean') {
     //@ts-ignore
     return {
@@ -92,13 +95,14 @@ export function Own<T>(value: T): Own<T> {
         !value ? fn() : ''
       },
     }
-  } /** @NumberCase */
+  }
+  /** @NumberCase */
   else if (typeof value === 'number') {
     //@ts-ignore
     return {
       ...own,
       is_nan: () => Own(isNaN(value)),
     }
-  } /** @OtherCase */
+  }
   else return own as Own<T>
 }
