@@ -1,3 +1,4 @@
+/** Own<T>的类型推导:泛型单态化 */
 export type Own<T> = T extends boolean ? OwnBoolean
   : (T extends number ? OwnNumber
     : (T extends Array<unknown> ? OwnArray<unknown> : OwnOther<T>))
@@ -49,7 +50,6 @@ interface OwnOther<T> {
   ): Own<V>
   /**  全等处理 多个比较数据采用 and / or 形式  , 默认采用and形式*/
   is_match: (value: T | T[], and?: boolean) => Own<boolean>
-
 }
 
 export function Own<T>(value: T): Own<T> {
@@ -73,8 +73,7 @@ export function Own<T>(value: T): Own<T> {
       ...own,
       is_empty: () => Own(value.length === 0),
     } as Own<unknown>
-  }
-  /** @BooleanCase */
+  } /** @BooleanCase */
   else if (typeof value === 'boolean') {
     //@ts-ignore
     return {
@@ -95,14 +94,12 @@ export function Own<T>(value: T): Own<T> {
         !value ? fn() : ''
       },
     }
-  }
-  /** @NumberCase */
+  } /** @NumberCase */
   else if (typeof value === 'number') {
     //@ts-ignore
     return {
       ...own,
       is_nan: () => Own(isNaN(value)),
     }
-  }
-  else return own as Own<T>
+  } else return own as Own<T>
 }
