@@ -79,7 +79,7 @@ export function Own<T>(value: T): Own<T> {
     //@ts-ignore
     return {
       ...own,
-      match: (t = () => { }, f = () => { }) => {
+      match: (t = () => {}, f = () => {}) => {
         value ? t() : f()
         return Own(value)
       },
