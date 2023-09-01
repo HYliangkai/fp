@@ -67,6 +67,7 @@ export function Ok<T>(value: T): Result<T, never> {
         return None
       }
     },
+
     map(fn) {
       return Ok(fn())
     },
@@ -115,11 +116,10 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
-
-
 /** 解决result()中嵌套过深无法返回的问题 */
-export function backtrack<T>(val: T) { throw new BackTrack(val) }
-
+export function backtrack<T>(val: T) {
+  throw new BackTrack(val)
+}
 
 /** 将一个可能throw的语句转化为Result<T, E>类型数据 */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {

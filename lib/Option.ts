@@ -3,7 +3,6 @@ import { Own } from './Own.ts'
 import { NullError } from './Error.ts'
 /** Option */
 
-
 interface opt<T> {
   readonly _tag: 'some' | 'none'
   /** 是否为Some*/
@@ -14,6 +13,8 @@ interface opt<T> {
   unwarp(): T
   /** 抛异,如果为None就抛异,msg作为错误信息 */
   expect(msg: string): T
+  /** 如果为some就执行 */
+  some_do(fn: (val: T) => void): void
 }
 interface Some<T> extends opt<T> {
   readonly _tag: 'some'
@@ -72,6 +73,9 @@ export function Some<T>(
     ) {
       return Some(callback(this.value))
     },
+    some_do(fn) {
+      fn(this.value)
+    },
     and_then<V>(callback: (value: T) => Option<V>) {
       return callback(this.value)
     },
@@ -109,6 +113,7 @@ export const None: None = {
   map<V>(_callback: (value: V) => V): Option<V> {
     return this
   },
+  some_do(_fn) {},
   and_then<V>(_callback: (value: V) => Option<V>) {
     return this
   },
