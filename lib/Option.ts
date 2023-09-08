@@ -1,6 +1,6 @@
-import { Result, result } from './Result.ts'
-import { Own } from './Own.ts'
-import { NullError } from './Error.ts'
+import {Result, result} from './Result.ts'
+import {Own} from './Own.ts'
+import {NullError} from './Error.ts'
 /** Option */
 
 interface opt<T> {
@@ -43,9 +43,7 @@ interface None extends opt<never> {
 
 export type Option<T> = Some<T> | None
 
-export function Some<T>(
-  val: T extends null | undefined ? never : T,
-): Option<T> {
+export function Some<T>(val: T extends null | undefined ? never : T): Option<T> {
   return {
     _tag: 'some',
     value: val,
@@ -67,10 +65,7 @@ export function Some<T>(
     unwrap_or_else(_fn) {
       return this.value
     },
-    map<V>(
-      callback: (value: T) => V extends null | undefined ? never
-        : V,
-    ) {
+    map<V>(callback: (value: T) => V extends null | undefined ? never : V) {
       return Some(callback(this.value))
     },
     some_do(fn) {
@@ -128,9 +123,7 @@ export const None: None = {
 }
 
 /** 将任意类型转化为Option类型 */
-export function option<T>(
-  value: T,
-): Option<T extends null | undefined ? never : T> {
+export function option<T>(value: T): Option<T extends null | undefined ? never : T> {
   if (typeof value == 'undefined' || value === null) {
     return None
   } else {
