@@ -26,3 +26,7 @@ const address = create_xmao().address.unwrap_or('八度空间')
 console.log(address)
 
 /** 在不是自己的代码中使用option()将可能为None的代码转为None */
+
+Some(12).some_do((it) => {
+  console.log(it)
+})

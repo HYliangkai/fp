@@ -29,4 +29,4 @@ export const try_then = (
     return error instanceof BackTrack ? Ok(true) : Err(false)
   }
 }
-/** 还要解决函数嵌套层级太深无法返回的问题 */
+/** 使用BackTrack解决函数嵌套层级太深无法返回的问题 */

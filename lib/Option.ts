@@ -127,7 +127,9 @@ export function option<T>(value: T): Option<T extends null | undefined ? never :
   if (typeof value == 'undefined' || value === null) {
     return None
   } else {
-    //@ts-ignore ;
+    //@ts-ignore
     return Some(value)
   }
 }
+
+
