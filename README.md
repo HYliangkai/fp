@@ -4,12 +4,12 @@
 + 🚀编程FP化
 
 ## How to use
-1. download Deno
-+  if you use in deno project, direct use mod.ts
-+ if you use in node/browser project, you can use `deno task npm:build` to build this project, and use ./npmBuild/esm/mod
+1. Download Deno
++ If you use in deno project, direct use `mod.ts`
++ If you use  `node`/`browser` project, you can use `deno task npm:build` to build this project, and use `./npmBuild/esm/mod`
 
 
-## Plan
+## Feature
 
 ### 数据类型
   ✅ Option  
