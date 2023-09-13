@@ -9,8 +9,12 @@ await build({
   shims: {
     deno: true,
   },
+  packageManager: 'pnpm',
   package: {
-    name: 'FPTools',
-    version: '0.1.0',
+    author: 'https://github.com/HYliangkai',
+    name: '@chzky/fp-tools',
+    version: '0.2.2',
+    main: './esm/mod.js',
+    access: 'public',
   },
 })
