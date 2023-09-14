@@ -2,6 +2,7 @@
 import { BackTrack } from './Error.ts'
 import { None, Option, option, Some } from './Option.ts'
 import { Own } from './Own.ts'
+
 interface Ok<T> {
   readonly _tag: 'ok'
   readonly value: T
@@ -21,7 +22,10 @@ interface Ok<T> {
   map(fn: () => T): Result<T, never>
   /** `Result<T, E>`  -->  `Result<V, E>` */
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
+  /**  转化为own类型 */
   to_own(def: T): Own<T>
+  /** match_ok */
+  match_ok<V>(fn: (val: T) => void): void
 }
 
 interface Err<E> {
@@ -36,6 +40,7 @@ interface Err<E> {
   map<V>(fn: () => V): Result<V, E>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
   to_own<T>(def: T): Own<T>
+  match_ok<V>(fn: (val: V) => void): void
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
@@ -67,7 +72,6 @@ export function Ok<T>(value: T): Result<T, never> {
         return None
       }
     },
-
     map(fn) {
       return Ok(fn())
     },
@@ -76,6 +80,9 @@ export function Ok<T>(value: T): Result<T, never> {
     },
     to_own(_def) {
       return Own(this.value)
+    },
+    match_ok(fn) {
+      fn(this.value)
     },
   }
 }
@@ -113,6 +120,7 @@ export function Err<E>(value: E): Result<never, E> {
     to_own(def) {
       return Own(def)
     },
+    match_ok(_fn) {},
   }
 }
 
