@@ -18,14 +18,24 @@ export class NullError extends Error {
 
 /** 数据格式错误 */
 
-export class DataFormatError extends Error {}
+export class DataFormatError extends Error {
+  constructor(msg: string = 'Data Format Error') {
+    super(msg)
+  }
+}
+
+/** 没有错误 */
+export class NoError extends Error {
+  constructor(msg: string = 'No Error') {
+    super(msg)
+  }
+}
 
 /** 常规错误 */
 
 /** 判断函数 */
 export const is_data_format_error = (val: unknown): val is DataFormatError =>
   val instanceof DataFormatError
-export const is_back_track = <T>(val: unknown): val is BackTrack<T> =>
-  val instanceof BackTrack
-export const is_null_error = (val: unknown): val is NullError =>
-  val instanceof NullError
+export const is_back_track = <T>(val: unknown): val is BackTrack<T> => val instanceof BackTrack
+export const is_null_error = (val: unknown): val is NullError => val instanceof NullError
+export const is_no_error = (val: unknown): val is NoError => val instanceof NoError

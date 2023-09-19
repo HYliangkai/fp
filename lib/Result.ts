@@ -1,7 +1,7 @@
 /** Result */
-import { BackTrack } from './Error.ts'
-import { None, Option, option, Some } from './Option.ts'
-import { Own } from './Own.ts'
+import {BackTrack, NoError} from './Error.ts'
+import {None, Option, Some} from './Option.ts'
+import {Own} from './Own.ts'
 
 interface Ok<T> {
   readonly _tag: 'ok'
@@ -14,6 +14,8 @@ interface Ok<T> {
   unwarp(): T
   /** 获取值,如果为`Err`就用def替代 */
   unwarp_or(def: T): T
+  /** 获取Error */
+  unwarp_err(): never
   /** 获取值,如果为`Err`就用fn()替代 */
   unwrap_or_else(fn: () => T): T
   /** 转化为`Option`类型的数据:注意如果`Ok`里面有`null`|`underfind`会转化成`None` */
@@ -34,6 +36,7 @@ interface Err<E> {
   is_ok(): false
   is_err(): true
   unwarp(): never
+  unwarp_err(): E
   unwarp_or<V>(def: V): V
   unwrap_or_else<V>(fn: () => V): V
   to_option(): Option<never>
@@ -61,6 +64,9 @@ export function Ok<T>(value: T): Result<T, never> {
     },
     unwarp_or(_def: T) {
       return this.value
+    },
+    unwarp_err() {
+      throw new NoError()
     },
     unwrap_or_else(_fn) {
       return this.value
@@ -104,6 +110,9 @@ export function Err<E>(value: E): Result<never, E> {
     },
     unwarp_or<V>(def: V) {
       return def
+    },
+    unwarp_err() {
+      return this.value
     },
     unwrap_or_else(fn) {
       return fn()
