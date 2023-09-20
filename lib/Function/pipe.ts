@@ -1,28 +1,27 @@
 type Fn<A, B> = (a: A) => B
-
+/**
+## Example
+```ts
+console.log(pipe(
+  1,//1
+  (x: number) => x + 1,//2
+  (x: number) => x * 2,//4
+  (x: number) => x + 1,//5
+)) // 5
+```
+ */
 export function pipe<A>(a: A): A
 export function pipe<A, B>(a: A, ab: Fn<A, B>): B
 export function pipe<A, B, C>(a: A, ab: Fn<A, B>, bc: Fn<B, C>): C
-export function pipe<A, B, C, D>(
-  a: A,
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-): D
-export function pipe<A, B, C, D, E>(
-  a: A,
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-  de: Fn<D, E>,
-): E
+export function pipe<A, B, C, D>(a: A, ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>): D
+export function pipe<A, B, C, D, E>(a: A, ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>): E
 export function pipe<A, B, C, D, E, F>(
   a: A,
   ab: Fn<A, B>,
   bc: Fn<B, C>,
   cd: Fn<C, D>,
   de: Fn<D, E>,
-  ef: Fn<E, F>,
+  ef: Fn<E, F>
 ): F
 export function pipe<A, B, C, D, E, F, G>(
   a: A,
@@ -31,7 +30,7 @@ export function pipe<A, B, C, D, E, F, G>(
   cd: Fn<C, D>,
   de: Fn<D, E>,
   ef: Fn<E, F>,
-  fg: Fn<F, G>,
+  fg: Fn<F, G>
 ): G
 export function pipe<A, B, C, D, E, F, G, H>(
   a: A,
@@ -41,7 +40,7 @@ export function pipe<A, B, C, D, E, F, G, H>(
   de: Fn<D, E>,
   ef: Fn<E, F>,
   fg: Fn<F, G>,
-  gh: Fn<G, H>,
+  gh: Fn<G, H>
 ): H
 export function pipe<A, B, C, D, E, F, G, H, I>(
   a: A,
@@ -52,7 +51,7 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
   ef: Fn<E, F>,
   fg: Fn<F, G>,
   gh: Fn<G, H>,
-  hi: Fn<H, I>,
+  hi: Fn<H, I>
 ): I
 // 依此类推，根据需要添加更多的重载签名(手动)
 

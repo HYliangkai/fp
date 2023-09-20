@@ -92,7 +92,8 @@
   "npm": {
     "specifiers": {
       "fp-ts": "fp-ts@2.16.0",
-      "ts-pattern": "ts-pattern@5.0.4"
+      "ts-pattern": "ts-pattern@5.0.4",
+      "zod": "zod@3.22.2"
     },
     "packages": {
       "fp-ts@2.16.0": {
@@ -101,6 +102,10 @@
       },
       "ts-pattern@5.0.4": {
         "integrity": "sha512-D5iVliqugv2C9541W2CNXFYNEZxr4TiHuLPuf49tKEdQFp/8y8fR0v1RExUvXkiWozKCwE7zv07C6EKxf0lKuQ==",
+        "dependencies": {}
+      },
+      "zod@3.22.2": {
+        "integrity": "sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==",
         "dependencies": {}
       }
     }

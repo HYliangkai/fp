@@ -138,7 +138,7 @@ export function backtrack<T>(val: T) {
   throw new BackTrack(val)
 }
 
-/** 将一个可能throw的语句转化为Result<T, E>类型数据 */
+/** 将一个可能throw的 语句/代码/函数 转化为Result<T, E>类型数据 */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
     return Ok(fn())
