@@ -9,6 +9,7 @@
     "deno.cache": "./cache/",
     "deno.config": "./deno.jsonc",
     "deno.unstable": true,
+    "deno.cacheOnSave": true,
     "editor.formatOnSave": true,
     "deno.lint": true,
     "[typescript]": {
