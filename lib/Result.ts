@@ -1,7 +1,7 @@
 /** Result */
-import {BackTrack, NoError} from './Error.ts'
-import {None, Option, Some} from './Option.ts'
-import {Own} from './Own.ts'
+import { BackTrack, NoError } from './Error.ts'
+import { None, Option, Some } from './Option.ts'
+import { Own } from './Own.ts'
 
 interface Ok<T> {
   readonly _tag: 'ok'
@@ -15,7 +15,7 @@ interface Ok<T> {
   /** 获取值,如果为`Err`就用def替代 */
   unwarp_or(def: T): T
   /** 获取Error */
-  unwarp_err(): never
+  unwarp_err(): NoError
   /** 获取值,如果为`Err`就用fn()替代 */
   unwrap_or_else(fn: () => T): T
   /** 转化为`Option`类型的数据:注意如果`Ok`里面有`null`|`underfind`会转化成`None` */
@@ -26,8 +26,10 @@ interface Ok<T> {
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
   /**  转化为own类型 */
   to_own(def: T): Own<T>
-  /** match_ok */
+  /** ok情况的handle */
   match_ok<V>(fn: (val: T) => void): void
+  /** error情况的handle */
+  match_err<V>(fn: (val: V) => void): void
 }
 
 interface Err<E> {
@@ -44,6 +46,7 @@ interface Err<E> {
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
   to_own<T>(def: T): Own<T>
   match_ok<V>(fn: (val: V) => void): void
+  match_err(fn: (val: E) => void): void
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
@@ -65,9 +68,11 @@ export function Ok<T>(value: T): Result<T, never> {
     unwarp_or(_def: T) {
       return this.value
     },
+
     unwarp_err() {
-      throw new NoError()
+      return new NoError()
     },
+
     unwrap_or_else(_fn) {
       return this.value
     },
@@ -89,6 +94,8 @@ export function Ok<T>(value: T): Result<T, never> {
     },
     match_ok(fn) {
       fn(this.value)
+    },
+    match_err(_fn) {
     },
   }
 }
@@ -130,6 +137,9 @@ export function Err<E>(value: E): Result<never, E> {
       return Own(def)
     },
     match_ok(_fn) {},
+    match_err(fn) {
+      fn(value)
+    },
   }
 }
 
