@@ -3,8 +3,11 @@ import {Own} from './Own.ts'
 import {NullError} from './Error.ts'
 /** Option */
 
+const some_tag = Symbol('some')
+const none_tag = Symbol('none')
+
 interface opt<T> {
-  readonly _tag: 'some' | 'none'
+  readonly _tag: typeof some_tag | typeof none_tag
   /** 是否为Some*/
   is_some(): boolean
   /** 是否为None */
@@ -17,7 +20,7 @@ interface opt<T> {
   some_do(fn: (val: T) => void): void
 }
 interface Some<T> extends opt<T> {
-  readonly _tag: 'some'
+  readonly _tag: typeof some_tag
   readonly value: T
   unwrap_or(def: T): T
   unwrap_or_else(fn: () => T): T
@@ -27,7 +30,7 @@ interface Some<T> extends opt<T> {
   to_own(def: T): Own<T>
 }
 interface None extends opt<never> {
-  readonly _tag: 'none'
+  readonly _tag: typeof none_tag
   /** 如果为None使用def作为默认值插入 */
   unwrap_or<V>(def: V): V
   /** 如果为None使用fn()作为默认值插入 */
@@ -45,7 +48,7 @@ export type Option<T> = Some<T> | None
 
 export function Some<T>(val: T extends null | undefined ? never : T): Option<T> {
   return {
-    _tag: 'some',
+    _tag: some_tag,
     value: val,
     is_some() {
       return true
@@ -86,7 +89,7 @@ export function Some<T>(val: T extends null | undefined ? never : T): Option<T> 
 }
 
 export const None: None = {
-  _tag: 'none',
+  _tag: none_tag,
   is_some() {
     return false
   },
@@ -131,5 +134,3 @@ export function option<T>(value: T): Option<T extends null | undefined ? never :
     return Some(value)
   }
 }
-
-

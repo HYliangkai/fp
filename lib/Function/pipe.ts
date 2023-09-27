@@ -1,6 +1,6 @@
 type Fn<A, B> = (a: A) => B
-/**
-## Example
+/** ## pipe : Run the functions nested in parallel
+### Example
 ```ts
 console.log(pipe(
   1,//1

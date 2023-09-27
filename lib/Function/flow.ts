@@ -1,7 +1,7 @@
 type Fn<A, B> = (a: A) => B
 
-/** flow:pipe的柯理化版本 
-## Example
+/** ##  flow : Corey form of pipe function
+### Example
 ```ts
 const fn = flow(
   (x: number) => x + 1,

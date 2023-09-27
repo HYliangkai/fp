@@ -1,10 +1,13 @@
 /** Result */
-import { BackTrack, NoError } from './Error.ts'
-import { None, Option, Some } from './Option.ts'
-import { Own } from './Own.ts'
+import {BackTrack, NoError} from './Error.ts'
+import {None, Option, Some} from './Option.ts'
+import {Own} from './Own.ts'
+
+const error_tag = Symbol('error')
+const ok_tag = Symbol('ok')
 
 interface Ok<T> {
-  readonly _tag: 'ok'
+  readonly _tag: typeof ok_tag
   readonly value: T
   /** 是否是`Ok` */
   is_ok(): true
@@ -17,7 +20,7 @@ interface Ok<T> {
   /** 获取Error */
   unwarp_err(): NoError
   /** 获取值,如果为`Err`就用fn()替代 */
-  unwrap_or_else(fn: () => T): T
+  unwrap_or_else(fn: (err: never) => T): T
   /** 转化为`Option`类型的数据:注意如果`Ok`里面有`null`|`underfind`会转化成`None` */
   to_option(): Option<T>
   /** `Result<T, E>`  -->  `Result<V, E>` */
@@ -33,14 +36,14 @@ interface Ok<T> {
 }
 
 interface Err<E> {
-  _tag: 'error'
+  _tag: typeof error_tag
   value: E
   is_ok(): false
   is_err(): true
   unwarp(): never
   unwarp_err(): E
   unwarp_or<V>(def: V): V
-  unwrap_or_else<V>(fn: () => V): V
+  unwrap_or_else<V>(fn: (err: E) => V): V
   to_option(): Option<never>
   map<V>(fn: () => V): Result<V, E>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
@@ -54,7 +57,7 @@ export type Result<T, E> = Ok<T> | Err<E>
 /** 定义为正确的 */
 export function Ok<T>(value: T): Result<T, never> {
   return {
-    _tag: 'ok',
+    _tag: ok_tag,
     value: value,
     is_ok() {
       return true
@@ -68,11 +71,9 @@ export function Ok<T>(value: T): Result<T, never> {
     unwarp_or(_def: T) {
       return this.value
     },
-
     unwarp_err() {
       return new NoError()
     },
-
     unwrap_or_else(_fn) {
       return this.value
     },
@@ -95,15 +96,14 @@ export function Ok<T>(value: T): Result<T, never> {
     match_ok(fn) {
       fn(this.value)
     },
-    match_err(_fn) {
-    },
+    match_err(_fn) {},
   }
 }
 
 /** 定义为错误的 */
 export function Err<E>(value: E): Result<never, E> {
   return {
-    _tag: 'error',
+    _tag: error_tag,
     value,
     is_ok() {
       return false
@@ -122,7 +122,7 @@ export function Err<E>(value: E): Result<never, E> {
       return this.value
     },
     unwrap_or_else(fn) {
-      return fn()
+      return fn(this.value)
     },
     to_option() {
       return None
@@ -138,7 +138,7 @@ export function Err<E>(value: E): Result<never, E> {
     },
     match_ok(_fn) {},
     match_err(fn) {
-      fn(value)
+      fn(this.value)
     },
   }
 }
@@ -148,11 +148,20 @@ export function backtrack<T>(val: T) {
   throw new BackTrack(val)
 }
 
-/** 将一个可能throw的 语句/代码/函数 转化为Result<T, E>类型数据 */
+/** 将一个可能throw的 语句/代码/函数 转化为Result<T, E>类型数据
+
+      `注意:`只能处理同步代码的情况
+ */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
-    return Ok(fn())
+    const res = fn()
+    return Ok(res)
   } catch (err: any) {
     return err instanceof BackTrack ? Ok(err.return_val) : Err(err)
   }
+}
+
+/**  运行时判断是否Result类型 */
+export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {
+  return val._tag === ok_tag || val._tag === error_tag
 }
