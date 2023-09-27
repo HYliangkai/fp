@@ -1,4 +1,4 @@
-import {run_effect, wait} from '../lib/Function/algebraicEffect.ts'
+import {run_effect, wait} from "lib"
 
 const adtt = async () => {
   const pro1: string = await new Promise(res => {

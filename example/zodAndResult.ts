@@ -1,4 +1,4 @@
-import {result, zod} from '../mod.ts'
+import {result, zod} from 'lib'
 /** zod结合result可以做到有效的类型安全 */
 
 const shema = zod.object({

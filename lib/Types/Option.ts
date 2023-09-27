@@ -1,6 +1,5 @@
-import {Result, result} from './Result.ts'
-import {Own} from './Own.ts'
-import {NullError} from './Error.ts'
+import {Result, result, Own, NullError} from '../mod.ts'
+
 /** Option */
 
 const some_tag = Symbol('some')

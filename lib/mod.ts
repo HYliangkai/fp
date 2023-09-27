@@ -1,6 +1,3 @@
-export * from './Option.ts'
-export * from './Result.ts'
-export * from './Own.ts'
+export * from './Types/mod.ts'
 export * from './Function/mod.ts'
 export * from './ThirdLib/mod.ts'
-export * from './Error.ts'

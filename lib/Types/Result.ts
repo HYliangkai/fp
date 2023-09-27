@@ -1,7 +1,5 @@
 /** Result */
-import {BackTrack, NoError} from './Error.ts'
-import {None, Option, Some} from './Option.ts'
-import {Own} from './Own.ts'
+import {None, Option, Some, BackTrack, NoError, Own} from '../mod.ts'
 
 const error_tag = Symbol('error')
 const ok_tag = Symbol('ok')
