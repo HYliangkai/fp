@@ -3,21 +3,22 @@
 + 🚀提升代码可读性
 + 🚀编程FP化
 
-## How to us
+## How to use
 + If you use in `deno` project, direct use `mod.ts`
 + If you use  `node`/`browser` project, you can use `deno task npm:build` to build this project, and use `./npmBuild/esm/mod`
 
 
 ## Feature
-
-### 数据类型
+### TypeClass
   ✅ Option  
   ✅ Result  
   ✅ Own
+  ✅ Lazy
   ⭕️ Entry
 
-### 辅助函数
+### Functions
   ✅  flow  
   ✅  pipe  
-  ✅  try_then
   ✅  match
+  ✅  algebraicEffect
+  ⭕️  monad 单子化计算
