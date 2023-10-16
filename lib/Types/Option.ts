@@ -1,4 +1,4 @@
-import {Result, result, Own, NullError} from '../mod.ts'
+import {Result, result, NullError} from '../mod.ts'
 
 /** Option */
 
@@ -26,7 +26,6 @@ interface Some<T> extends opt<T> {
   map<V>(callback: (value: T) => V): Option<V>
   and_then<V>(callback: (value: T) => Option<V>): Option<V>
   to_result(): Result<T, never>
-  to_own(def: T): Own<T>
 }
 interface None extends opt<never> {
   readonly _tag: typeof none_tag
@@ -40,7 +39,6 @@ interface None extends opt<never> {
   and_then<V>(callback: (value: never) => Option<V>): Option<V>
   /** 转化为Result类型 */
   to_result(): Result<never, Error>
-  to_own<V>(def: V): Own<V>
 }
 
 export type Option<T> = Some<T> | None
@@ -81,9 +79,6 @@ export function Some<T>(val: T extends null | undefined ? never : T): Option<T> 
         return this.value
       })
     },
-    to_own(_def) {
-      return Own(this.value)
-    },
   }
 }
 
@@ -118,9 +113,6 @@ export const None: None = {
     return result<never, NullError>(() => {
       throw new NullError()
     })
-  },
-  to_own(_def) {
-    return Own(_def)
   },
 }
 

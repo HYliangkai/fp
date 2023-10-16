@@ -28,9 +28,10 @@ export class NoError extends Error {
   constructor(msg: string = 'No Error') {
     super(msg)
   }
+  static decide(val: unknown): val is NoError {
+    return val instanceof DataFormatError
+  }
 }
-
-/** 常规错误 */
 
 /** 判断函数 */
 export const is_data_format_error = (val: unknown): val is DataFormatError =>

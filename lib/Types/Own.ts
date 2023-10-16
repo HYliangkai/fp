@@ -1,7 +1,13 @@
-/** Own<T>的类型推导:泛型单态化 */
-export type Own<T> = T extends boolean ? OwnBoolean
-  : (T extends number ? OwnNumber
-    : (T extends Array<unknown> ? OwnArray<unknown> : OwnOther<T>))
+/** 
+@deprecated 设计臃肿,废弃使用
+Own<T>的类型推导:泛型单态化 */
+export type Own<T> = T extends boolean
+  ? OwnBoolean
+  : T extends number
+  ? OwnNumber
+  : T extends Array<unknown>
+  ? OwnArray<unknown>
+  : OwnOther<T>
 
 /** @array */
 type OwnArray<T> = Omit<
@@ -25,10 +31,7 @@ type OwnBoolean = Omit<
     /** 对true/false进行匹配但是只返回原来的OwnBoolean */
     match(true_handle?: () => void, false_handle?: () => void): Own<boolean>
     /** 对true/false进行匹配返回新值 */
-    match_map<T>(
-      true_handle: (val: true) => T,
-      false_handle: (val: false) => T,
-    ): Own<T>
+    match_map<T>(true_handle: (val: true) => T, false_handle: (val: false) => T): Own<T>
     /** 匹配true */
     match_true: (fn: Function) => void
     /** 匹配false */
@@ -45,9 +48,7 @@ interface OwnOther<T> {
   /** 是否数组 */
   is_array(): Own<boolean>
   /** 值处理 */
-  map<V>(
-    fn: (value: T) => V,
-  ): Own<V>
+  map<V>(fn: (value: T) => V): Own<V>
   /**  全等处理 多个比较数据采用 and / or 形式  , 默认采用and形式*/
   is_match: (value: T | T[], and?: boolean) => Own<boolean>
 }
@@ -61,9 +62,9 @@ export function Own<T>(value: T): Own<T> {
     map: (fn: (val: T) => unknown) => Own(fn(value)),
     is_match: (val: T, and = true) =>
       Array.isArray(val)
-        ? and ? Own(val.every((v) => v === value)) : Own(val.some(
-          (v) => v === value,
-        ))
+        ? and
+          ? Own(val.every(v => v === value))
+          : Own(val.some(v => v === value))
         : Own(val === value),
   }
   /** @ArrayCase */
@@ -73,8 +74,7 @@ export function Own<T>(value: T): Own<T> {
       ...own,
       is_empty: () => Own(value.length === 0),
     } as Own<unknown>
-  } /** @BooleanCase */
-  else if (typeof value === 'boolean') {
+  } /** @BooleanCase */ else if (typeof value === 'boolean') {
     //@ts-ignore
     return {
       ...own,
@@ -83,9 +83,7 @@ export function Own<T>(value: T): Own<T> {
         return Own(value)
       },
       match_map: (t, f) => {
-        return Own(
-          value ? t(true) : f(false),
-        )
+        return Own(value ? t(true) : f(false))
       },
       match_true(fn) {
         value ? fn() : ''
@@ -94,8 +92,7 @@ export function Own<T>(value: T): Own<T> {
         !value ? fn() : ''
       },
     }
-  } /** @NumberCase */
-  else if (typeof value === 'number') {
+  } /** @NumberCase */ else if (typeof value === 'number') {
     //@ts-ignore
     return {
       ...own,

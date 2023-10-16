@@ -12,8 +12,9 @@
 ### TypeClass
   ✅ Option  
   ✅ Result  
-  ✅ Own
+  ✅ Own[Dep]
   ✅ Lazy
+  ⭕️ Either
   ⭕️ Entry
 
 ### Functions

@@ -1,6 +1,6 @@
 /** Build deno package to npm package */
 import {build, emptyDir} from 'https://deno.land/x/dnt@0.38.0/mod.ts'
-import {result} from '../../../mod.ts'
+import {result} from '../mod.ts'
 await emptyDir('./dist')
 result(async () => {
   const jsonc = JSON.parse(new TextDecoder('utf-8').decode(await Deno.readFile('./deno.jsonc')))

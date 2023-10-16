@@ -95,6 +95,11 @@ const range = function* (iterator: any, range: number, fill = None) {
 export function lazy_array<T>(val?: Array<T>) {
   return new LazyArray<T>(val)
 }
+
+/**
+  ## LazyArray 一个提供惰性求值的数组 
+  *tips* 当前还是测试版本,在不用take()取值的情况下性能是比如JS内建的Array的,所以请在明确需要使用take()进行范围取值的情况下使用LazyArray
+ */
 export class LazyArray<T> {
   private _iterator: any
   constructor(iterator?: any) {
@@ -133,7 +138,7 @@ export class LazyArray<T> {
     return some(this._iterator, callback)
   }
 
-  public done<V>(callback: (val: Array<T>) => V) {
+  public exec<V>(callback: (val: Array<T>) => V) {
     return callback(this.value())
   }
 

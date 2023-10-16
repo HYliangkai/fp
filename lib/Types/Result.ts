@@ -1,5 +1,5 @@
 /** Result */
-import {None, Option, Some, BackTrack, NoError, Own} from '../mod.ts'
+import {None, Option, Some, BackTrack, NoError} from '../mod.ts'
 
 const error_tag = Symbol('error')
 const ok_tag = Symbol('ok')
@@ -25,8 +25,7 @@ interface Ok<T> {
   map(fn: () => T): Result<T, never>
   /** `Result<T, E>`  -->  `Result<V, E>` */
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
-  /**  转化为own类型 */
-  to_own(def: T): Own<T>
+
   /** ok情况的handle */
   match_ok<V>(fn: (val: T) => void): void
   /** error情况的handle */
@@ -45,7 +44,7 @@ interface Err<E> {
   to_option(): Option<never>
   map<V>(fn: () => V): Result<V, E>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
-  to_own<T>(def: T): Own<T>
+
   match_ok<V>(fn: (val: V) => void): void
   match_err(fn: (val: E) => void): void
 }
@@ -88,9 +87,7 @@ export function Ok<T>(value: T): Result<T, never> {
     and_then(fn) {
       return fn()
     },
-    to_own(_def) {
-      return Own(this.value)
-    },
+
     match_ok(fn) {
       fn(this.value)
     },
@@ -130,9 +127,6 @@ export function Err<E>(value: E): Result<never, E> {
     },
     and_then(_fn) {
       return this
-    },
-    to_own(def) {
-      return Own(def)
     },
     match_ok(_fn) {},
     match_err(fn) {

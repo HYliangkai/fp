@@ -1,6 +1,7 @@
-import {Err, Ok, Result, is_result} from '../../mod.ts'
+import { Err, is_result, Ok, Result } from '../../mod.ts'
 
-const weak_states: WeakMap<Function, 'pending' | 'fulfulled' | 'error'> = new WeakMap()
+const weak_states: WeakMap<Function, 'pending' | 'fulfulled' | 'error'> =
+  new WeakMap()
 const weak_datas: WeakMap<Function, any> = new WeakMap()
 
 function is_promise(pro: Promise<any> | null): pro is Promise<any> {
@@ -11,7 +12,7 @@ function is_promise(pro: Promise<any> | null): pro is Promise<any> {
   )
 }
 
-/** 
+/**
 ## wait : Convert asynchronous functions into synchronous execution
 模拟[代数效应](https://mongkii.com/blog/2021-05-08-talk-about-algebraic-effects)在JS引擎的实现.
 
@@ -27,7 +28,7 @@ const func1 = async () => {//mock async incident
 
 async function func1(){
   const pro2: string = await new Promise(res =>
-    setTimeout(() => {res('No') }, 2000)  ) 
+    setTimeout(() => {res('No') }, 2000)  )
   return pro2
 }
 
@@ -64,22 +65,25 @@ export const wait = <T, E = unknown>(fn: () => Promise<T>): Result<T, E> => {
 
   //第一次执行才会执行这一步
   throw fn().then(
-    res => {
+    (res) => {
       weak_states.set(fn, 'fulfulled')
       weak_datas.set(fn, res)
     },
-    err => {
+    (err) => {
       weak_states.set(fn, 'error')
       weak_datas.set(fn, err)
-    }
+    },
   )
 }
 /** 运行环境 */
 export function run_effect<T extends Result<any, any>>(
   fn: () => T,
-  callback?: (res: T) => any
+  callback?: (res: T) => any,
 ): void
-export function run_effect<T, E = unknown>(fn: () => T, callback?: (res: Result<T, E>) => any): void
+export function run_effect<T, E = unknown>(
+  fn: () => T,
+  callback?: (res: Result<T, E>) => any,
+): void
 export function run_effect(fn: () => any, callback?: (res: any) => any): void {
   try {
     const res = fn()
@@ -94,7 +98,7 @@ export function run_effect(fn: () => any, callback?: (res: any) => any): void {
         },
         () => {
           run_effect(fn, callback)
-        }
+        },
       )
     } else {
       callback ? callback(Err(effect)) : ''
