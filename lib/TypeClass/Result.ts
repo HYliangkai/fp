@@ -1,5 +1,15 @@
 /** Result */
-import {None, Option, Some, BackTrack, NoError} from '../mod.ts'
+
+import {
+  BackTrack,
+  Either,
+  Left,
+  NoError,
+  None,
+  Option,
+  Right,
+  Some,
+} from './mod.ts'
 
 const error_tag = Symbol('error')
 const ok_tag = Symbol('ok')
@@ -30,6 +40,8 @@ interface Ok<T> {
   match_ok<V>(fn: (val: T) => void): void
   /** error情况的handle */
   match_err<V>(fn: (val: V) => void): void
+  /** Ok -> Left / Err -> Righr */
+  to_either: <E>() => Either<T, E>
 }
 
 interface Err<E> {
@@ -44,9 +56,9 @@ interface Err<E> {
   to_option(): Option<never>
   map<V>(fn: () => V): Result<V, E>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
-
   match_ok<V>(fn: (val: V) => void): void
   match_err(fn: (val: E) => void): void
+  to_either: <T>() => Either<T, E>
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
@@ -92,6 +104,9 @@ export function Ok<T>(value: T): Result<T, never> {
       fn(this.value)
     },
     match_err(_fn) {},
+    to_either() {
+      return Left(this.value)
+    },
   }
 }
 
@@ -132,6 +147,9 @@ export function Err<E>(value: E): Result<never, E> {
     match_err(fn) {
       fn(this.value)
     },
+    to_either() {
+      return Right(this.value)
+    },
   }
 }
 
@@ -154,6 +172,8 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
 }
 
 /**  运行时判断是否Result类型 */
-export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {
+export function is_result<T = unknown, E = unknown>(
+  val: any,
+): val is Result<T, E> {
   return val._tag === ok_tag || val._tag === error_tag
 }

@@ -1,18 +1,28 @@
-import {Err, Ok, Result} from './mod.ts'
+import { Err, Ok, Result } from './mod.ts'
 
 const left_tag = Symbol('left')
 const right_tag = Symbol('right')
 
 interface either<L, R> {
   readonly _tag: typeof left_tag | typeof right_tag
+  /** ### is left? */
   is_left: boolean
+  /** ### if left , do  */
   left_do: (callback: (val: L) => void) => void
+  /** ### is right? */
   is_right: boolean
+  /** ### if right , do */
   right_do: (callback: (val: R) => void) => void
+  /** ### match left and right in callback  */
   match: (left: (val: L) => void, right: (val: R) => void) => void
+  /** ### map left and right in callback */
   map: <E, A>(left: (val: L) => E, right: (val: R) => A) => Either<E, A>
+  /** ### get left value or use param value */
   unwarp_left_or: <E>(left: E) => E | L
+  /** ### get right value or use param value */
   unwarp_right_or: <A>(right: A) => A | R
+  /** ### to result */
+  to_result: () => Result<L, R>
 }
 
 interface Left<T> extends either<T, never> {
@@ -33,14 +43,14 @@ interface Right<T> extends either<never, T> {
 export type Either<L, R> = Left<L> | Right<R>
 
 const leftback = <T>(val: T) => {
-  throw {tag: left_tag, value: val}
+  throw { tag: left_tag, value: val }
 }
 const rightback = <T>(val: T) => {
-  throw {tag: right_tag, value: val}
+  throw { tag: right_tag, value: val }
 }
 
 export const Either = <L, R>(
-  callback: (left: (lvalue: L) => L, right: (rvalue: R) => R) => any
+  callback: (left: (lvalue: L) => L, right: (rvalue: R) => R) => any,
 ): Result<Either<L, R>, unknown> => {
   try {
     callback(leftback<L>, rightback<R>)
@@ -63,7 +73,7 @@ export const Left = <L, R = never>(value: L): Either<L, R> => {
     left: value,
     is_left: true,
     is_right: false,
-    left_do: cb => {
+    left_do: (cb) => {
       cb(value)
     },
     right_do: () => {},
@@ -71,8 +81,9 @@ export const Left = <L, R = never>(value: L): Either<L, R> => {
       le(value)
     },
     map: (le, _ri) => Left(le(value)),
-    unwarp_left_or: _val => value,
-    unwarp_right_or: val => val,
+    unwarp_left_or: (_val) => value,
+    unwarp_right_or: (val) => val,
+    to_result: () => Ok(value),
   }
 }
 
@@ -83,14 +94,18 @@ export const Right = <R, L = never>(value: R): Either<L, R> => {
     is_left: false,
     is_right: true,
     left_do: () => {},
-    right_do: cb => {
+    right_do: (cb) => {
       cb(value)
     },
     match: (_le, ri) => {
       ri(value)
     },
     map: (_le, ri) => Right(ri(value)),
-    unwarp_left_or: val => val,
-    unwarp_right_or: _val => value,
+    unwarp_left_or: (val) => val,
+    unwarp_right_or: (_val) => value,
+    to_result: () => Err(value),
   }
 }
+
+const ad = (): Either<string, string> =>
+  Date.now() % 2 === 0 ? Left('da') : Right('osp')

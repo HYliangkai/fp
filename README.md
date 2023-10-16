@@ -14,7 +14,8 @@
   ✅ Result  
   ✅ Own[Dep]
   ✅ Lazy
-  ⭕️ Either
+  ✅ Either
+  ✅ Ord
   ⭕️ Entry
 
 ### Functions

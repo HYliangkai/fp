@@ -1,8 +1,8 @@
-import {result, zod} from 'lib'
-/** zod结合result可以做到有效的类型安全 */
+import { result, zod } from 'lib'
+/** zod结合result可以做到有效的类型安全; */
 
 const shema = zod.object({
-  name: zod.string({description: '字符串校验'}),
+  name: zod.string({ description: '字符串校验' }),
   age: zod.number(),
   address: zod.object({
     now: zod.literal('now'),

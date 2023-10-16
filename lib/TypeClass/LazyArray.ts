@@ -97,7 +97,7 @@ export function lazy_array<T>(val?: Array<T>) {
 }
 
 /**
-  ## LazyArray 一个提供惰性求值的数组 
+  ## LazyArray 一个提供惰性求值的数组
   *tips* 当前还是测试版本,在不用take()取值的情况下性能是比如JS内建的Array的,所以请在明确需要使用take()进行范围取值的情况下使用LazyArray
  */
 export class LazyArray<T> {
