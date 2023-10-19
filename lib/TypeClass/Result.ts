@@ -1,15 +1,6 @@
 /** Result */
 
-import {
-  BackTrack,
-  Either,
-  Left,
-  NoError,
-  None,
-  Option,
-  Right,
-  Some,
-} from './mod.ts'
+import {BackTrack, Either, Left, NoError, None, Option, Right, Some} from './mod.ts'
 
 const error_tag = Symbol('error')
 const ok_tag = Symbol('ok')
@@ -18,9 +9,9 @@ interface Ok<T> {
   readonly _tag: typeof ok_tag
   readonly value: T
   /** 是否是`Ok` */
-  is_ok(): true
+  is_ok: true
   /** 是否是`Err` */
-  is_err(): false
+  is_err: false
   /** 获取值,如果为`Err`就抛异 */
   unwarp(): T
   /** 获取值,如果为`Err`就用def替代 */
@@ -47,8 +38,8 @@ interface Ok<T> {
 interface Err<E> {
   _tag: typeof error_tag
   value: E
-  is_ok(): false
-  is_err(): true
+  is_ok: false
+  is_err: true
   unwarp(): never
   unwarp_err(): E
   unwarp_or<V>(def: V): V
@@ -68,12 +59,8 @@ export function Ok<T>(value: T): Result<T, never> {
   return {
     _tag: ok_tag,
     value: value,
-    is_ok() {
-      return true
-    },
-    is_err() {
-      return false
-    },
+    is_ok: true,
+    is_err: false,
     unwarp() {
       return this.value
     },
@@ -115,12 +102,8 @@ export function Err<E>(value: E): Result<never, E> {
   return {
     _tag: error_tag,
     value,
-    is_ok() {
-      return false
-    },
-    is_err() {
-      return true
-    },
+    is_ok: false,
+    is_err: true,
     unwarp() {
       if (this.value instanceof Error) throw this.value
       else throw new Error(String(this.value))
@@ -172,8 +155,6 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
 }
 
 /**  运行时判断是否Result类型 */
-export function is_result<T = unknown, E = unknown>(
-  val: any,
-): val is Result<T, E> {
+export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {
   return val._tag === ok_tag || val._tag === error_tag
 }

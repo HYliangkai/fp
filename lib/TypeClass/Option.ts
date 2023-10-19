@@ -8,9 +8,9 @@ const none_tag = Symbol('none')
 interface opt<T> {
   readonly _tag: typeof some_tag | typeof none_tag
   /** 是否为Some*/
-  is_some(): boolean
+  is_some: boolean
   /** 是否为None */
-  is_none(): boolean
+  is_none: boolean
   /**  获取值,如果为None就抛异 */
   unwarp(): T
   /** 抛异,如果为None就抛异,msg作为错误信息 */
@@ -47,12 +47,8 @@ export function Some<T>(val: T extends null | undefined ? never : T): Option<T> 
   return {
     _tag: some_tag,
     value: val,
-    is_some() {
-      return true
-    },
-    is_none() {
-      return false
-    },
+    is_some: true,
+    is_none: false,
     unwarp() {
       return this.value
     },
@@ -84,12 +80,9 @@ export function Some<T>(val: T extends null | undefined ? never : T): Option<T> 
 
 export const None: None = {
   _tag: none_tag,
-  is_some() {
-    return false
-  },
-  is_none() {
-    return true
-  },
+  is_some: false,
+  is_none: true,
+
   unwarp() {
     throw new NullError()
   },
