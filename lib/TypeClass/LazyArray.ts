@@ -29,8 +29,8 @@ const take = function* (iterator: any, num: number) {
 
 const value = <T>(iterator: any) => {
   const val: Array<T> = []
-  let item
-  for (item of iterator) {
+
+  for (const item of iterator) {
     val.push(item)
   }
   return val
@@ -42,8 +42,7 @@ const back = () => {
 }
 const for_each = <T>(iterator: any, callback: (val: T, backer: () => never) => any) => {
   try {
-    let item
-    for (item of iterator) {
+    for (const item of iterator) {
       callback(item, back)
     }
   } catch (effect) {
@@ -51,16 +50,14 @@ const for_each = <T>(iterator: any, callback: (val: T, backer: () => never) => a
   }
 }
 const some = <T>(iterator: any, callback: (val: T) => boolean): boolean => {
-  let item
-  for (item of iterator) {
+  for (const item of iterator) {
     if (callback(item)) return true
   }
   return false
 }
 
 const find = <T>(iterator: any, callback: (val: T) => boolean): Option<T> => {
-  let item
-  for (item of iterator) {
+  for (const item of iterator) {
     if (callback(item)) return Some(item)
   }
   return None
@@ -68,21 +65,36 @@ const find = <T>(iterator: any, callback: (val: T) => boolean): Option<T> => {
 
 const at = <T>(iterator: any, index: number): Option<T> => {
   let i = 0
-  let item
-  for (item of iterator) {
-    if (i === index) {
-      return Some(item)
-    } else {
-      i += 1
-    }
+  for (const item of iterator) {
+    if (i === index) return Some(item)
+    else i += 1
   }
   return None
 }
 
+const slice = function* (iterator: any, start: number, end?: number) {
+  let index = 0
+  if (end === undefined) {
+    for (const item of iterator) {
+      if (start >= index) {
+        yield item
+      }
+      index++
+    }
+  } else {
+    for (const item of iterator) {
+      if (start >= index && end < index) {
+        yield item
+      }
+      index++
+    }
+  }
+}
+
 const range = function* (iterator: any, range: number, fill = None) {
   let index = 0
-  let item
-  for (item of iterator) {
+
+  for (const item of iterator) {
     yield item
     index += 1
   }
@@ -92,13 +104,13 @@ const range = function* (iterator: any, range: number, fill = None) {
   }
 }
 
-export function lazy_array<T>(val?: Array<T>) {
+export function Lazy_Array<T>(val?: Array<T>) {
   return new LazyArray<T>(val)
 }
 
 /**
-  ## LazyArray 一个提供惰性求值的数组
-  *tips* 当前还是测试版本,在不用take()取值的情况下性能是比如JS内建的Array的,所以请在明确需要使用take()进行范围取值的情况下使用LazyArray
+  ## LazyArray : 一个提供惰性求值的数组
+  **tips* : 当前还是测试版本,在不用take()取值的情况下性能是不如JS内建的Array的,所以请在明确需要使用take()进行范围取值的情况下使用LazyArray
  */
 export class LazyArray<T> {
   private _iterator: any
@@ -123,6 +135,11 @@ export class LazyArray<T> {
   /** 🌟: 性能关键 */
   public take(range: number) {
     this._iterator = take(this._iterator, range)
+    return this
+  }
+
+  public slice(start: number, end?: number) {
+    this._iterator = slice(this._iterator, start, end)
     return this
   }
 

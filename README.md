@@ -5,22 +5,25 @@
 
 ## How to use
 + If you use in `deno` project, direct use `mod.ts`
-+ If you use  `node`/`browser` project, you can use `deno task npm:build` to build this project, and use `./npmBuild/esm/mod`
++ If you use  `node`/`browser` project, you can use `deno task npm:build` to build this project, and use `./npmBuild/esm/mod` in your project (use esm ) 
 
 
 ## Feature
 ### TypeClass
-  ✅ Option  
-  ✅ Result  
-  ✅ Own[Dep]
-  ✅ Lazy
-  ✅ Either
-  ✅ Ord
-  ⭕️ Entry
+  ✅ Option    
+  ✅ Result    
+  ✅ Own[Dep]  
+  ✅ Lazy  
+  ✅ Either  
+  ✅ Ord  
+  ⭕️ Entry  
 
 ### Functions
   ✅  flow  
   ✅  pipe  
-  ✅  match
-  ✅  algebraicEffect
-  ⭕️  monad 单子化计算
+  ✅  match  
+  ✅  algebraicEffect  
+  ⭕️  monad 单子化计算  
+
+### ThirdLib
+  ✅ zod  

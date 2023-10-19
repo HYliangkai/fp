@@ -1,4 +1,4 @@
-import {run_effect, wait} from "lib"
+import {run_effect, wait} from 'lib'
 
 const adtt = async () => {
   const pro1: string = await new Promise(res => {
@@ -8,6 +8,7 @@ const adtt = async () => {
   })
   return pro1
 }
+
 const abct = async () => {
   const pro2: string = await new Promise(res =>
     setTimeout(() => {
