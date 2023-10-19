@@ -91,9 +91,8 @@ const slice = function* (iterator: any, start: number, end?: number) {
   }
 }
 
-const range = function* (iterator: any, range: number, fill = None) {
+const range = function* (iterator: any, range: number, fill: any) {
   let index = 0
-
   for (const item of iterator) {
     yield item
     index += 1
@@ -163,9 +162,9 @@ export class LazyArray<T> {
     return at(this._iterator, index)
   }
 
-  public range(rang: number, fill = None): LazyArray<T | typeof fill> {
+  public range(rang: number, fl?: unknown): LazyArray<T | typeof fl> {
+    const fill = fl === undefined ? None : fl
     this._iterator = range(this._iterator, rang, fill)
-    //@ts-ignore
     return this
   }
 
