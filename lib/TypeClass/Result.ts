@@ -55,13 +55,12 @@ interface Err<E> {
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
-const empty = Symbol('empty')
-type Empty = typeof empty
+const empty_tag = Symbol('empty')
 /** 定义为正确的 */
-export function Ok<T = Empty>(value?: T): Result<T, never> {
+export function Ok<T = void>(value?: T): Result<T, never> {
   {
     //@ts-ignore
-    arguments.length === 0 ? (value = empty) : null
+    arguments.length === 0 ? (value = empty_tag) : null
   }
   return {
     _tag: ok_tag,
@@ -72,9 +71,8 @@ export function Ok<T = Empty>(value?: T): Result<T, never> {
     unwarp() {
       return this.value
     },
-    //@ts-ignore
     expect<V>(_msg: V) {
-      return value
+      return this.value
     },
     unwarp_or(_def: T) {
       return this.value
@@ -93,13 +91,11 @@ export function Ok<T = Empty>(value?: T): Result<T, never> {
       }
     },
     map(fn) {
-      //@ts-ignore
-      return Ok(fn(value))
+      return Ok(fn(this.value))
     },
     and_then(fn) {
       return fn()
     },
-
     match_ok(fn) {
       fn(this.value)
     },
