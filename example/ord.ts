@@ -1,6 +1,6 @@
 /** 一个使用ord的场景就是配合match进行模式匹配,能减少很多冗余的if else */
 
-import {cmp, Default, Eq, Ge, Gr, Lr, match} from 'lib'
+import {cmp, Default, Eq, Ge, Gr, Lr, match, option} from 'lib'
 
 const result1 = Math.ceil(Math.random() * 100)
 

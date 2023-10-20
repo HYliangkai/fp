@@ -14,6 +14,8 @@ interface Ok<T> {
   is_err: false
   /** 获取值,如果为`Err`就抛异 */
   unwarp(): T
+  /** 如果为None就抛异,msg作为错误信息 */
+  expect<V>(msg: V): T
   /** 获取值,如果为`Err`就用def替代 */
   unwarp_or(def: T): T
   /** 获取Error */
@@ -23,10 +25,9 @@ interface Ok<T> {
   /** 转化为`Option`类型的数据:注意如果`Ok`里面有`null`|`underfind`会转化成`None` */
   to_option(): Option<T>
   /** `Result<T, E>`  -->  `Result<V, E>` */
-  map(fn: () => T): Result<T, never>
+  map<V>(fn: (val: T) => V): Result<V, never>
   /** `Result<T, E>`  -->  `Result<V, E>` */
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
-
   /** ok情况的handle */
   match_ok<V>(fn: (val: T) => void): void
   /** error情况的handle */
@@ -40,12 +41,13 @@ interface Err<E> {
   value: E
   is_ok: false
   is_err: true
-  unwarp(): never
   unwarp_err(): E
+  unwarp(): never
   unwarp_or<V>(def: V): V
+  expect<V>(msg: V): never
   unwrap_or_else<V>(fn: (err: E) => V): V
   to_option(): Option<never>
-  map<V>(fn: () => V): Result<V, E>
+  map<V>(fn: (val: E) => V): Result<V, E>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
   match_ok<V>(fn: (val: V) => void): void
   match_err(fn: (val: E) => void): void
@@ -53,16 +55,26 @@ interface Err<E> {
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
-
+const empty = Symbol('empty')
+type Empty = typeof empty
 /** 定义为正确的 */
-export function Ok<T>(value: T): Result<T, never> {
+export function Ok<T = Empty>(value?: T): Result<T, never> {
+  {
+    //@ts-ignore
+    arguments.length === 0 ? (value = empty) : null
+  }
   return {
     _tag: ok_tag,
+    //@ts-ignore
     value: value,
     is_ok: true,
     is_err: false,
     unwarp() {
       return this.value
+    },
+    //@ts-ignore
+    expect<V>(_msg: V) {
+      return value
     },
     unwarp_or(_def: T) {
       return this.value
@@ -81,7 +93,8 @@ export function Ok<T>(value: T): Result<T, never> {
       }
     },
     map(fn) {
-      return Ok(fn())
+      //@ts-ignore
+      return Ok(fn(value))
     },
     and_then(fn) {
       return fn()
@@ -106,7 +119,10 @@ export function Err<E>(value: E): Result<never, E> {
     is_err: true,
     unwarp() {
       if (this.value instanceof Error) throw this.value
-      else throw new Error(String(this.value))
+      else throw this.value
+    },
+    expect<V>(msg: V) {
+      throw msg
     },
     unwarp_or<V>(def: V) {
       return def
