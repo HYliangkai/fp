@@ -23,8 +23,10 @@ interface either<L, R> {
   unwarp_right_or: <A>(right: A) => A | R
   /** ### to result */
   to_result: () => Result<L, R>
-  /**  */
+  /** ### Either<A,B> -> Either<B,A> */
   exchange: () => Either<R, L>
+  /** ### merge data */
+  merge: () => L | R
 }
 
 interface Left<T> extends either<T, never> {
@@ -88,6 +90,7 @@ export const Left = <L, R = never>(value: L): Either<L, R> => {
     unwarp_right_or: val => val,
     to_result: () => Ok(value),
     exchange: () => Right(value),
+    merge: () => value,
   }
 }
 
@@ -109,6 +112,7 @@ export const Right = <R, L = never>(value: R): Either<L, R> => {
     unwarp_right_or: _val => value,
     to_result: () => Err(value),
     exchange: () => Left(value),
+    merge: () => value,
   }
 }
 
