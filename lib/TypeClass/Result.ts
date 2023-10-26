@@ -159,6 +159,7 @@ export function backtrack<T>(val: T) {
  */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
+    console.log('进入try')
     const res = fn()
     return Ok(res)
   } catch (err: any) {

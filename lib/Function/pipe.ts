@@ -57,8 +57,8 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
 
 //使用 any版本做函数的具体实现
 export function pipe(...fns: Array<Fn<any, any>>): any {
-  var ret = fns[0]
-  for (var i = 1; i < fns.length; i++) {
+  let ret = fns[0]
+  for (let i = 1; i < fns.length; i++) {
     ret = fns[i](ret)
   }
   return ret
