@@ -16,6 +16,9 @@ Deno.bench('cache', () => {
   cache(10)
   cache(10)
   cache(10)
+  cache(10)
+  cache(10)
+  cache(10)
 })
 
 Deno.bench('no-cache', () => {
@@ -23,6 +26,8 @@ Deno.bench('no-cache', () => {
   fibonacci(4)
   fibonacci(6)
   fibonacci(6)
+  fibonacci(10)
+  fibonacci(10)
   fibonacci(10)
   fibonacci(10)
   fibonacci(10)
