@@ -5,3 +5,10 @@ export * from './match.ts' //模式匹配
 export * from './uniqueId.ts' //唯一id
 export * from './lazyPipe.ts' //lazy版的pipe
 export * from './algebraicEffect.ts' //代数效应
+
+/** ## Default
+global default value
+*/
+export const Def = Symbol('default')
+export type JudeCondition<T> = (val: T) => boolean
+export type Condition<T> = T | JudeCondition<T>

@@ -17,12 +17,14 @@ interface opt<T> {
   expect(msg: string): T
   /** 如果为some就执行 */
   some_do(fn: (val: T) => void): void
+  
 }
 interface Some<T> extends opt<T> {
   readonly _tag: typeof some_tag
   readonly value: T
   unwrap_or(def: T): T
   unwrap_or_else(fn: () => T): T
+  // unwrap_ro_default(): T
   map<V>(callback: (value: T) => V): Option<V>
   and_then<V>(callback: (value: T) => Option<V>): Option<V>
   to_result(): Result<T, never>
@@ -109,7 +111,7 @@ export const None: None = {
   },
 }
 
-/** 将任意类型转化为Option类型 */
+/** 将任意类型转化为Option类型: null/underfind ->None | other ->Some(other) */
 export function option<T>(value: T): Option<T extends null | undefined ? never : T> {
   if (typeof value == 'undefined' || value === null) {
     return None

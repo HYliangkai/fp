@@ -1,5 +1,4 @@
 /** 函数缓存,源至[tc39的提案](https://github.com/tc39/proposal-function-memo) */
-
 export const memo = (func: Function) => {
   if (typeof func !== 'function') {
     throw new TypeError('Expected a function')
