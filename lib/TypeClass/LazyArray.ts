@@ -1,5 +1,5 @@
 import {None, Option, Some} from '../../mod.ts'
-
+/** 使用RXJs能替代LazyArray的使用 */
 const map = function* (flow: any, transform: any) {
   for (const data of flow) {
     yield transform(data)

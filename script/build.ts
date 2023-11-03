@@ -1,6 +1,6 @@
 /** Build deno package to npm package */
 
-import {build, emptyDir} from 'https://deno.land/x/dnt/mod.ts'
+import {build, emptyDir} from 'https://deno.land/x/dnt@0.38.1/mod.ts'
 import {Err, Ok, Option, Result, option, result} from '../mod.ts'
 import {join} from 'https://deno.land/std@0.204.0/path/mod.ts'
 type Path = {__dirname: Option<string>; __filename: Option<string>}

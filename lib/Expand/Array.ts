@@ -33,3 +33,5 @@ Array.prototype.for_each = function (callback) {
     callback(this[i], i, block)
   }
 }
+
+export {}

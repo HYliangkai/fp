@@ -5,7 +5,7 @@
 
 ## How to use
 + If you use in `deno` project, direct use `mod.ts`
-+ If you use  `node`/`browser` project, you can use `deno task npm:build` to build this project, and use `./npmBuild/esm/mod` in your project (use esm ) 
++ If you use  `node`/`browser` project, you can use `deno task build` to build this project, and use `./npmBuild/esm/mod` in your project (use esm ) 
 
 
 ## Feature
