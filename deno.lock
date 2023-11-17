@@ -2,12 +2,7 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "npm:dayjs": "npm:dayjs@1.11.9",
-      "npm:fp-ts": "npm:fp-ts@2.16.0",
-      "npm:mathjs": "npm:mathjs@11.11.2",
-      "npm:rxjs": "npm:rxjs@7.8.1",
-      "npm:ts-pattern": "npm:ts-pattern@5.0.4",
-      "npm:zod": "npm:zod@3.22.2"
+      "npm:rxjs": "npm:rxjs@7.8.1"
     },
     "npm": {
       "@babel/runtime@7.23.2": {
