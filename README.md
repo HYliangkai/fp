@@ -6,7 +6,12 @@
 
 ## How to use
 
-- If you use in `deno` project, direct use `mod.ts`
+### Deno
+- If you use in `deno` project, direct use `mod.ts`   
+or   
+- `import * as fpSystem from "https://deno.land/x/fp_system@v0.3/mod.ts";`
+
+### Node/Browser
 - If you use `node`/`browser` project, you can use `deno task build` to build this project, and use `./npmBuild/esm/mod` in your project (use esm )
 
 ## Feature
