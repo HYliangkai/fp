@@ -2,8 +2,8 @@
 
 import {BackTrack, Either, Left, NoError, None, Option, Right, Some} from './mod.ts'
 
-const error_tag = Symbol('error')
-const ok_tag = Symbol('ok')
+export const error_tag = Symbol('error')
+export const ok_tag = Symbol('ok')
 
 interface Ok<T> {
   readonly _tag: typeof ok_tag
@@ -29,9 +29,11 @@ interface Ok<T> {
   /** `Result<T, E>`  -->  `Result<V, E>` */
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
   /** ok情况的handle */
-  match_ok<V>(fn: (val: T) => void): void
+  match_ok(fn: (val: T) => void): void
   /** error情况的handle */
   match_err<V>(fn: (val: V) => void): void
+  /** 匹配err */
+
   /** Ok -> Left / Err -> Righr */
   to_either: <E>() => Either<T, E>
 }

@@ -2,8 +2,8 @@ import {Result, result, NullError} from '../mod.ts'
 
 /** Option */
 
-const some_tag = Symbol('some')
-const none_tag = Symbol('none')
+export const some_tag = Symbol('some')
+export const none_tag = Symbol('none')
 
 interface opt<T> {
   readonly _tag: typeof some_tag | typeof none_tag
@@ -17,7 +17,6 @@ interface opt<T> {
   expect(msg: string): T
   /** 如果为some就执行 */
   some_do(fn: (val: T) => void): void
-  
 }
 interface Some<T> extends opt<T> {
   readonly _tag: typeof some_tag

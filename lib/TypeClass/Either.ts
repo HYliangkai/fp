@@ -1,7 +1,7 @@
 import {Err, Ok, Result} from './mod.ts'
 
-const left_tag = Symbol('left')
-const right_tag = Symbol('right')
+export const left_tag = Symbol('left')
+export const right_tag = Symbol('right')
 
 interface either<L, R> {
   readonly _tag: typeof left_tag | typeof right_tag

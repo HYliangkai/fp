@@ -59,9 +59,7 @@ export function lzpipe<A, B, C, D, E, F, G, H, I>(
   gh: Fn<G, H>,
   hi: Fn<H, I>
 ): () => I
-// 依此类推，根据需要添加更多的重载签名(手动)
 
-//使用 any版本做函数的具体实现
 export function lzpipe(...fns: Array<Fn<any, any>>): any {
   return () => {
     let ret = fns[0]
