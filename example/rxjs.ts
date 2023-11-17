@@ -17,10 +17,10 @@ const observable = new rxj.Observable(subscribe => {
 //加入一个订阅
 observable.subscribe({
   next(val) {
-    console.log('第一个订阅获取到val', val)
+    // console.log('第一个订阅获取到val', val)
   },
   complete() {
-    console.log('第一个订阅结束了')
+    // console.log('第一个订阅结束了')
   },
 })
 //订阅执行顺序是从上往下的,也就是先执行完第一个订阅的回调再执行第二个订阅的回调

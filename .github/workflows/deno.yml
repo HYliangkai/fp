@@ -3,9 +3,9 @@ name: Deno
 # 触发条件
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 permissions:
   contents: read
@@ -24,9 +24,9 @@ jobs:
 
       # 初始化deno到运行环境中
       - name: Setup Deno
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
+        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31 # v1.1.2
         with:
           deno-version: v1.x
       # 开始测试
       - name: Run tests
-        run: deno test -A
+        run: deno test test/* -A --unstable
