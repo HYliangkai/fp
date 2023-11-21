@@ -1,4 +1,4 @@
-import {Result, result, NullError} from '../mod.ts'
+import {panic, ErrorLevel, anyresult, AnyResult} from '../mod.ts'
 
 /** Option */
 
@@ -12,7 +12,7 @@ interface opt<T> {
   /** 是否为None */
   is_none: boolean
   /**  获取值,如果为None就抛异 */
-  unwarp(): T
+  unwarp(level?: ErrorLevel): T
   /** 抛异,如果为None就抛异,msg作为错误信息 */
   expect(msg: string): T
   /** 如果为some就执行 */
@@ -26,7 +26,7 @@ interface Some<T> extends opt<T> {
   // unwrap_ro_default(): T
   map<V>(callback: (value: T) => V): Option<V>
   and_then<V>(callback: (value: T) => Option<V>): Option<V>
-  to_result(): Result<T, never>
+  to_result(): AnyResult<T>
 }
 interface None extends opt<never> {
   readonly _tag: typeof none_tag
@@ -39,7 +39,7 @@ interface None extends opt<never> {
   /** 如果为Some调用callback进行替换 */
   and_then<V>(callback: (value: never) => Option<V>): Option<V>
   /** 转化为Result类型 */
-  to_result(): Result<never, Error>
+  to_result(): AnyResult<never>
 }
 
 export type Option<T> = Some<T> | None
@@ -50,7 +50,7 @@ export function Some<T>(val: T extends null | undefined ? never : T): Option<T> 
     value: val,
     is_some: true,
     is_none: false,
-    unwarp() {
+    unwarp(level?: ErrorLevel) {
       return this.value
     },
     expect(_msg: string) {
@@ -72,7 +72,7 @@ export function Some<T>(val: T extends null | undefined ? never : T): Option<T> 
       return callback(this.value)
     },
     to_result() {
-      return result<T, never>(() => {
+      return anyresult<T>(() => {
         return this.value
       })
     },
@@ -84,11 +84,11 @@ export const None: None = {
   is_some: false,
   is_none: true,
 
-  unwarp() {
-    throw new NullError()
+  unwarp(level?: ErrorLevel) {
+    panic(level || 'Error', 'None Value')
   },
-  expect(msg: string) {
-    throw new NullError(msg)
+  expect(msg: string, level?: ErrorLevel) {
+    panic(level || 'Error', msg)
   },
   unwrap_or<T>(def: T) {
     return def
@@ -104,8 +104,8 @@ export const None: None = {
     return this
   },
   to_result() {
-    return result<never, NullError>(() => {
-      throw new NullError()
+    return anyresult<never>(() => {
+      panic('Error', 'None Value')
     })
   },
 }

@@ -13,4 +13,5 @@
   "explorer.fileNesting.patterns": {
     "deno.jsonc": ".gitignore, .gitmodules,package-lock.json,package.json,pnpm-lock.yaml,"
   },
+  "liveServer.settings.port": 5001,
 }

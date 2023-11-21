@@ -37,3 +37,5 @@ or
 
 ✅ zod
 ✅ rxjs
+
+### Error handling

@@ -1,6 +1,23 @@
 /** Result */
 
-import {BackTrack, Either, Left, NoError, None, Option, Right, Some} from './mod.ts'
+import {AnyError, AnyResult, ErrorLevel, match_error} from '../../mod.ts'
+import {Either, Left, None, Option, Right, Some} from './mod.ts'
+
+export class BackTrack<T> {
+  public return_val: T
+  constructor(val: T) {
+    this.return_val = val
+  }
+}
+
+interface ErrorHandle {
+  debug: (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => void
+  info: (func: (v: AnyError<'Info'>) => AnyResult<unknown>) => void
+  error: (func: (v: AnyError<'Error'>) => AnyResult<unknown>) => void
+  warn: (func: (v: AnyError<'Warn'>) => AnyResult<unknown>) => void
+  fatal: (func: (v: AnyError<'Fatal'>) => AnyResult<unknown>) => void
+  panic: (func: (v: AnyError<'Panic'>) => AnyResult<unknown>) => void
+}
 
 export const error_tag = Symbol('error')
 export const ok_tag = Symbol('ok')
@@ -12,28 +29,28 @@ interface Ok<T> {
   is_ok: true
   /** 是否是`Err` */
   is_err: false
-  /** 获取值,如果为`Err`就抛异 */
+  /** get value,if value is `Err` , throw an exception  */
   unwarp(): T
   /** 如果为None就抛异,msg作为错误信息 */
   expect<V>(msg: V): T
-  /** 获取值,如果为`Err`就用def替代 */
+  /** get value,if value is `Err` , Replace it with def */
   unwarp_or(def: T): T
-  /** 获取Error */
-  unwarp_err(): NoError
-  /** 获取值,如果为`Err`就用fn()替代 */
+  /** get Error value */
+  unwarp_err(): AnyError<'Error'>
+  /** get value,if value is `Err` , Replace it with fn() */
   unwrap_or_else(fn: (err: never) => T): T
   /** 转化为`Option`类型的数据:注意如果`Ok`里面有`null`|`underfind`会转化成`None` */
   to_option(): Option<T>
   /** `Result<T, E>`  -->  `Result<V, E>` */
   map<V>(fn: (val: T) => V): Result<V, never>
+  /** `AnyResult<T>` --> `ANyResult<V>` : 用于对可恢复错误进行恢复 */
+  map_err(fn: any): AnyResult<unknown>
   /** `Result<T, E>`  -->  `Result<V, E>` */
   and_then<E>(fn: () => Result<T, E>): Result<T, E>
-  /** ok情况的handle */
+  /** handle of ok */
   match_ok(fn: (val: T) => void): void
-  /** error情况的handle */
+  /** handle of error */
   match_err<V>(fn: (val: V) => void): void
-  /** 匹配err */
-
   /** Ok -> Left / Err -> Righr */
   to_either: <E>() => Either<T, E>
 }
@@ -50,6 +67,7 @@ interface Err<E> {
   unwrap_or_else<V>(fn: (err: E) => V): V
   to_option(): Option<never>
   map<V>(fn: (val: E) => V): Result<V, E>
+  map_err(fn: E extends AnyError ? (handle: ErrorHandle) => unknown : never): AnyResult<unknown>
   and_then<T>(fn: () => Result<T, E>): Result<T, E>
   match_ok<V>(fn: (val: V) => void): void
   match_err(fn: (val: E) => void): void
@@ -80,7 +98,7 @@ export function Ok<T = void>(value?: T): Result<T, never> {
       return this.value
     },
     unwarp_err() {
-      return new NoError()
+      return AnyError.new('Ok value not error')
     },
     unwrap_or_else(_fn) {
       return this.value
@@ -94,6 +112,9 @@ export function Ok<T = void>(value?: T): Result<T, never> {
     },
     map(fn) {
       return Ok(fn(this.value))
+    },
+    map_err(_fn) {
+      return this
     },
     and_then(fn) {
       return fn()
@@ -137,6 +158,34 @@ export function Err<E>(value: E): Result<never, E> {
     map(_fn) {
       return this
     },
+    map_err(fn: any) {
+      if (this.value instanceof AnyError) {
+        let retdswd: any = Err(this.value)
+        const wqdq121 = this.value as AnyError<ErrorLevel>
+        const debug = (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => {
+          wqdq121.type == 'Debug' ? (retdswd = func(wqdq121)) : null
+        }
+        const info = (func: (v: AnyError<'Info'>) => AnyResult<unknown>) => {
+          wqdq121.type == 'Info' ? (retdswd = func(wqdq121)) : null
+        }
+        const error = (func: (v: AnyError<'Error'>) => AnyResult<unknown>) => {
+          wqdq121.type == 'Error' ? (retdswd = func(wqdq121)) : null
+        }
+        const warn = (func: (v: AnyError<'Warn'>) => AnyResult<unknown>) => {
+          wqdq121.type == 'Warn' ? (retdswd = func(wqdq121)) : null
+        }
+        const fatal = (func: (v: AnyError<'Fatal'>) => AnyResult<unknown>) => {
+          wqdq121.type == 'Fatal' ? (retdswd = func(wqdq121)) : null
+        }
+        const panic = (func: (v: AnyError<'Panic'>) => AnyResult<unknown>) => {
+          wqdq121.type == 'Panic' ? (retdswd = func(wqdq121)) : null
+        }
+        fn({debug, info, error, warn, fatal, panic})
+        return retdswd
+      } else {
+        return this
+      }
+    },
     and_then(_fn) {
       return this
     },
@@ -156,7 +205,6 @@ export function backtrack<T>(val: T) {
 }
 
 /** 将一个可能throw的 语句/代码/函数 转化为Result<T, E>类型数据
-
       `注意:`只能处理同步代码的情况
  */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
@@ -165,6 +213,16 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
     return Ok(res)
   } catch (err: any) {
     return err instanceof BackTrack ? Ok(err.return_val) : Err(err)
+  }
+}
+
+export function anyresult<T>(fn: () => T): AnyResult<T> {
+  try {
+    return Ok(fn())
+  } catch (err) {
+    return err instanceof BackTrack
+      ? Ok(err.return_val as T)
+      : Err(match_error(err).handle_throw(err => err))
   }
 }
 
