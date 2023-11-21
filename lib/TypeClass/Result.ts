@@ -199,6 +199,9 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
+export const AnyErr = (type: ErrorLevel, name?: string, cause?: string) =>
+  Err(AnyError.new(cause || '', {name: name || '', type}))
+
 /** 解决result()中嵌套过深无法返回的问题 */
 export function backtrack<T>(val: T) {
   throw new BackTrack(val)
