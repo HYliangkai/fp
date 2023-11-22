@@ -6,7 +6,6 @@ import {
 } from 'https://deno.land/std@0.206.0/assert/mod.ts'
 
 import {AnyError, anyresult, match_error, panic} from 'lib'
-import {__esModule} from '../dist/script/_dnt.polyfills.js'
 
 Deno.test('error-init', () => {
   const error = new AnyError()
