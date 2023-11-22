@@ -49,6 +49,3 @@ Deno.test('func-log', () => {
   const err = AnyError.new()
   err.log()
 })
-
-const err = AnyError.new('Fatal')
-err.log()
