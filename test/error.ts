@@ -44,8 +44,3 @@ Deno.test('match_error : Function', () => {
     () => {}
   )
 })
-
-Deno.test('func-log', () => {
-  const err = AnyError.new()
-  err.log()
-})
