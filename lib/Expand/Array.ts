@@ -14,6 +14,7 @@ declare global {
 Array.prototype.zip = function <T>(arr: Array<T>) {
   return [this, arr]
 }
+
 Array.prototype.max = function () {
   return Math.max(...this)
 }

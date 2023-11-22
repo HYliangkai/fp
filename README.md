@@ -20,11 +20,10 @@ or
 
  ✅ Option    
  ✅ Result    
- ✅ Own[Dep]    
  ✅ Lazy    
  ✅ Either    
  ✅ Ord    
- ⭕️ Entry  
+ ✅ Own[Dep]    
 
 ### Functions
 
@@ -35,7 +34,24 @@ or
 
 ### ThirdLib
 
-✅ zod
+✅ zod  
 ✅ rxjs
 
 ### Error handling
+
+✅ AnyError
+
+
+## TypeClass
+
+### Option
+pending...
+
+### Result
+pending...
+
+### Either
+pending...
+
+## Functions
+
