@@ -98,7 +98,7 @@ export function Ok<T = void>(value?: T): Result<T, never> {
       return this.value
     },
     unwarp_err() {
-      return AnyError.new('Ok value not error')
+      return AnyError.new('Error', 'Ok value not error')
     },
     unwrap_or_else(_fn) {
       return this.value
@@ -183,7 +183,7 @@ export function Err<E>(value: E): Result<never, E> {
         fn({debug, info, error, warn, fatal, panic})
         return retdswd
       } else {
-        return this
+        return AnyErr('Info', 'must be AnyError can use map_err', 'map_err')
       }
     },
     and_then(_fn) {
@@ -199,8 +199,8 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
-export const AnyErr = (type: ErrorLevel, name?: string, cause?: string) =>
-  Err(AnyError.new(cause || '', {name: name || '', type}))
+export const AnyErr = (type: ErrorLevel, cause?: string, name?: string) =>
+  Err(AnyError.new(type, cause, name))
 
 /** 解决result()中嵌套过深无法返回的问题 */
 export function backtrack<T>(val: T) {

@@ -6,6 +6,7 @@ import {
 } from 'https://deno.land/std@0.206.0/assert/mod.ts'
 
 import {AnyError, anyresult, match_error, panic} from 'lib'
+import {__esModule} from '../dist/script/_dnt.polyfills.js'
 
 Deno.test('error-init', () => {
   const error = new AnyError()
@@ -13,14 +14,14 @@ Deno.test('error-init', () => {
   assertFalse(error instanceof Error)
   assertEquals(error.type, 'Error')
 
-  const err2 = AnyError.new('Debug', {name: 'DebugTest', type: 'Debug'})
+  const err2 = AnyError.new('Debug', 'Debug', 'DebugTest')
   assert(err2 instanceof AnyError)
   assertFalse(err2 instanceof Error)
   assertEquals(err2.type, 'Debug')
 })
 
 Deno.test('error-fn', () => {
-  const error = AnyError.new('testing')
+  const error = AnyError.new('Error', 'testing')
   let flag = false
   for (const stark of error.strack_trace().split('\n')) {
     if (stark.includes(import.meta.url)) {
@@ -44,4 +45,10 @@ Deno.test('match_error : Function', () => {
   )
 })
 
-Deno.test('anyresult', () => {})
+Deno.test('func-log', () => {
+  const err = AnyError.new()
+  err.log()
+})
+
+const err = AnyError.new('Fatal')
+err.log()

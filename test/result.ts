@@ -6,7 +6,7 @@ Deno.test('map_err', () => {
   //lsp tips never,can't use map_err
   // err1.map_err(() => {})
 
-  const err2 = Err(AnyError.new('test', {type: 'Debug'}))
+  const err2 = Err(AnyError.new('Debug', 'test'))
 
   const res = err2
     .map_err(({error, debug}) => {
@@ -18,9 +18,7 @@ Deno.test('map_err', () => {
     .unwarp()
   assertEquals(res, 'test')
 
-  /**  */
-
-  const err3 = Err(AnyError.new('test', {type: 'Error'}))
+  const err3 = Err(AnyError.new('Error', 'test'))
   const res1 = err3.map_err(({error, debug}) => {
     error(val => Err(val))
     debug(() => {

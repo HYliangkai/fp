@@ -1,4 +1,5 @@
-import {Result} from '../../mod.ts'
+import * as colors from 'https://deno.land/std@0.207.0/fmt/colors.ts'
+import {Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 /** ### 错误级别
 + Panic：最高级别，表示系统不可恢复的错误。
@@ -13,12 +14,20 @@ export type ErrorLevel = 'Debug' | 'Info' | 'Warn' | 'Error' | 'Fatal' | 'Panic'
 export type AnyResult<T, E extends ErrorLevel = ErrorLevel> = Result<T, AnyError<E>>
 
 export function panic(type: ErrorLevel = 'Panic', cause = 'error...'): never {
-  throw new AnyError(cause, {
-    name: 'panic funtion call',
-    type: type,
-  })
+  throw new AnyError(type, cause, 'panic')
 }
 
+/** ## AnyError : A unified type of error
+  + type :  `AnyResult<T>` == `Result<T,ANyError<ErrorLevel>>`
+  ### Example
+  ```ts
+  const result: AnyResult<number> = Date.now() % 2 === 0 ? Ok(1) : AnyError('Debug','test error')
+  const res:number= result
+  .map_error(({debug})=>{debug(()=>Ok(1))})
+  .unwarp()
+  assert(res === 1) // true
+  ```
+ */
 export class AnyError<T extends ErrorLevel = 'Error'> {
   public type: ErrorLevel
   protected name: string
@@ -26,35 +35,47 @@ export class AnyError<T extends ErrorLevel = 'Error'> {
   protected strack: string
 
   constructor(
+    type?: T /** @Default - Error */,
     cause?: string,
-    options?: {name?: string /** @Default - AnyError */; type: T /** @Default - Error */}
+    name?: string /** @Default - AnyError */
   ) {
     this.cause = cause || ''
-    this.name = options?.name || 'AnyError'
-    this.type = options?.type || 'Error'
+    this.name = name || 'AnyError'
+    this.type = type || 'Error'
     this.strack = new Error().stack || 'no stack'
   }
 
   static new<T extends ErrorLevel = 'Error'>(
+    type?: T /** @Default - Error */,
     cause?: string,
-    options?: {
-      name?: string /** @Default - AnyError */
-      type?: T /** @Default - Error */
-    }
+    name?: string /** @Default - AnyError */
   ) {
-    return new AnyError<ErrorLevel>(cause || '', {
-      name: options?.name || 'AnyError', //@ts-ignore
-      type: options?.type || 'Error',
-    })
+    return new AnyError<ErrorLevel>(type, cause, name)
   }
 
   value() {
     return {type: this.type, name: this.name, cause: this.cause, strack: this.strack}
   }
 
-  /** log error */
+  /** format log error */
   log() {
-    console.error(this.value())
+    console.log(
+      `------------------ ${colors.red('Error')} ------------------\n` +
+        `${colors.green('*')} type : ${match(
+          this.type,
+          ['Error', colors.red],
+          ['Warn', colors.yellow],
+          ['Info', colors.blue],
+          ['Debug', colors.green],
+          ['Fatal', colors.cyan],
+          ['Panic', colors.red],
+          [Def, (item: string) => item]
+        )(this.type)}\n` +
+        `${this.name ? `${colors.yellow('*')} name : ${colors.bgWhite(this.name)}\n` : ''}` +
+        `${this.cause ? `${colors.blue('*')} cause : ${this.cause}\n` : ''}` +
+        `${colors.red('*')} strack : ${this.strack}\n`
+    )
+    debugger
   }
 
   /** call stack trace */
