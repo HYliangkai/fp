@@ -45,6 +45,7 @@ interface Right<T> extends either<never, T> {
     不像 Result/Option 具有明确用途,而是表示一个泛化的二元状态机
 */
 export type Either<L, R> = Left<L> | Right<R>
+export type AsyncEither<L, R> = Promise<Either<L, R>>
 
 const leftback = <T>(val: T) => {
   throw {tag: left_tag, value: val}

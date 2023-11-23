@@ -5,7 +5,7 @@ import {
   assertThrows,
 } from 'https://deno.land/std@0.206.0/assert/mod.ts'
 
-import {AnyError, anyresult, match_error, panic} from 'lib'
+import {AnyError, match_error, panic} from 'lib'
 
 Deno.test('error-init', () => {
   const error = new AnyError()
@@ -28,9 +28,7 @@ Deno.test('error-fn', () => {
     }
   }
   assert(flag)
-
   assert(error.value().cause == 'testing')
-
   assertThrows(error.throw)
 })
 

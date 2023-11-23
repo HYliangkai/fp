@@ -1,5 +1,5 @@
 import * as colors from 'https://deno.land/std@0.207.0/fmt/colors.ts'
-import {Def, Result, match} from '../../mod.ts'
+import {AsyncResult, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 /** ### 错误级别
 + Panic：最高级别，表示系统不可恢复的错误。
@@ -12,6 +12,7 @@ export * from './matchError.ts'
 export type ErrorLevel = 'Debug' | 'Info' | 'Warn' | 'Error' | 'Fatal' | 'Panic'
 
 export type AnyResult<T, E extends ErrorLevel = ErrorLevel> = Result<T, AnyError<E>>
+export type AsyncAnyResult<T, E extends ErrorLevel = ErrorLevel> = AsyncResult<T, AnyError<E>>
 
 export function panic(type: ErrorLevel = 'Panic', cause = 'error...'): never {
   throw new AnyError(type, cause, 'panic')

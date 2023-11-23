@@ -75,6 +75,7 @@ interface Err<E> {
 }
 
 export type Result<T, E> = Ok<T> | Err<E>
+export type AsyncResult<T, E> = Promise<Ok<T> | Err<E>>
 const empty_tag = Symbol('empty')
 /** 定义为正确的 */
 export function Ok<T = void>(value?: T): Result<T, never> {

@@ -43,6 +43,7 @@ interface None extends opt<never> {
 }
 
 export type Option<T> = Some<T> | None
+export type AsyncOption<T> = Promise<Option<T>>
 
 export function Some<T>(val: T extends null | undefined ? never : T): Option<T> {
   return {
