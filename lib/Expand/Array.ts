@@ -9,6 +9,11 @@ declare global {
     to_shift(value: T): Array<T>
     to_unshift(value: T): Array<T>
   }
+
+  interface ArrayConstructor {
+    /** Array default is `[ ]` */
+    default(): Array<void>
+  }
 }
 
 Array.prototype.zip = function <T>(arr: Array<T>) {
@@ -34,5 +39,11 @@ Array.prototype.for_each = function (callback) {
     callback(this[i], i, block)
   }
 }
+Object.defineProperty(Array, 'default', {
+  value: function () {
+    return []
+  },
+  writable: false,
+})
 
 export {}

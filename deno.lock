@@ -2,6 +2,7 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "npm:dayjs": "npm:dayjs@1.11.9",
       "npm:rxjs": "npm:rxjs@7.8.1"
     },
     "npm": {

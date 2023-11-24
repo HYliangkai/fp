@@ -1,6 +1,6 @@
-/** 提供类型的默认数据 */
+/**  ## Default : Provide default data
 
-/** 默认数据 */
-export interface Default<T> {
-  default: () => Omit<T, 'default'>
+*/
+export interface Default {
+  default: () => unknown
 }
