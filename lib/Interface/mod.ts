@@ -2,3 +2,5 @@
 export * from './default.ts'
 
 export * from './newable.ts'
+
+export * from './partialEq.ts'
