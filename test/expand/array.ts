@@ -6,7 +6,3 @@ Deno.test('arrayDefault', () => {
   const adef = Array.default()
   assert(Array.isArray(adef) && adef.length === 0)
 })
-
-const run = (val: Default) => {
-  console.log(val.default())
-}

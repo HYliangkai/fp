@@ -1,5 +1,5 @@
 import * as colors from 'https://deno.land/std@0.207.0/fmt/colors.ts'
-import {AsyncResult, Def, Result, match} from '../../mod.ts'
+import {AsyncResult, Def, Default, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 /** ### 错误级别
 + Panic：最高级别，表示系统不可恢复的错误。
