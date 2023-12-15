@@ -14,7 +14,6 @@ Deno.test('PartialEq', () => {
   const User1 = new User('Tom', 18)
   const User2 = new User('dio', 18)
   assertFalse(User1.eq(User2))
-
   const User3 = new User('Tom', 18)
   assert(User1.eq(User3))
 })

@@ -116,5 +116,3 @@ export const Right = <R, L = never>(value: R): Either<L, R> => {
     merge: () => value,
   }
 }
-
-const ad = (): Either<string, string> => (Date.now() % 2 === 0 ? Left('da') : Right('osp'))

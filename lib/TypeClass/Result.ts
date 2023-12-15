@@ -3,13 +3,6 @@
 import {AnyError, AnyResult, ErrorLevel, match_error} from '../../mod.ts'
 import {Either, Left, None, Option, Right, Some} from './mod.ts'
 
-export class BackTrack<T> {
-  public return_val: T
-  constructor(val: T) {
-    this.return_val = val
-  }
-}
-
 interface ErrorHandle {
   debug: (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => void
   info: (func: (v: AnyError<'Info'>) => AnyResult<unknown>) => void
@@ -200,9 +193,16 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
+/** AnyError类型的错误 */
 export const AnyErr = (type: ErrorLevel, cause?: string, name?: string) =>
   Err(AnyError.new(type, cause, name))
 
+export class BackTrack<T> {
+  public return_val: T
+  constructor(val: T) {
+    this.return_val = val
+  }
+}
 /** 解决result()中嵌套过深无法返回的问题 */
 export function backtrack<T>(val: T) {
   throw new BackTrack(val)
