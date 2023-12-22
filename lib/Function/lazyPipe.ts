@@ -14,6 +14,7 @@ export function lzpipe<A>(a: A): () => A
 export function lzpipe<A, B>(a: A, ab: Fn<A, B>): () => B
 export function lzpipe<A, B, C>(a: A, ab: Fn<A, B>, bc: Fn<B, C>): () => C
 export function lzpipe<A, B, C, D>(a: A, ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>): () => D
+
 export function lzpipe<A, B, C, D, E>(
   a: A,
   ab: Fn<A, B>,

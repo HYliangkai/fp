@@ -19,7 +19,7 @@ export function panic(type: ErrorLevel = 'Panic', cause = 'error...'): never {
 }
 
 /** ## AnyError : A unified type of error
-  + type :  `AnyResult<T>` == `Result<T,ANyError<ErrorLevel>>`
+  + type :  `AnyResult<T>` == `Result<T,AnyError<ErrorLevel>>`
   ### Example
   ```ts
   const result: AnyResult<number> = Date.now() % 2 === 0 ? Ok(1) : AnyError('Debug','test error')

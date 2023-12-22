@@ -1,7 +1,7 @@
 /** Result */
 
-import {AnyError, AnyResult, ErrorLevel, match_error} from '../../mod.ts'
-import {Either, Left, None, Option, Right, Some} from './mod.ts'
+import {AnyError, AnyResult, ErrorLevel, match_error} from '../mod.ts'
+import {Either, Left, None, Option, Right, Some} from './TypeClass/mod.ts'
 
 interface ErrorHandle {
   debug: (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => void
@@ -108,7 +108,7 @@ export function Ok<T = void>(value?: T): Result<T, never> {
       return Ok(fn(this.value))
     },
     map_err(_fn) {
-      return this
+      return this as any
     },
     and_then(fn) {
       return fn()
@@ -177,7 +177,7 @@ export function Err<E>(value: E): Result<never, E> {
         fn({debug, info, error, warn, fatal, panic})
         return retdswd
       } else {
-        return AnyErr('Info', 'must be AnyError can use map_err', 'map_err')
+        return AnyErr('Info', 'must be AnyError can use map_err()', 'map_err')
       }
     },
     and_then(_fn) {
@@ -193,7 +193,7 @@ export function Err<E>(value: E): Result<never, E> {
   }
 }
 
-/**  返回AnyError类型的错误 */
+/** AnyError类型的错误 */
 export const AnyErr = (type: ErrorLevel, cause?: string, name?: string) =>
   Err(AnyError.new(type, cause, name))
 
@@ -209,8 +209,8 @@ export function backtrack<T>(val: T) {
 }
 
 /** 将一个可能throw的 语句/代码/函数 转化为Result<T, E>类型数据
-    `注意:`只能处理同步代码的情况
-*/
+      `注意:`只能处理同步代码的情况
+ */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
     const res = fn()
@@ -220,11 +220,12 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   }
 }
 
-/** 将一个可能throw的  语句/代码/函数 转化为AnyResult<T>类型数据*/
 export function anyresult<T>(fn: () => T): AnyResult<T> {
   try {
+    //@ts-ignore
     return Ok(fn())
   } catch (err) {
+    //@ts-ignore
     return err instanceof BackTrack
       ? Ok(err.return_val as T)
       : Err(match_error(err).handle_throw(err => err))
