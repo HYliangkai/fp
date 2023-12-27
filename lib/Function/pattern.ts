@@ -98,6 +98,13 @@ export function pattern(...args: ([Condition<any>, unknown] | [typeof Def, unkno
         (condition as JudeCondition<any>)(pattern_value)
       ) {
         return result
+      } else if (
+        typeof pattern_value['eq'] === 'function' &&
+        typeof condition['eq'] === 'function'
+      ) {
+        if (pattern_value['eq'](condition)) {
+          return result
+        }
       } else if (condition === Def) {
         return result
       }

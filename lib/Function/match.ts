@@ -4,6 +4,7 @@ import {Condition, Def, JudeCondition} from './mod.ts'
 ## match : Simple Pattern matching
 简单的模式匹配
 ### Example
++ normal match
 ```typescript
 const name='jiojio'
 const age=match(name,
@@ -11,6 +12,20 @@ const age=match(name,
 [(name)=>name==='dio',19],
 [Def,20])
 assert(age===18)//true
+```
++ match with implements the interface : PartialEq
+```typescript
+class User implements PartialEq {
+  constructor(public name: string, public age: number) {}
+
+  eq(other: this) {
+    return other.name == this.name && other.age == this.age
+  }
+}
+const User1 = new User('Tom', 18)
+const User2 = new User('Tom', 18)
+const res = match(User1, [User2, true], [Def, false])
+assert(res)//true
 
 ```
 */
@@ -108,6 +123,10 @@ export function match(
       return result
     } else if (typeof condition === 'function' && (condition as JudeCondition<any>)(match_value)) {
       return result
+    } else if (typeof match_value['eq'] === 'function' && typeof condition['eq'] === 'function') {
+      if (match_value['eq'](condition)) {
+        return result
+      }
     } else if (condition === Def) {
       return result
     }
