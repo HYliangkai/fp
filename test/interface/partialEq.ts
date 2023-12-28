@@ -1,6 +1,6 @@
 import {assertFalse} from '@std/assert/assert_false.ts'
 import {assert} from '@std/assert/assert.ts'
-import {PartialEq} from 'lib'
+import {Def, PartialEq, match} from 'lib'
 
 class User implements PartialEq {
   constructor(public name: string, public age: number) {}
@@ -16,4 +16,11 @@ Deno.test('PartialEq', () => {
   assertFalse(User1.eq(User2))
   const User3 = new User('Tom', 18)
   assert(User1.eq(User3))
+})
+
+Deno.test('EqMatch', () => {
+  const User1 = new User('Tom', 18)
+  const User2 = new User('Tom', 18)
+  const res = match(User1, [User2, true], [Def, false])
+  assert(res)
 })

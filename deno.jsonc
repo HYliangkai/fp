@@ -13,9 +13,7 @@
       "indentWidth": 2
     }
   },
-  "compilerOptions": {
-    "forceConsistentCasingInFileNames": false,
-  },
+  "compilerOptions": {},
   "lint": {
     "files": {
       "include": [
