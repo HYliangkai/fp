@@ -26,10 +26,16 @@ Deno.test('map_err', () => {
     })
   })
   assertThrows(() => {
-    res1.match_err(err => {
+    res1.match_err((err: AnyError) => {
+      // Explicitly specify the type of 'err' as 'AnyError'
       if (err instanceof AnyError) throw err
     })
   })
 })
 
-const A = Date.now() % 2 === 0 ? Ok(1) : AnyErr('Error')
+Deno.test('a-result', () => {
+  const A: AnyResult<number> = Date.now() % 2 === 0 ? Ok(1) : AnyErr('Error')
+  A.map(val => {
+    console.log('i am number :', val)
+  })
+})

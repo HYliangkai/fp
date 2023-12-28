@@ -14,7 +14,7 @@ interface ErrorHandle {
 
 export const error_tag = Symbol('error')
 export const ok_tag = Symbol('ok')
-
+const empty_tag = Symbol('empty')
 interface Ok<T> {
   readonly _tag: typeof ok_tag
   readonly value: T
@@ -69,128 +69,138 @@ interface Err<E> {
 
 export type Result<T, E> = Ok<T> | Err<E>
 export type AsyncResult<T, E> = Promise<Ok<T> | Err<E>>
-const empty_tag = Symbol('empty')
-/** 定义为正确的 */
-export function Ok<T = void>(value?: T): Result<T, never> {
-  {
-    //@ts-ignore
-    arguments.length === 0 ? (value = empty_tag) : null
+class ok<T = void> implements Ok<T> {
+  value: T
+  _tag: typeof ok_tag
+  is_ok: true
+  is_err: false
+  constructor(val: T) {
+    this.value = val
+    this._tag = ok_tag
+    this.is_ok = true
+    this.is_err = false
   }
-  return {
-    _tag: ok_tag,
-    //@ts-ignore
-    value: value,
-    is_ok: true,
-    is_err: false,
-    unwarp() {
-      return this.value
-    },
-    expect<V>(_msg: V) {
-      return this.value
-    },
-    unwarp_or(_def: T) {
-      return this.value
-    },
-    unwarp_err() {
-      return AnyError.new('Error', 'Ok value not error')
-    },
-    unwrap_or_else(_fn) {
-      return this.value
-    },
-    to_option() {
-      if (typeof this.value !== undefined && this.value !== null) {
-        return Some(this.value as any)
-      } else {
-        return None
-      }
-    },
-    map(fn) {
-      return Ok(fn(this.value))
-    },
-    map_err(_fn) {
-      return this
-    },
-    and_then(fn) {
-      return fn()
-    },
-    match_ok(fn) {
-      fn(this.value)
-    },
-    match_err(_fn) {},
-    to_either() {
-      return Left(this.value)
-    },
+  unwarp() {
+    return this.value
+  }
+  expect<V>(_msg: V) {
+    return this.value
+  }
+  unwarp_or(_def: T) {
+    return this.value
+  }
+  unwarp_err() {
+    return AnyError.new('Error', 'Ok value not error')
+  }
+  unwrap_or_else(_fn: Function) {
+    return this.value
+  }
+  to_option() {
+    if (typeof this.value !== undefined && this.value !== null) {
+      return Some(this.value as any)
+    } else {
+      return None
+    }
+  }
+  map(fn: Function) {
+    return Ok(fn(this.value))
+  }
+  //@ts-ignore
+  map_err(_fn: Function) {
+    return this
+  }
+  and_then(fn: Function) {
+    return fn()
+  }
+  match_ok(fn: Function) {
+    fn(this.value)
+  }
+  match_err(_fn: Function) {}
+  to_either() {
+    return Left(this.value)
   }
 }
+/** 定义为正确的 */
+export function Ok<T = void>(value?: T): Result<T, never> {
+  arguments.length === 0 ? ((value as any) = empty_tag) : null
+  return new ok(value!)
+}
+class err<E> implements Err<E> {
+  value: E
+  _tag: typeof error_tag
+  is_err: true
+  is_ok: false
+  constructor(val: E) {
+    this.value = val
+    this._tag = error_tag
+    this.is_err = true
+    this.is_ok = false
+  }
 
+  unwarp(): never {
+    if (this.value instanceof Error) throw this.value
+    throw this.value
+  }
+  expect<V>(msg: V): never {
+    throw msg
+  }
+  unwarp_or<V>(def: V) {
+    return def
+  }
+  unwarp_err() {
+    return this.value
+  }
+  unwrap_or_else(fn: Function) {
+    return fn(this.value)
+  }
+  to_option() {
+    return None
+  }
+  map(_fn: Function) {
+    return this
+  }
+  map_err(fn: any) {
+    if (this.value instanceof AnyError) {
+      let retdswd: any = Err(this.value)
+      const wqdq121 = this.value as AnyError<ErrorLevel>
+      const debug = (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => {
+        wqdq121.type == 'Debug' ? (retdswd = func(wqdq121)) : null
+      }
+      const info = (func: (v: AnyError<'Info'>) => AnyResult<unknown>) => {
+        wqdq121.type == 'Info' ? (retdswd = func(wqdq121)) : null
+      }
+      const error = (func: (v: AnyError<'Error'>) => AnyResult<unknown>) => {
+        wqdq121.type == 'Error' ? (retdswd = func(wqdq121)) : null
+      }
+      const warn = (func: (v: AnyError<'Warn'>) => AnyResult<unknown>) => {
+        wqdq121.type == 'Warn' ? (retdswd = func(wqdq121)) : null
+      }
+      const fatal = (func: (v: AnyError<'Fatal'>) => AnyResult<unknown>) => {
+        wqdq121.type == 'Fatal' ? (retdswd = func(wqdq121)) : null
+      }
+      const panic = (func: (v: AnyError<'Panic'>) => AnyResult<unknown>) => {
+        wqdq121.type == 'Panic' ? (retdswd = func(wqdq121)) : null
+      }
+      fn({debug, info, error, warn, fatal, panic})
+      return retdswd
+    } else {
+      return AnyErr('Info', 'must be AnyError can use map_err', 'map_err')
+    }
+  }
+  and_then(_fn: Function) {
+    return this
+  }
+  match_ok(_fn: Function) {}
+  match_err(fn: Function) {
+    fn(this.value)
+  }
+  to_either() {
+    return Right(this.value)
+  }
+}
 /** 定义为错误的 */
 export function Err<E>(value: E): Result<never, E> {
-  return {
-    _tag: error_tag,
-    value,
-    is_ok: false,
-    is_err: true,
-    unwarp() {
-      if (this.value instanceof Error) throw this.value
-      else throw this.value
-    },
-    expect<V>(msg: V) {
-      throw msg
-    },
-    unwarp_or<V>(def: V) {
-      return def
-    },
-    unwarp_err() {
-      return this.value
-    },
-    unwrap_or_else(fn) {
-      return fn(this.value)
-    },
-    to_option() {
-      return None
-    },
-    map(_fn) {
-      return this
-    },
-    map_err(fn: any) {
-      if (this.value instanceof AnyError) {
-        let retdswd: any = Err(this.value)
-        const wqdq121 = this.value as AnyError<ErrorLevel>
-        const debug = (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => {
-          wqdq121.type == 'Debug' ? (retdswd = func(wqdq121)) : null
-        }
-        const info = (func: (v: AnyError<'Info'>) => AnyResult<unknown>) => {
-          wqdq121.type == 'Info' ? (retdswd = func(wqdq121)) : null
-        }
-        const error = (func: (v: AnyError<'Error'>) => AnyResult<unknown>) => {
-          wqdq121.type == 'Error' ? (retdswd = func(wqdq121)) : null
-        }
-        const warn = (func: (v: AnyError<'Warn'>) => AnyResult<unknown>) => {
-          wqdq121.type == 'Warn' ? (retdswd = func(wqdq121)) : null
-        }
-        const fatal = (func: (v: AnyError<'Fatal'>) => AnyResult<unknown>) => {
-          wqdq121.type == 'Fatal' ? (retdswd = func(wqdq121)) : null
-        }
-        const panic = (func: (v: AnyError<'Panic'>) => AnyResult<unknown>) => {
-          wqdq121.type == 'Panic' ? (retdswd = func(wqdq121)) : null
-        }
-        fn({debug, info, error, warn, fatal, panic})
-        return retdswd
-      } else {
-        return AnyErr('Info', 'must be AnyError can use map_err', 'map_err')
-      }
-    },
-    and_then(_fn) {
-      return this
-    },
-    match_ok(_fn) {},
-    match_err(fn) {
-      fn(this.value)
-    },
-    to_either() {
-      return Right(this.value)
-    },
-  }
+  return new err(value)
 }
 
 /**  返回AnyError类型的错误 */

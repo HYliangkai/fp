@@ -45,46 +45,52 @@ interface None extends opt<never> {
 export type Option<T> = Some<T> | None
 export type AsyncOption<T> = Promise<Option<T>>
 
-export function Some<T>(val: T extends null | undefined ? never : T): Option<T> {
-  return {
-    _tag: some_tag,
-    value: val,
-    is_some: true,
-    is_none: false,
-    unwarp(level?: ErrorLevel) {
-      return this.value
-    },
-    expect(_msg: string) {
-      return this.value
-    },
-    unwrap_or<T>(_def: T) {
-      return this.value
-    },
-    unwrap_or_else(_fn) {
-      return this.value
-    },
-    map<V>(callback: (value: T) => V extends null | undefined ? never : V) {
-      return Some(callback(this.value))
-    },
-    some_do(fn) {
-      fn(this.value)
-    },
-    and_then<V>(callback: (value: T) => Option<V>) {
-      return callback(this.value)
-    },
-    to_result() {
-      return anyresult<T>(() => {
-        return this.value
-      })
-    },
+class some<T> implements Some<T> {
+  value: T
+  constructor(val: T) {
+    this.value = val
+    this._tag = some_tag
+    this.is_some = true
+    this.is_none = false
   }
+  _tag: typeof some_tag
+  is_some: boolean
+  is_none: boolean
+  unwarp(level?: ErrorLevel) {
+    return this.value
+  }
+  expect(_msg: string) {
+    return this.value
+  }
+  unwrap_or<T>(_def: T) {
+    return this.value
+  }
+  unwrap_or_else(_fn: Function) {
+    return this.value
+  }
+  map<V>(callback: (value: T) => V extends null | undefined ? never : V) {
+    return Some(callback(this.value))
+  }
+  some_do(fn: Function) {
+    fn(this.value)
+  }
+  and_then<V>(callback: (value: T) => Option<V>) {
+    return callback(this.value)
+  }
+  to_result() {
+    return anyresult<T>(() => {
+      return this.value
+    })
+  }
+}
+export function Some<T>(val: T extends null | undefined ? never : T): Option<T> {
+  return new some(val)
 }
 
 export const None: None = {
   _tag: none_tag,
   is_some: false,
   is_none: true,
-
   unwarp(level?: ErrorLevel) {
     panic(level || 'Error', 'None Value')
   },
