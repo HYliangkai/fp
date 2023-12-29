@@ -2,22 +2,7 @@
  */
 import {Err, Ok, Result, Some, None, Option} from '../../mod.ts'
 
-/*
-+ zip()
-+ max()
-+ min()
-+ take()
-+ to_push()
-+ to_pop()
-+ to_shift()
-+ to_unshift()
-+ position()
-+ rposition()
-*/
-
-type OnlyType<T, V> = T extends V ? T : never
 type LoopCallBack<T, R = void> = (value: T, index: number) => R
-type Narrow<R> = (value: unknown, index: number) => value is R
 type ITR<T = any> = Iterator<T>
 type ITB<T = any> = Iterable<T>
 
@@ -49,6 +34,16 @@ export class Vector<T> {
     return take(this.generator, range) as T[]
   }
 
+  /** ### `consume` position */
+  position(call: LoopCallBack<T, boolean>) {
+    return position(this.generator, call) as Option<number>
+  }
+
+  /** ### `consume` find */
+  find(call: LoopCallBack<T, boolean>) {
+    return find(this.generator, call) as Option<T>
+  }
+
   /** ### zip : 将两个迭代器合并为一个,超出部分将舍弃 */
   zip<O>(other: ITB<O>) {
     this.generator = zip(this.generator, other[Symbol.iterator]())
@@ -77,16 +72,6 @@ export class Vector<T> {
   unshift<O>(item: O) {
     this.generator = unshift(this.generator, item)
     return this as Vector<T | O>
-  }
-
-  /** ### `consume` position */
-  position(call: LoopCallBack<T, boolean>) {
-    return position(this.generator, call) as Option<number>
-  }
-
-  /** ### `consume` find */
-  find(call: LoopCallBack<T, boolean>) {
-    return find(this.generator, call) as Option<T>
   }
 
   /** ### filter */
