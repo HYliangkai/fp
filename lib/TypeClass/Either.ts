@@ -73,6 +73,8 @@ export const Either = <L, R>(
 }
 export const BooleanEither = <T>(val: T): Either<T, T> => (val ? Left(val) : Right(val))
 
+
+
 export const Left = <L, R = never>(value: L): Either<L, R> => {
   return {
     _tag: left_tag,

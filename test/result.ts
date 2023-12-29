@@ -1,5 +1,5 @@
 import {assertThrows, assertEquals} from 'https://deno.land/std@0.206.0/assert/mod.ts'
-import {AnyErr, AnyError, AnyResult, Err, Ok, anyresult, result} from 'lib'
+import {AnyError, Err, Ok} from 'lib'
 
 Deno.test('map_err', () => {
   const err1 = Err('Nihao')
@@ -30,12 +30,5 @@ Deno.test('map_err', () => {
       // Explicitly specify the type of 'err' as 'AnyError'
       if (err instanceof AnyError) throw err
     })
-  })
-})
-
-Deno.test('a-result', () => {
-  const A: AnyResult<number> = Date.now() % 2 === 0 ? Ok(1) : AnyErr('Error')
-  A.map(val => {
-    console.log('i am number :', val)
   })
 })
