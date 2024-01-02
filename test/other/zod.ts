@@ -1,6 +1,7 @@
 /** 利用zod的类型校验达到显著的运行时安全效果 */
-import {assertFalse, assert} from 'https://deno.land/std@0.206.0/assert/mod.ts'
+
 import {Err, Left, Ok, Right, Some, zod} from 'lib'
+import {assert, assertFalse} from '../mod.ts'
 
 Deno.test('test-option-and-zod', () => {
   //先定义shema

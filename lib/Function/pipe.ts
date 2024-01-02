@@ -10,6 +10,7 @@ console.log(pipe(
 )) // 5
 ```
 */
+
 export function pipe<A>(a: A): A
 export function pipe<A, B>(a: A, ab: Fn<A, B>): B
 export function pipe<A, B, C>(a: A, ab: Fn<A, B>, bc: Fn<B, C>): C

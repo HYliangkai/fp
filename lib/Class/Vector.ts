@@ -1,21 +1,23 @@
-/** ## Vector : 一个惰性求值的迭代器的封装
- */
-import {Err, Ok, Result, Some, None, Option} from '../../mod.ts'
+import {Err, Ok, Result, Some, None, Option, Debug, Copy} from '../../mod.ts'
 
-type LoopCallBack<T, R = void> = (value: T, index: number) => R
+type CallBack<T, R = void> = (value: T, index: number) => R
+
 type ITR<T = any> = Iterator<T>
+
 type ITB<T = any> = Iterable<T>
 
-export class Vector<T> {
+/** ## Vector :  一个惰性求值的迭代器封装 , 操作具有迭代器的一次性性质 */
+export class Vector<T> implements Debug, Copy {
   private generator: ITR<unknown>
   constructor(iter: ITB<T> | ITR<T>, itable = true) {
     this.generator = itable ? (iter as ITB<T>)[Symbol.iterator]() : (iter as ITR<T>)
   }
 
-  /** ### `consume` log : 打印数据  */
-  log() {
-    log_iterator(this.generator)
-  }
+  ////////////////////////////////////////
+  //////                            //////
+  //////            consume          //////
+  //////                            //////
+  ////////////////////////////////////////
 
   /** ### `consume` max : 获取最大值*/
   max(): Result<number, 'NaN'> {
@@ -29,64 +31,102 @@ export class Vector<T> {
     return isNaN(i) ? Err('NaN') : Ok(i)
   }
 
-  /** ### `consume` take : 将数据转化成array */
+  /** ### `consume` take : 将数据转化成array并获取rang二哥 */
   take(range = Infinity) {
     return take(this.generator, range) as T[]
   }
 
   /** ### `consume` position */
-  position(call: LoopCallBack<T, boolean>) {
+  position(call: CallBack<T, boolean>) {
     return position(this.generator, call) as Option<number>
   }
 
   /** ### `consume` find */
-  find(call: LoopCallBack<T, boolean>) {
+  find(call: CallBack<T, boolean>) {
     return find(this.generator, call) as Option<T>
   }
 
+  ////////////////////////////////////////
+  //////                            //////
+  //////            nolazy          //////
+  //////                            //////
+  ////////////////////////////////////////
+
+  /** ### `nolazy` clone : 复制迭代器内容(浅拷贝) */
+  clone(): this {
+    const this_gen: T[] = []
+    const retrun_gen: T[] = []
+    while (true) {
+      const r = this.generator.next()
+      if (r.done) break
+      this_gen.push(r.value as T)
+      retrun_gen.push(r.value as T)
+    }
+    this.generator = this_gen[Symbol.iterator]()
+    return new Vector(retrun_gen) as this
+  }
+
+  /** ### `nolazy` log : 打印数据  */
+  log() {
+    const this_gen: T[] = []
+    while (true) {
+      const r = this.generator.next()
+      if (r.done) break
+      this_gen.push(r.value as T)
+    }
+    console.log(this_gen)
+    this.generator = this_gen[Symbol.iterator]()
+  }
+
+  ////////////////////////////////////////
+  //////                            //////
+  //////            iterator        //////
+  //////                            //////
+  ////////////////////////////////////////
+
   /** ### zip : 将两个迭代器合并为一个,超出部分将舍弃 */
-  zip<O>(other: ITB<O>) {
+  zip<O>(other: ITB<O>): Vector<[T, O]> {
     this.generator = zip(this.generator, other[Symbol.iterator]())
     return this as Vector<[T, O]>
   }
 
-  /** ### push */
+  /** ### push : 迭代器Push数据 */
   push<O>(item: O) {
     this.generator = push(this.generator, item)
     return this as Vector<T | O>
   }
 
-  /** ### pop */
+  /** ### pop : 迭代器Pop数据 */
   pop() {
     this.generator = pop(this.generator)
     return this as Vector<T>
   }
 
-  /** ### shift */
+  /** ### shift : 迭代器Shift数据 */
   shift() {
     this.generator = shift(this.generator)
     return this as Vector<T>
   }
 
-  /** ### unshift */
+  /** ### unshift : 迭代器Unshift数据  */
   unshift<O>(item: O) {
     this.generator = unshift(this.generator, item)
     return this as Vector<T | O>
   }
 
-  /** ### filter */
-  filter<O = T>(call: LoopCallBack<T, boolean>) {
+  /** ### filter : [迭代器filter数据](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) */
+  filter<O = T>(call: CallBack<T, boolean>) {
     this.generator = filter(this.generator, call)
     return this as Vector<any> as Vector<O>
   }
 
   /** ### map */
-  map<O>(call: LoopCallBack<T, O>) {
+  map<O>(call: CallBack<T, O>) {
     this.generator = map(this.generator as ITR<T>, call) as ITR<O>
     return this as Vector<any> as Vector<O>
   }
 
-  static new<T>(...iter: T[] | [ITB<T>]) {
+  static new<T>(...iter: T[] | [ITB<T>]): Vector<T> {
     if (iter.length > 1) return new Vector(iter as T[])
     return new Vector(
       (iter[0] as any)[Symbol.iterator] !== undefined ? (iter[0] as ITB<T>) : (iter as [T])
@@ -133,7 +173,7 @@ function take(t: ITR, number: number) {
   return res
 }
 
-function position<O>(t: ITR, call: LoopCallBack<O, boolean>) {
+function position<O>(t: ITR, call: CallBack<O, boolean>) {
   let idx = 0
   while (true) {
     const r = t.next()
@@ -144,7 +184,7 @@ function position<O>(t: ITR, call: LoopCallBack<O, boolean>) {
   return None
 }
 
-function find<O>(t: ITR, call: LoopCallBack<O, boolean>) {
+function find<O>(t: ITR, call: CallBack<O, boolean>) {
   let idx = 0
   while (true) {
     const r = t.next()
@@ -203,7 +243,7 @@ function* shift(t: ITR) {
   }
 }
 
-function* filter<O>(t: ITR, call: LoopCallBack<O, boolean>) {
+function* filter<O>(t: ITR, call: CallBack<O, boolean>) {
   let idx = 0
   while (true) {
     const r = t.next()
@@ -213,7 +253,7 @@ function* filter<O>(t: ITR, call: LoopCallBack<O, boolean>) {
   }
 }
 
-function* map<L, R>(t: ITR<L>, call: LoopCallBack<L, R>) {
+function* map<L, R>(t: ITR<L>, call: CallBack<L, R>) {
   let idx = 0
   while (true) {
     const r = t.next()

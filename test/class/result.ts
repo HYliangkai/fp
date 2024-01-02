@@ -1,11 +1,7 @@
-import {assertThrows, assertEquals} from 'https://deno.land/std@0.206.0/assert/mod.ts'
 import {AnyError, Err, Ok} from 'lib'
+import {assertEquals, assertThrows} from '../mod.ts'
 
 Deno.test('map_err', () => {
-  const err1 = Err('Nihao')
-  //lsp tips never,can't use map_err
-  // err1.map_err(() => {})
-
   const err2 = Err(AnyError.new('Debug', 'test'))
 
   const res = err2
@@ -27,7 +23,6 @@ Deno.test('map_err', () => {
   })
   assertThrows(() => {
     res1.match_err((err: AnyError) => {
-      // Explicitly specify the type of 'err' as 'AnyError'
       if (err instanceof AnyError) throw err
     })
   })

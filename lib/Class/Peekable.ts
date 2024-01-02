@@ -14,13 +14,13 @@ example:
   assert(peek.next().unwarp() !== peek.peeked.unwarp())
 ```
  */
-export class Peekable<V, T extends Iterable<V>> {
+export class Peekable<V, T extends Iterable<V> | Iterator<V>> {
   private iter: Iterator<V>
   private peek_value: IteratorResult<V, any>
   private peek_data: Option<V>
 
-  constructor(iter: T) {
-    this.iter = iter[Symbol.iterator]()
+  constructor(iter: T, itable = true) {
+    this.iter = itable ? (iter as Iterable<V>)[Symbol.iterator]() : (iter as Iterator<V>)
     this.peek_value = this.iter.next()
     this.peek_data = this.peek_value.done
       ? None

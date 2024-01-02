@@ -1,11 +1,5 @@
-import {
-  assert,
-  assertFalse,
-  assertEquals,
-  assertThrows,
-} from 'https://deno.land/std@0.206.0/assert/mod.ts'
-
 import {AnyError, match_error, panic} from 'lib'
+import {assert, assertEquals, assertFalse, assertThrows} from '../mod.ts'
 
 Deno.test('error-init', () => {
   const error = new AnyError()

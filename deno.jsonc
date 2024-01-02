@@ -1,9 +1,10 @@
 {
-  "version": "0.3.27",
+  "version": "0.3.34",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
     "watch": "deno run -A --unstable --watch main.ts",
-    "test": "deno test -A --unstable test/* ",
+    "test": "deno test  test/* test/*/* -A --unstable ",
+    "coverage": "deno task test --coverage && deno coverage --html ",
     "build": "deno run -A ./script/build.ts"
   },
   "fmt": {

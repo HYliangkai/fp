@@ -1,5 +1,5 @@
-import {assertEquals, assert, assertThrows} from '@std/assert/mod.ts'
 import {Vector, vec} from 'lib'
+import {assert, assertEquals, assertThrows} from '../mod.ts'
 
 Deno.test('vec-new', () => {
   const vn1 = vec(1)
@@ -26,6 +26,7 @@ Deno.test('vec-max', () => {
 
 Deno.test('vec-min', () => {
   const le = vec(1, 2, 3, 4)
+
   const ri = vec([5, 6, 7, 8, 'Asb'])
   assertEquals(le.min().unwarp(), 1)
   assertThrows(ri.min().unwarp)
@@ -35,8 +36,7 @@ Deno.test('vec-take', () => {
   const vc = vec(1, 2, 21)
   const vc2 = vec(3, 4, 5, 6)
   const r = vc.zip(vc2).take(2)
-  console.log(r)
-  console.log(vc.take())
+  assert(r.length === 2)
 })
 
 Deno.test('vector', () => {

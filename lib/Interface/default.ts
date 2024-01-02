@@ -1,6 +1,4 @@
-/**  ## Default : Provide default data
-
-*/
+/**  ## Default : Provide default data */
 export interface Default {
   default: () => unknown
 }

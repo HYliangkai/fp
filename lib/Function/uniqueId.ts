@@ -1,5 +1,14 @@
 const id_counter: any = {}
-/** 通过建立局部变量获取唯一值 */
+/** ## unique_id : 获取唯一id值
+  @param prefix 前缀, 默认`$chzky$`
+  @example 
+  ```ts
+  const id1=unique_id()
+  const id2=unique_id()
+  assert(id1=='')
+  ```
+  @category Function
+*/
 export const unique_id = (prefix = '$chzky$') => {
   if (!id_counter[prefix]) id_counter[prefix] = 0
   const id = ++id_counter[prefix]
