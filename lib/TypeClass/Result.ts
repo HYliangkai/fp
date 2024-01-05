@@ -230,7 +230,7 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   }
 }
 
-/** 将一个可能throw的  语句/代码/函数 转化为AnyResult<T>类型数据*/
+/** ## anyresult :  MayBe Throw Function --> AnyResult<T>*/
 export function anyresult<T>(fn: () => T): AnyResult<T> {
   try {
     return Ok(fn())

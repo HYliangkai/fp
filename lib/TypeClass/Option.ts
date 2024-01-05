@@ -1,7 +1,5 @@
 import {panic, ErrorLevel, anyresult, AnyResult} from '../mod.ts'
 
-/** Option */
-
 export const some_tag = Symbol('some')
 export const none_tag = Symbol('none')
 
@@ -23,7 +21,7 @@ interface Some<T> extends opt<T> {
   readonly value: T
   unwrap_or(def: T): T
   unwrap_or_else(fn: () => T): T
-  // unwrap_ro_default(): T
+  // unwrap_or_default(): T
   map<V>(callback: (value: T) => V): Option<V>
   and_then<V>(callback: (value: T) => Option<V>): Option<V>
   to_result(): AnyResult<T>
@@ -35,15 +33,24 @@ interface None extends opt<never> {
   /** 如果为None使用fn()作为默认值插入 */
   unwrap_or_else<V>(fn: () => V): V
   /** 如果为Some调用callback结果替换Some值 */
-  map<V>(callback: (value: never) => V): Option<V>
+  map<V>(callback: (value: never) => Option<V>): Option<V>
   /** 如果为Some调用callback进行替换 */
   and_then<V>(callback: (value: never) => Option<V>): Option<V>
   /** 转化为Result类型 */
   to_result(): AnyResult<never>
 }
 
-export type Option<T> = Some<T> | None
+export type Option<T> = Some<NonNullable<T>> | None
 export type AsyncOption<T> = Promise<Option<T>>
+type DeepOption<T extends object> = {
+  [K in keyof T]-?: T[K] extends Option<any> | Function
+    ? T[K]
+    : T[K] extends object
+    ? DeepOption<T[K]>
+    : T[K] extends number | string | boolean | symbol | bigint
+    ? T[K]
+    : Option<NonNullable<T[K]>>
+}
 
 class some<T> implements Some<T> {
   value: T
@@ -68,7 +75,7 @@ class some<T> implements Some<T> {
   unwrap_or_else(_fn: Function) {
     return this.value
   }
-  map<V>(callback: (value: T) => V extends null | undefined ? never : V) {
+  map<V>(callback: (value: T) => NonNullable<V>) {
     return Some(callback(this.value))
   }
   some_do(fn: Function) {
@@ -83,7 +90,16 @@ class some<T> implements Some<T> {
     })
   }
 }
-export function Some<T>(val: T extends null | undefined ? never : T): Option<T> {
+
+/** ## Some 
+  + 将一个值转化为Some类型
+  + 如果值为null/underfind 就抛出异常 
+  + 如果值为其他类型就转化为Some类型
+  @throws  AnyError<'Error','Some Value'>
+  @category TypeClass
+ */
+export function Some<T>(val: NonNullable<T>): Option<T> {
+  if (val === undefined || val === null) panic('Error', 'Some Value')
   return new some(val)
 }
 
@@ -117,12 +133,42 @@ export const None: None = {
   },
 }
 
-/** 将任意类型转化为Option类型: null/underfind ->None | other ->Some(other) */
-export function option<T>(value: T): Option<T extends null | undefined ? never : T> {
-  if (typeof value == 'undefined' || value === null) {
-    return None
-  } else {
-    //@ts-ignore
-    return Some(value)
+/** ## option : 将任意类型转化为Option类型(浅遍历)
+  + null | underfind ->`None` 
+  + other ->`Some<other>`
+  @example
+  //Todo
+  @category TypeClass
+*/
+export function option<T>(value: T): Option<T> {
+  return value === undefined || value === null ? None : (Some(value) as Option<T>)
+}
+
+/** ## deep_option : 将任意类型转化为Option类型(深遍历)
+  + {A : null|string|underfind , B : string } -> `{Some<{A : string}> , B:string}`
+  @example
+  //Todo
+  @category TypeClass
+*/
+function deep_option<T>(value: T) {
+  if (typeof value !== 'object') return option(value)
+  const cache = new WeakMap()
+  {
+    //实现深遍历赋值
+    // const loop = (value: unknown) => {
+    //   if (typeof value == 'object') {
+    //     if (cache.has(value)) return cache.get(value)
+    //     const res = {} as any
+    //     cache.set(value, res)
+    //     for (const key in value) {
+    //       res[key] = loop(value[key])
+    //     }
+    //     return res
+    //   } else if (typeof value == 'undefined' || value === null) {
+    //     return None;
+    //   } else {
+    //     return option(value)
+    //   }
+    // }
   }
 }

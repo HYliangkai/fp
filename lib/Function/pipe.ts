@@ -1,6 +1,6 @@
 type Fn<A, B> = (a: A) => B
-/** ## pipe : Run the functions nested in parallel
-### Example
+/** ## pipe : 函数嵌套参数化运行
+@example
 ```ts
 console.log(pipe(
   1,//1
@@ -9,6 +9,7 @@ console.log(pipe(
   (x: number) => x + 1,//5
 )) // 5
 ```
+@category Function
 */
 
 export function pipe<A>(a: A): A

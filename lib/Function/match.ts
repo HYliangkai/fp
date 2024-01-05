@@ -1,9 +1,8 @@
 import {Condition, Def, JudeCondition} from './mod.ts'
 
 /**
-## match : Simple Pattern matching
-简单的模式匹配
-### Example
+## match : 简单的模式匹配
+@example
 + normal match
 ```typescript
 const name='jiojio'
@@ -26,8 +25,8 @@ const User1 = new User('Tom', 18)
 const User2 = new User('Tom', 18)
 const res = match(User1, [User2, true], [Def, false])
 assert(res)//true
-
 ```
+@category Function
 */
 export function match<T, V>(match_value: T, ab: [typeof Def, V]): V
 export function match<T, V, C>(match_value: T, ab: [Condition<T>, V], bc: [typeof Def, C]): V | C

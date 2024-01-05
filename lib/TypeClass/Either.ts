@@ -41,8 +41,7 @@ interface Right<T> extends either<never, T> {
 
 /** ###  Either :
 -- 表示一个二元的类型 , 可以是: true/false,也可以是right/left
-
-    不像 Result/Option 具有明确用途,而是表示一个泛化的二元状态机
+  不像 Result/Option 具有明确用途,而是表示一个泛化的二元状态机
 */
 export type Either<L, R> = Left<L> | Right<R>
 export type AsyncEither<L, R> = Promise<Either<L, R>>
@@ -72,8 +71,6 @@ export const Either = <L, R>(
   }
 }
 export const BooleanEither = <T>(val: T): Either<T, T> => (val ? Left(val) : Right(val))
-
-
 
 export const Left = <L, R = never>(value: L): Either<L, R> => {
   return {

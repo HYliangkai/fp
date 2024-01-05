@@ -1,6 +1,6 @@
 type Fn<A, B> = (a: A) => B
 /** ## lzpipe : Run the functions nested in parallel,but lazy run 
-### Example
+@example
 ```ts
 console.log(lzpipe(
   1,//1
@@ -9,6 +9,7 @@ console.log(lzpipe(
   (x: number) => x + 1,//5
 )()) // 5
 ```
+@category Function
  */
 export function lzpipe<A>(a: A): () => A
 export function lzpipe<A, B>(a: A, ab: Fn<A, B>): () => B

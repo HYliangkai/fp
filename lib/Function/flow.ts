@@ -1,7 +1,7 @@
 type Fn<A, B> = (a: A) => B
 
 /** ##  flow : Corey form of pipe function
-### Example
+@example
 ```ts
 const fn = flow(
   (x: number) => x + 1,
@@ -10,6 +10,7 @@ const fn = flow(
 )
 console.log(fn(1)) // 5
 ```
+@category Function
 */
 export function flow<A, B>(ab: Fn<A, B>): Fn<A, B>
 export function flow<A, B, C>(ab: Fn<A, B>, bc: Fn<B, C>): Fn<A, C>

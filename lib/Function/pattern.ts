@@ -1,6 +1,6 @@
 import {Condition, Def, JudeCondition} from './mod.ts'
-/** pattern : Corey form of match function
-### Example
+/** pattern : 科里化的match函数
+@example
 ```ts
 const name='jiojio'
 const age=pattern(
@@ -9,7 +9,7 @@ const age=pattern(
 [Def,20])
 assert(age(name)===18)//true
 ```
-
+@category Function
   */
 export function pattern<T, V>(ab: [typeof Def, V]): (value: V) => V
 export function pattern<T, V, C>(ab: [Condition<T>, V], bc: [typeof Def, C]): (value: V) => V | C
