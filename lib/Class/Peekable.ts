@@ -1,4 +1,4 @@
-import {None, Option, Some} from '../../mod.ts'
+import {None, Some} from '../../mod.ts'
 
 /** ## Can 'peek' with Iterator
 example:

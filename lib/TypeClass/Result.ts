@@ -1,7 +1,7 @@
 /** Result */
 
-import {AnyError, AnyResult, ErrorLevel, match_error} from '../../mod.ts'
-import {Either, Left, None, Option, Right, Some} from './mod.ts'
+import {AnyError, match_error} from '../../mod.ts'
+import {Either, Left, None, Right, Some} from './mod.ts'
 
 interface ErrorHandle {
   debug: (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => void
@@ -15,6 +15,17 @@ interface ErrorHandle {
 export const error_tag = Symbol('error')
 export const ok_tag = Symbol('ok')
 const empty_tag = Symbol('empty')
+
+declare global {
+  /** ## Result : 一个可能为Ok或者Err的数据类型
+  @category TypeClass */
+  type Result<T, E> = Ok<T> | Err<E>
+
+  /** ## AsyncResult : 对Result类型的异步封装 
+  @category TypeClass */
+  type AsyncResult<T, E> = Promise<Ok<T> | Err<E>>
+}
+
 interface Ok<T> {
   readonly _tag: typeof ok_tag
   readonly value: T
@@ -67,8 +78,6 @@ interface Err<E> {
   to_either: <T>() => Either<T, E>
 }
 
-export type Result<T, E> = Ok<T> | Err<E>
-export type AsyncResult<T, E> = Promise<Ok<T> | Err<E>>
 class ok<T = void> implements Ok<T> {
   value: T
   _tag: typeof ok_tag

@@ -1,4 +1,4 @@
-import {AnyError, ErrorLevel} from './mod.ts'
+import {AnyError} from './mod.ts'
 
 /**   error match  */
 export function match_error(error: any) {

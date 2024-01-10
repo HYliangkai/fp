@@ -1,4 +1,4 @@
-import {Err, Ok, Result, Some, None, Option, Debug, Copy} from '../../mod.ts'
+import {Err, Ok, Some, None, Debug, Copy} from '../../mod.ts'
 
 type CallBack<T, R = void> = (value: T, index: number) => R
 

@@ -1,5 +1,5 @@
 /**  ## PartialEq : 提供一个相等性判断的接口
-example :
+@example 
 ```ts
 class User implements PartialEq {
   constructor(public name: string, public age: number) {}
@@ -13,6 +13,7 @@ class User implements PartialEq {
   assert(User1.eq(User3))//Pass
 
 ```
+@category Interface
 */
 
 export interface PartialEq {

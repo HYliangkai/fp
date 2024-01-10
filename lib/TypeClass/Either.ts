@@ -1,4 +1,4 @@
-import {Err, Ok, Result} from './mod.ts'
+import {Err, Ok} from './mod.ts'
 
 export const left_tag = Symbol('left')
 export const right_tag = Symbol('right')

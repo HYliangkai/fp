@@ -1,6 +1,6 @@
 /** 在自己的代码中使用Option代替可能会出现None或者undefined的情况*/
 
-import {Default, None, Option, Some} from 'lib'
+import {Default, None, Some} from 'lib'
 
 interface XMao {
   name: string

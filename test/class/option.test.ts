@@ -1,5 +1,3 @@
-import {Option} from 'lib'
-
 type AMO = {
   opt: Option<null>
   name?: string

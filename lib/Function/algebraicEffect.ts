@@ -1,4 +1,4 @@
-import {Err, is_result, Ok, Result} from '../../mod.ts'
+import {Err, is_result, Ok} from '../../mod.ts'
 
 const weak_states: WeakMap<Function, 'pending' | 'fulfulled' | 'error'> = new WeakMap()
 const weak_datas: WeakMap<Function, any> = new WeakMap()
@@ -62,7 +62,7 @@ export const wait = <T, E = unknown>(fn: () => Promise<T>): Result<T, E> => {
     throw Error('wait() 不能传递匿名函数 !!')
   }
   if (state === 'fulfulled') return Ok(weak_datas.get(fn))
-  else if (state === 'error') return Err(weak_datas.get(fn))
+  if (state === 'error') return Err(weak_datas.get(fn))
 
   //第一次执行才会执行这一步
   throw fn().then(

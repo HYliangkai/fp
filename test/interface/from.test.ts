@@ -1,7 +1,7 @@
-/** ## From : 提供不同类型转化的接口
-@explain type`T`  - form<T,F> -> type`F`
-@example
-```ts
+import {From} from 'lib'
+import {assert} from '../mod.ts'
+
+Deno.test('from', () => {
   const AstrConstructor: From<Cstr, Astr> = {
     from(val: Cstr): Astr {
       return new Astr(Number(val.str))
@@ -9,6 +9,9 @@
   }
   class Astr {
     constructor(public str: number) {}
+    to(): string | Cstr {
+      throw new Error('Method not implemented.')
+    }
   }
 
   const CstrConstructor: From<Astr, Cstr> = {
@@ -22,9 +25,4 @@
 
   assert(AstrConstructor.from(new Cstr('18', 18)) instanceof Astr)
   assert(CstrConstructor.from(new Astr(18)) instanceof Cstr)
-```
-@category Interface
- */
-export interface From<T, F> {
-  from(val: T): F
-}
+})

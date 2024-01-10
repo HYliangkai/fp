@@ -4,19 +4,7 @@ zod是一个Schema验证库,用于弥补Ts在运行时不具有类型检查的�
 */
 export * from 'https://deno.land/x/zod@v3.22.2/mod.ts'
 import * as z from 'https://deno.land/x/zod@v3.22.2/mod.ts'
-import {
-  Either,
-  Err,
-  Ok,
-  Option,
-  Result,
-  error_tag,
-  left_tag,
-  none_tag,
-  ok_tag,
-  right_tag,
-  some_tag,
-} from '../mod.ts'
+import {Either, error_tag, left_tag, none_tag, ok_tag, right_tag, some_tag} from '../mod.ts'
 
 export const option = <S extends z.Schema>(
   value: S
