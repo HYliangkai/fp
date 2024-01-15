@@ -1,4 +1,4 @@
-import {Err, Ok, Some, None, Debug, Copy} from '../../mod.ts'
+import {Err, Ok, Some, None, Debug, Copy, panic} from '../../mod.ts'
 
 type CallBack<T, R = void> = (value: T, index: number) => R
 
@@ -31,8 +31,9 @@ export class Vector<T> implements Debug, Copy {
     return isNaN(i) ? Err('NaN') : Ok(i)
   }
 
-  /** ### `consume` take : 将数据转化成array并获取rang二哥 */
+  /** ### `consume` take : 将数据转化成array并获取rang范围内数据 */
   take(range = Infinity) {
+    isNaN(range) && panic('Error', 'range is NaN')
     return take(this.generator, range) as T[]
   }
 

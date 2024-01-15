@@ -6,7 +6,7 @@ Rxjs是一个响应式编程库,用于处理异步数据流,能实现全链路�
   1. 需要处理复杂的数据流场景
   2. 惰性求值
   
-@category ThirdLib
+@category ext
 */
 
 import rjx from 'npm:rxjs'
