@@ -40,7 +40,7 @@ result(async () => {
       shims: {
         deno: true,
       },
-      packageManager: 'npm',
+      packageManager: 'pnpm',
       package: {
         author: 'https://github.com/HYliangkai',
         name: '@chzky/fp-tools',
