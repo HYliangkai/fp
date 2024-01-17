@@ -1,4 +1,5 @@
-import {Condition, Def, JudeCondition} from './mod.ts'
+import {Condition, JudeCondition} from '../../mod.ts'
+import {Def} from './mod.ts'
 
 /**
 ## match : 简单的模式匹配

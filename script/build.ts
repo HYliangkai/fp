@@ -34,12 +34,13 @@ result(async () => {
   await Deno.writeTextFile(relative_to_absolute('../deno.jsonc'), JSON.stringify(jsonc))
   result(async () => {
     await build({
+      test: false,
       entryPoints: [relative_to_absolute('../mod.ts')],
       outDir: relative_to_absolute('../dist'),
       shims: {
         deno: true,
       },
-      packageManager: 'pnpm',
+      packageManager: 'npm',
       package: {
         author: 'https://github.com/HYliangkai',
         name: '@chzky/fp-tools',

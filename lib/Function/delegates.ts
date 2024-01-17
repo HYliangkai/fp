@@ -22,7 +22,7 @@
 ```
 @category Function
 */
-export const delegates = (() => {
+const delegates = (() => {
   const global_delegates: Function[] = []
 
   Function.prototype.valueOf = function () {

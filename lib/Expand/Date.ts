@@ -1,5 +1,5 @@
 import {AnyErr} from '../../mod.ts'
-import {AnyResult, Ok, dayjs} from '../mod.ts'
+import {Ok, dayjs} from '../mod.ts'
 
 type timestamp = number
 
