@@ -1,4 +1,5 @@
-import {Condition, Def, JudeCondition} from './mod.ts'
+import {Condition} from '../../mod.ts'
+import {Def} from './mod.ts'
 /** pattern : 科里化的match函数
 @example
 ```ts
@@ -93,10 +94,7 @@ export function pattern(...args: ([Condition<any>, unknown] | [typeof Def, unkno
       const [condition, result] = args[index]
       if (condition === pattern_value) {
         return result
-      } else if (
-        typeof condition === 'function' &&
-        (condition as JudeCondition<any>)(pattern_value)
-      ) {
+      } else if (typeof condition === 'function' && (condition as Condition<any>)(pattern_value)) {
         return result
       } else if (
         typeof pattern_value['eq'] === 'function' &&
