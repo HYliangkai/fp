@@ -1,1 +1,15 @@
-{"version":"0.3.52","tasks":{"dev":"deno run -A --unstable main.ts","watch":"deno run -A --unstable --watch main.ts","test":"deno test  test/* test/*/* -A --unstable ","coverage":"deno task test --coverage && deno coverage --html ","build":"deno run -A ./script/build.ts"},"fmt":{"options":{"semiColons":false,"singleQuote":true,"indentWidth":2}},"compilerOptions":{},"lint":{"files":{"include":["src/"]}},"imports":{"@/":"./src/","@std/":"https://deno.land/std@0.206.0/","lib":"./lib/mod.ts"}}
+{
+  "version": "0.3.55",
+  "tasks": {
+    "dev": "deno run -A --unstable main.ts",
+    "watch": "deno run -A --unstable --watch main.ts",
+    "test": "deno test  test/* test/*/* -A --unstable ",
+    "coverage": "deno task test --coverage && deno coverage --html ",
+    "build": "deno run -A ./script/build.ts",
+    "build:FFI": "deno_bindgen   -o binding "
+  },
+  "fmt": {"options": {"semiColons": false, "singleQuote": true, "indentWidth": 2}},
+  "compilerOptions": {},
+  "lint": {"files": {"include": ["src/"]}},
+  "imports": {"@/": "./src/", "@std/": "https://deno.land/std@0.206.0/", "lib": "./lib/mod.ts"}
+}
