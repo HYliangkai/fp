@@ -129,11 +129,13 @@ class ok<T = void> implements Ok<T> {
     return Left(this.value)
   }
 }
+
 /** 定义为正确的 */
 export function Ok<T = void>(value?: T): Result<T, never> {
   arguments.length === 0 ? ((value as any) = empty_tag) : null
   return new ok(value!)
 }
+
 class err<E> implements Err<E> {
   value: E
   _tag: typeof error_tag
@@ -207,14 +209,17 @@ class err<E> implements Err<E> {
     return Right(this.value)
   }
 }
-/** 定义为错误的 */
+
+/** ## Err : 定义一个E类型的错误 */
 export function Err<E>(value: E): Result<never, E> {
   return new err(value)
 }
 
-/**  返回AnyError类型的错误 */
+/** ## AnyErr : 定义一个AnyError类型的错误 */
 export const AnyErr = (type: ErrorLevel, cause?: string, name?: string) =>
   Err(AnyError.new(type, cause, name))
+
+/** @Helper_Function  */
 
 export class BackTrack<T> {
   public return_val: T
@@ -222,14 +227,17 @@ export class BackTrack<T> {
     this.return_val = val
   }
 }
-/** 解决result()中嵌套过深无法返回的问题 */
+
+/** 解决result()中嵌套过深无法返回的问题,可以作为result()函数中的return使用 */
 export function backtrack<T>(val: T) {
   throw new BackTrack(val)
 }
 
-/** 将一个可能throw的 语句/代码/函数 转化为Result<T, E>类型数据
-    `注意:`只能处理同步代码的情况
-*/
+/** ## result : 将一个可能throw的 `同步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型数据
+  @example
+  //Todo
+  @category TypeClass 
+ */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   try {
     const res = fn()
@@ -239,7 +247,25 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   }
 }
 
-/** ## anyresult :  MayBe Throw Function --> AnyResult<T>*/
+/** ## result : 将一个可能throw的 `异步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型数据
+  @example
+  //Todo
+  @category TypeClass
+*/
+export async function async_result<T, E = unknown>(fn: () => Promise<T>): AsyncResult<T, E> {
+  try {
+    const res = await fn()
+    return Ok(res)
+  } catch (err: any) {
+    return err instanceof BackTrack ? Ok(err.return_val) : Err(err)
+  }
+}
+
+/** ## anyresult :  MayBe Throw Function --> AnyResult<T>
+  @example
+  //Todo
+  @category TypeClass
+*/
 export function anyresult<T>(fn: () => T): AnyResult<T> {
   try {
     return Ok(fn())
@@ -250,7 +276,11 @@ export function anyresult<T>(fn: () => T): AnyResult<T> {
   }
 }
 
-/**  运行时判断是否Result类型 */
+/** ## is_result : 运行时判断是否Result类型 
+  @example
+  //Todo
+  @category TypeClass
+*/
 export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {
   return val._tag === ok_tag || val._tag === error_tag
 }

@@ -1,7 +1,7 @@
 import {Ok, Err, Fn} from '../../mod.ts'
 import {ZodError, ZodSchema} from '../Ext/zod.ts'
 
-/** ## shape_checking :进行运行时的类型检查/校验
+/** ## shape_checking : 进行运行时的类型检查/校验
   @example
   ```ts
   const res = shape_checking({a: 1}, zod.object({a: zod.number()}))
@@ -40,6 +40,5 @@ export function shape_checking<T, V extends ZodSchema | Fn<T, boolean>>(
       return Err(e)
     }
   }
-
   return Ok(target)
 }
