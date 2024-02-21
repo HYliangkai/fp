@@ -57,6 +57,7 @@ interface Ok<T> {
   match_err<V>(fn: (val: V) => void): void
   /** Ok -> Left / Err -> Righr */
   to_either: <E>() => Either<T, E>
+
 }
 
 interface Err<E> {

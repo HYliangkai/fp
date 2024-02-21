@@ -27,6 +27,8 @@ interface either<L, R> {
   exchange: () => Either<R, L>
   /** ### merge data */
   merge: () => L | R
+  /*** ### side effect handle */
+  tap: (handle: (val: L | R) => any) => Either<L, R>
 }
 
 interface Left<T> extends either<T, never> {
@@ -91,6 +93,10 @@ export const Left = <L, R = never>(value: L): Either<L, R> => {
     to_result: () => Ok(value),
     exchange: () => Right(value),
     merge: () => value,
+    tap: handle => {
+      handle(value)
+      return Left(value)
+    },
   }
 }
 
@@ -113,5 +119,10 @@ export const Right = <R, L = never>(value: R): Either<L, R> => {
     to_result: () => Err(value),
     exchange: () => Left(value),
     merge: () => value,
+    //Todo : test
+    tap: handle => {
+      handle(value)
+      return Right(value)
+    },
   }
 }
