@@ -6,7 +6,9 @@ type ITR<T = any> = Iterator<T>
 
 type ITB<T = any> = Iterable<T>
 
-/** ## Vector :  一个惰性求值的迭代器封装 , 操作具有迭代器的一次性性质 */
+/** ## Vector :  一个惰性求值的迭代器封装 , 操作具有迭代器的一次性性质
+  @deprecated [tc39最新提案中已经有了类似的功能](https://github.com/tc39/proposal-iterator-helpers)
+*/
 export class Vector<T> implements Debug, Copy {
   private generator: ITR<unknown>
   constructor(iter: ITB<T> | ITR<T>, itable = true) {
