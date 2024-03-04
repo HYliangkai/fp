@@ -1,4 +1,4 @@
-import * as colors from 'jsr:@std/fmt/colors'
+import * as colors from 'jsr:@std/fmt@^0.218.2/colors'
 import {AsyncResult, Debug, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 
