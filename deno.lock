@@ -2,9 +2,17 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "jsr:@std/fmt": "jsr:@std/fmt@0.218.2",
       "npm:dayjs": "npm:dayjs@1.11.9",
+      "npm:dayjs@1.11.9": "npm:dayjs@1.11.9",
       "npm:immer": "npm:immer@10.0.3",
-      "npm:rxjs": "npm:rxjs@7.8.1"
+      "npm:rxjs": "npm:rxjs@7.8.1",
+      "npm:zod@3.22.2": "npm:zod@3.22.2"
+    },
+    "jsr": {
+      "@std/fmt@0.218.2": {
+        "integrity": "99526449d2505aa758b6cbef81e7dd471d8b28ec0dcb1491d122b284c548788a"
+      }
     },
     "npm": {
       "@babel/runtime@7.23.2": {

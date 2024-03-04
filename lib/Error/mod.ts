@@ -1,9 +1,8 @@
-import * as colors from 'https://deno.land/std@0.207.0/fmt/colors.ts'
-import {Debug, Def, match} from '../../mod.ts'
+import * as colors from 'jsr:@std/fmt/colors'
+import {AsyncResult, Debug, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 
-declare global {
-  /** ## ErrorLevel : 错误级别
+/** ## ErrorLevel : 错误级别
   + Panic：最高级别，表示系统不可恢复的错误。
   + Fatal：次高级别，表示系统将在不久的将来停止运行。
   + Error：错误级别，表示发生了错误但不会导致系统停止运行。
@@ -12,16 +11,15 @@ declare global {
   + Debug：调试级别，表示用于调试的信息。
   @category TypeClass 
   */
-  type ErrorLevel = 'Debug' | 'Info' | 'Warn' | 'Error' | 'Fatal' | 'Panic'
+export type ErrorLevel = 'Debug' | 'Info' | 'Warn' | 'Error' | 'Fatal' | 'Panic'
 
-  /** ## AnyResult : 错误类型为 {@link AnyError} 的 {@link Result } 
+/** ## AnyResult : 错误类型为 {@link AnyError} 的 {@link Result } 
   @category TypeClass */
-  type AnyResult<T, E extends ErrorLevel = ErrorLevel> = Result<T, AnyError<E>>
+export type AnyResult<T, E extends ErrorLevel = ErrorLevel> = Result<T, AnyError<E>>
 
-  /** ## AsyncAnyResult : 对 {@link AnyResult} 的异步封装 
+/** ## AsyncAnyResult : 对 {@link AnyResult} 的异步封装 
   @category TypeClass */
-  type AsyncAnyResult<T, E extends ErrorLevel = ErrorLevel> = AsyncResult<T, AnyError<E>>
-}
+export type AsyncAnyResult<T, E extends ErrorLevel = ErrorLevel> = AsyncResult<T, AnyError<E>>
 
 /** ## panic : 抛出一个AnyError类型的异常
 @example

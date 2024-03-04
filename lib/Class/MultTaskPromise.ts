@@ -1,6 +1,18 @@
-import {AnyErr, Ok} from '../../mod.ts'
+import {AnyErr, AnyResult, Ok} from '../../mod.ts'
 /** ## MultTaskPromise : 多任务Promise池 
   `任务模型`: 用于运行多个Promise任务,并限制并数量,当有任务完成时,会自动运行下一个任务
+  @example
+  ```ts
+  const mtp = new MultTaskPromise(2)
+  const task = (time: number) => new Promise((res) => setTimeout(res, time))
+  mtp.add(() => task(1000))//1
+  mtp.add(() => task(2000))//2
+  mtp.add(() => task(3000))//1
+  mtp.add(() => task(4000))//2
+  mtp.add(() => task(5000))//1
+
+  ```
+  @category Class
 */
 export class MultTaskPromise {
   private task_count: number
@@ -24,7 +36,7 @@ export class MultTaskPromise {
   }
 
   /** ### add : 添加Promise任务进入 */
-  public add(task: () => Promise<any>) {
+  public add(task: () => Promise<any>): Promise<unknown> {
     return new Promise((res, rej) => {
       this.task_pool.push({res, task, rej})
       this.run()

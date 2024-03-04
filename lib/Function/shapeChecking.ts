@@ -1,4 +1,4 @@
-import {Ok, Err, Fn} from '../../mod.ts'
+import {Ok, Err, Fn, Result} from '../../mod.ts'
 import {ZodError, ZodSchema} from '../Ext/zod.ts'
 
 /** ## shape_checking : 进行运行时的类型检查/校验

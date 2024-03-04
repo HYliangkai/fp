@@ -1,5 +1,7 @@
 {
-  "version": "0.3.55",
+  "name": "@chzky/fp",
+  "version": "0.5.0",
+  "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
     "watch": "deno run -A --unstable --watch main.ts",
@@ -8,8 +10,12 @@
     "build": "deno run -A ./script/build.ts",
     "build:FFI": "deno_bindgen   -o binding "
   },
-  "fmt": {"options": {"semiColons": false, "singleQuote": true, "indentWidth": 2}},
+  "fmt": {"semiColons": false, "singleQuote": true, "indentWidth": 2},
   "compilerOptions": {},
   "lint": {"files": {"include": ["src/"]}},
-  "imports": {"@/": "./src/", "@std/": "https://deno.land/std@0.206.0/", "lib": "./lib/mod.ts"}
+  "imports": {
+    "@/": "./src/",
+    "@std/": "https://deno.land/std@0.206.0/",
+    "lib": "./lib/mod.ts"
+  }
 }

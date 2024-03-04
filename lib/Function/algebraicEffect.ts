@@ -1,4 +1,4 @@
-import {Err, is_result, Ok} from '../../mod.ts'
+import {Err, is_result, Ok, Result} from '../../mod.ts'
 
 const weak_states: WeakMap<Function, 'pending' | 'fulfulled' | 'error'> = new WeakMap()
 const weak_datas: WeakMap<Function, any> = new WeakMap()

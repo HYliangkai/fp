@@ -1,28 +1,26 @@
-import {panic, anyresult} from '../mod.ts'
+import {panic, anyresult, ErrorLevel, AnyResult} from '../mod.ts'
 
 export const some_tag = Symbol('some')
 export const none_tag = Symbol('none')
 
-declare global {
-  /** ## Option : 一个可能为{@link None}或{@link Some}的数据类型 
+/** ## Option : 一个可能为{@link None}或{@link Some}的数据类型 
   @category TypeClass */
-  type Option<T> = Some<NonNullable<T>> | None
+export type Option<T> = Some<NonNullable<T>> | None
 
-  /** ## AsyncOption : 对 {@link Option}的异步封装 
+/** ## AsyncOption : 对 {@link Option}的异步封装 
   @category TypeClass */
-  type AsyncOption<T> = Promise<Option<T>>
+export type AsyncOption<T> = Promise<Option<T>>
 
-  /** ## DeepOption : 针对object类型,对于可能存在None类型的数据将其转化为{@link Option}类型 
+/** ## DeepOption : 针对object类型,对于可能存在None类型的数据将其转化为{@link Option}类型 
   @category TypeClass */
-  type DeepOption<T extends object> = {
-    [K in keyof T]-?: T[K] extends Option<any> | Function
-      ? T[K]
-      : T[K] extends object
-      ? DeepOption<T[K]>
-      : T[K] extends number | string | boolean | symbol | bigint
-      ? T[K]
-      : Option<NonNullable<T[K]>>
-  }
+export type DeepOption<T extends object> = {
+  [K in keyof T]-?: T[K] extends Option<any> | Function
+    ? T[K]
+    : T[K] extends object
+    ? DeepOption<T[K]>
+    : T[K] extends number | string | boolean | symbol | bigint
+    ? T[K]
+    : Option<NonNullable<T[K]>>
 }
 
 export interface opt<T> {
