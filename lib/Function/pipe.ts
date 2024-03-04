@@ -1,15 +1,15 @@
 type Fn<A, B> = (a: A) => B
 /** ## pipe : 函数嵌套参数化运行
-@example
-```ts
-console.log(pipe(
-  1,//1
-  (x: number) => x + 1,//2
-  (x: number) => x * 2,//4
-  (x: number) => x + 1,//5
-)) // 5
-```
-@category Function
+  @example
+  ```ts
+  console.log(pipe(
+    1,//1
+    (x: number) => x + 1,//2
+    (x: number) => x * 2,//4
+    (x: number) => x + 1,//5
+  )) // 5
+  ```
+  @category Function
 */
 
 export function pipe<A>(a: A): A

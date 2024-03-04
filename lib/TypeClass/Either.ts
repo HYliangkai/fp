@@ -119,7 +119,6 @@ export const Right = <R, L = never>(value: R): Either<L, R> => {
     to_result: () => Err(value),
     exchange: () => Left(value),
     merge: () => value,
-    //Todo : test
     tap: handle => {
       handle(value)
       return Right(value)

@@ -145,7 +145,12 @@ export const None: None = {
   + null | underfind ->`None` 
   + other ->`Some<other>`
   @example
-  //Todo
+  ```ts
+  const a = option(1)
+  assertEquals(a.is_some, true)
+  const b = option(null)
+  assertEquals(b.is_none, true)
+  ```
   @category TypeClass
 */
 export function option<T>(value: T): Option<T> {
@@ -155,7 +160,12 @@ export function option<T>(value: T): Option<T> {
 /** ## deep_option : 将任意类型转化为Option类型(深遍历)
   + {A : null|string|underfind , B : string } -> `{Some<{A : string}> , B:string}`
   @example
-  //Todo
+  ```ts
+  const a = deep_option({a:1,b:2})
+  assertEquals(a.is_some, true)
+  const b = deep_option({a:null,b:2})
+  assertEquals(b.is_none, true)
+  ```
   @category TypeClass
 */
 function deep_option<T>(value: T) {

@@ -213,7 +213,16 @@ export function Err<E>(value: E): Result<never, E> {
   return new err(value)
 }
 
-/** ## AnyErr : 定义一个AnyError类型的错误 */
+/** ## ## AnyErr : 定义一个AnyError类型的错误 
+  @example
+  ```ts
+  const err = AnyErr('Error','test error')
+  assert(err.type === 'Error')//Pass
+  assert(err.cause === 'test error')//Pass
+  assert(err.name === 'AnyError')//Pass
+  ```
+  @category TypeClass
+*/
 export const AnyErr = <T extends ErrorLevel>(
   type: T,
   cause?: string,
@@ -236,7 +245,18 @@ export function backtrack<T>(val: T) {
 
 /** ## result : 将一个可能throw的 `同步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型数据
   @example
-  //Todo
+  ```ts
+  const res = result(() => {
+    if (Math.random() > 0.5) {
+      return 1
+    } else {
+      throw new Error('test error')
+    }
+  })
+  res.match_ok(val => {
+    console.log(val) // 1
+  })
+  ```
   @category TypeClass 
  */
 export function result<T, E = unknown>(fn: () => T): Result<T, E> {
@@ -250,7 +270,18 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
 
 /** ## result : 将一个可能throw的 `异步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型数据
   @example
-  //Todo
+  ```ts
+  const res = result(() => {
+    if (Math.random() > 0.5) {
+      return 1
+    } else {
+      throw new Error('test error')
+    }
+  })
+  res.match_ok(val => {
+    console.log(val) // 1
+  })
+  ```
   @category TypeClass
 */
 export async function async_result<T, E = unknown>(fn: () => Promise<T>): AsyncResult<T, E> {
@@ -264,7 +295,18 @@ export async function async_result<T, E = unknown>(fn: () => Promise<T>): AsyncR
 
 /** ## anyresult :  MayBe Throw Function --> AnyResult<T>
   @example
-  //Todo
+  ```ts
+  const res = anyresult(() => {
+    if (Math.random() > 0.5) {
+      return 1
+    } else {
+      throw new Error('test error')
+    }
+  })
+  res.match_ok(val => {
+    console.log(val) // 1
+  })
+  ```
   @category TypeClass
 */
 export function anyresult<T>(fn: () => T): AnyResult<T> {
@@ -279,7 +321,16 @@ export function anyresult<T>(fn: () => T): AnyResult<T> {
 
 /** ## is_result : 运行时判断是否Result类型 
   @example
-  //Todo
+  ```ts
+  const res = result(() => {
+    if (Math.random() > 0.5) {
+      return 1
+    } else {
+      throw new Error('test error')
+    }
+  })
+  console.log(is_result(res)) // true
+  ```
   @category TypeClass
 */
 export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {

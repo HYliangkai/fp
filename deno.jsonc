@@ -11,17 +11,22 @@
     "publish": "deno publish",
     "build:FFI": "deno_bindgen -o binding "
   },
-  "fmt": {"semiColons": false, "singleQuote": true, "indentWidth": 2, "exclude": ["dist/"]},
+  "fmt": {
+    "semiColons": false,
+    "singleQuote": true,
+    "indentWidth": 2,
+    "exclude": ["dist/"]
+  },
   "lint": {"files": {"include": ["src/"]}},
   "exclude": ["dist/", "node_modules/"],
   "compilerOptions": {},
   "imports": {
     "@/": "./src/",
     "@std/": "https://deno.land/std@0.206.0/",
-    "lib": "./lib/mod.ts",
-    "zod": "npm:zod@3.22.2",
-    "rxjs": "npm:rxjs@7.8.1",
+    "colors": "jsr:@std/fmt@^0.218.2/colors",
     "dayjs": "npm:dayjs@1.11.9",
-    "colors": "jsr:@std/fmt@^0.218.2/colors"
+    "lib": "./lib/mod.ts",
+    "rxjs": "npm:rxjs@7.8.1",
+    "zod": "npm:zod@3.22.2"
   }
 }
