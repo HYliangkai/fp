@@ -1,6 +1,13 @@
-import * as colors from 'jsr:@std/fmt@^0.218.2/colors'
+import * as colors from 'colors'
 import {AsyncResult, Debug, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
+
+type ErrorInfo = {
+  type: ErrorLevel
+  name: string
+  cause: string
+  strack: string
+}
 
 /** ## ErrorLevel : 错误级别
   + Panic：最高级别，表示系统不可恢复的错误。
@@ -73,11 +80,11 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug {
     type?: T /** @Default - Error */,
     cause?: string,
     name?: string /** @Default - AnyError */
-  ) {
+  ): AnyError<ErrorLevel> {
     return new AnyError<ErrorLevel>(type, cause, name)
   }
 
-  value() {
+  value(): ErrorInfo {
     return {type: this.type, name: this.name, cause: this.cause, strack: this.strack}
   }
 
@@ -103,12 +110,12 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug {
   }
 
   /** call stack trace */
-  strack_trace() {
+  strack_trace(): string {
     return this.strack
   }
 
   /** throw value */
-  throw() {
+  throw(): never {
     throw this.value()
   }
 }

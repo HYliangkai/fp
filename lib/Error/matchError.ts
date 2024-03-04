@@ -1,7 +1,33 @@
 import {AnyError, ErrorLevel} from './mod.ts'
 
 /**   error match  */
-export function match_error(error: any) {
+export const match_error = (
+  error: any
+): {
+  handle: (is: (error: AnyError<ErrorLevel>) => any, other: (error: any) => any) => any
+  handle_throw: <T>(is: (error: AnyError<ErrorLevel>) => T) => any
+  debug: (is: (error: AnyError<'Debug'>) => any, other: (error: any) => any) => any
+  debug_throw: (is: (error: AnyError<'Debug'>) => unknown) => any
+  info: (is: (error: AnyError<'Info'>) => any, other: (error: any) => any) => any
+  info_throw: (is: (error: AnyError<'Info'>) => unknown) => any
+  warn: (is: (error: AnyError<'Warn'>) => any, other: (error: any) => any) => any
+  warn_throw: (is: (error: AnyError<'Warn'>) => unknown) => any
+  error: (is: (error: AnyError<'Error'>) => any, other: (error: any) => any) => any
+  error_throw: (is: (error: AnyError<'Error'>) => unknown) => any
+  fatal: (is: (error: AnyError<'Fatal'>) => any, other: (error: any) => any) => any
+  fatal_throw: (is: (error: AnyError<'Fatal'>) => unknown) => any
+  panic: (is: (error: AnyError<'Panic'>) => any, other: (error: any) => any) => any
+  panic_throw: (is: (error: AnyError<'Panic'>) => unknown) => any
+  loginfo: (is: (error: AnyError<'Info' | 'Debug'>) => any, other: (error: any) => any) => any
+  logininfo_throw: (is: (error: AnyError<'Info' | 'Debug'>) => unknown) => any
+  recoverable: (is: (error: AnyError<'Error'>) => any, other: (error: any) => any) => any
+  recoverable_throw: (is: (error: AnyError<'Error'>) => unknown) => any
+  unrecoverable: (
+    is: (error: AnyError<'Panic' | 'Fatal'>) => any,
+    other: (error: any) => any
+  ) => any
+  unrecoverable_throw: (is: (error: AnyError<'Panic' | 'Fatal'>) => unknown) => any
+} => {
   return {
     /** match any error */
     handle(is: (error: AnyError<ErrorLevel>) => any, other: (error: any) => any) {

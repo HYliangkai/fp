@@ -1,7 +1,7 @@
 /** Build deno package to npm package */
 
 import {build, emptyDir} from 'https://deno.land/x/dnt@0.38.1/mod.ts'
-import {Err, Ok, option, result} from '../mod.ts'
+import {Err, Ok, Option, Result, option, result} from '../mod.ts'
 import {join} from 'https://deno.land/std@0.204.0/path/mod.ts'
 type Path = {__dirname: Option<string>; __filename: Option<string>}
 const path = (): Result<Path, string> => {
@@ -43,7 +43,7 @@ result(async () => {
       packageManager: 'pnpm',
       package: {
         author: 'https://github.com/HYliangkai',
-        name: '@chzky/fp-tools',
+        name: '@chzky/fp',
         version: res,
         main: './esm/mod.js',
         access: 'public',

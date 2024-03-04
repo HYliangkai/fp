@@ -214,8 +214,11 @@ export function Err<E>(value: E): Result<never, E> {
 }
 
 /** ## AnyErr : 定义一个AnyError类型的错误 */
-export const AnyErr = (type: ErrorLevel, cause?: string, name?: string) =>
-  Err(AnyError.new(type, cause, name))
+export const AnyErr = <T extends ErrorLevel>(
+  type: T,
+  cause?: string,
+  name?: string
+): Result<never, AnyError<T>> => Err(AnyError.new(type, cause, name))
 
 /** @Helper_Function  */
 

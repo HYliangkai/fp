@@ -1,5 +1,5 @@
 /** 函数缓存,源至[tc39的提案](https://github.com/tc39/proposal-function-memo) */
-export const memo = (func: Function) => {
+export const memo = <T>(func: (...args: any[]) => T): ((...args: any[]) => T) => {
   if (typeof func !== 'function') {
     throw new TypeError('Expected a function')
   }

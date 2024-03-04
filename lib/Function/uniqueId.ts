@@ -9,7 +9,7 @@ assert(id1=='')
 ```
 @category Function
 */
-export const unique_id = (prefix = '$chzky$') => {
+export const unique_id = (prefix = '$chzky$'): string => {
   if (!id_counter[prefix]) id_counter[prefix] = 0
   const id = ++id_counter[prefix]
   return prefix === '$chzky$' ? `${id}` : `${prefix}${id}`

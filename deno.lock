@@ -3,10 +3,12 @@
   "packages": {
     "specifiers": {
       "jsr:@std/fmt": "jsr:@std/fmt@0.218.2",
+      "jsr:@std/fmt@^0.218.2": "jsr:@std/fmt@0.218.2",
       "npm:dayjs": "npm:dayjs@1.11.9",
       "npm:dayjs@1.11.9": "npm:dayjs@1.11.9",
       "npm:immer": "npm:immer@10.0.3",
       "npm:rxjs": "npm:rxjs@7.8.1",
+      "npm:rxjs@7.8.1": "npm:rxjs@7.8.1",
       "npm:zod@3.22.2": "npm:zod@3.22.2"
     },
     "jsr": {
@@ -344,5 +346,12 @@
     "https://deno.land/x/zod@v3.22.2/locales/en.ts": "a7a25cd23563ccb5e0eed214d9b31846305ddbcdb9c5c8f508b108943366ab4c",
     "https://deno.land/x/zod@v3.22.2/mod.ts": "64e55237cb4410e17d968cd08975566059f27638ebb0b86048031b987ba251c4",
     "https://deno.land/x/zod@v3.22.2/types.ts": "18cbe3d895f42977c43fa9411da214b06d0d682cf2f4c9dd26cc8c3737740d40"
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@std/fmt@^0.218.2",
+      "npm:rxjs@7.8.1",
+      "npm:zod@3.22.2"
+    ]
   }
 }

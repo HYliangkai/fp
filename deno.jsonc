@@ -1,21 +1,27 @@
 {
   "name": "@chzky/fp",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
     "watch": "deno run -A --unstable --watch main.ts",
     "test": "deno test  test/* test/*/* -A --unstable ",
     "coverage": "deno task test --coverage && deno coverage --html ",
-    "build": "deno run -A ./script/build.ts",
-    "build:FFI": "deno_bindgen   -o binding "
+    "build": "deno run -A ./script/esbuild.ts",
+    "publish": "deno publish",
+    "build:FFI": "deno_bindgen -o binding "
   },
-  "fmt": {"semiColons": false, "singleQuote": true, "indentWidth": 2},
-  "compilerOptions": {},
+  "fmt": {"semiColons": false, "singleQuote": true, "indentWidth": 2, "exclude": ["dist/"]},
   "lint": {"files": {"include": ["src/"]}},
+  "exclude": ["dist/", "node_modules/"],
+  "compilerOptions": {},
   "imports": {
     "@/": "./src/",
     "@std/": "https://deno.land/std@0.206.0/",
-    "lib": "./lib/mod.ts"
+    "lib": "./lib/mod.ts",
+    "zod": "npm:zod@3.22.2",
+    "rxjs": "npm:rxjs@7.8.1",
+    "dayjs": "npm:dayjs@1.11.9",
+    "colors": "jsr:@std/fmt@^0.218.2/colors"
   }
 }

@@ -1,4 +1,4 @@
-name: jsr-publish
+name: JSR Publish
 
 # 触发条件
 on:

@@ -8,7 +8,7 @@ sleep(1000).then(() => {
 @category Function
 */
 
-export const sleep = (time = 1000, random = false) =>
+export const sleep = (time = 1000, random = false): Promise<void> =>
   new Promise(resolve => {
     setTimeout(resolve, random ? Math.floor(Math.random() * time) : time)
   })
