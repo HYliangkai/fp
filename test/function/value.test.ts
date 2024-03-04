@@ -1,4 +1,4 @@
-import {None, value} from 'lib'
+import {None, Option, value} from 'lib'
 import {assertEquals, assertThrows} from '../mod.ts'
 
 Deno.test('value', () => {

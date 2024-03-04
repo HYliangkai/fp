@@ -3,5 +3,5 @@
 immer是一个不可变数据库,能够将数据隔离,避免数据被修改,同时能够提高性能
 @category ext
  */
-import {produce} from 'npm:immer'
+import {produce} from 'npm:immer@10.0.3'
 export {produce}

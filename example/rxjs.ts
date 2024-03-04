@@ -1,4 +1,4 @@
-import rxj from 'npm:rxjs'
+import rxj from 'npm:rxjs@7.8.1'
 
 //一个独立的响应式库,主要聚焦于如何更好的封装 观察/订阅者 模式的数据
 
