@@ -1,20 +1,14 @@
 {
 	"deno.enable": true,
-	"deno.cache": "./cache/",
 	"deno.config": "./deno.jsonc",
 	"deno.unstable": true,
 	"deno.cacheOnSave": true,
 	"editor.formatOnSave": true,
 	"deno.lint": true,
-	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
+	"[typescript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+	"[javascript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"	},
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		"deno.jsonc": ".gitignore, .gitmodules,package-lock.json,package.json,pnpm-lock.yaml,deno.lock"
 	},
-	"liveServer.settings.port": 4399
 }
