@@ -12,7 +12,7 @@ export * from './uniqueId.ts' //唯一id
 export * from './lazyPipe.ts' //lazy版的pipe
 export * from './algebraicEffect.ts' //代数效应
 
-// export * from './delegates.ts' //事件代理 <danger>
-
-/** ##  Default : global default value */
+/** ##  Default : global default value 
+  @category Constant
+*/
 export const Def = Symbol('default')

@@ -4,7 +4,7 @@
 */
 export type FnReturn<T> = () => T
 
-/** ## FnOnce
+/** ## Fn<T,R>
   参数为单个的`T`,返回值为`R`的函数
   @category Gymnastics
  */
