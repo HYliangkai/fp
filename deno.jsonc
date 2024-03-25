@@ -9,7 +9,7 @@
     "coverage": "deno task test --coverage && deno coverage --html ",
     "build": "deno run -A ./script/esbuild.ts",
     "publish": "deno publish",
-    "build:FFI": "deno_bindgen -o binding "
+    "build:FFI": "deno_bindgen -o binding"
   },
   "fmt": {
     "semiColons": false,
