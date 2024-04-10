@@ -3,8 +3,8 @@
 zod是一个Schema验证库,用于弥补Ts在运行时不具有类型检查的缺陷,能实现全链路的类型安全
 @category ext
 */
-export * from 'zod'
-import * as z from 'zod'
+export * from 'npm:zod'
+import * as z from 'npm:zod'
 import {
   Either,
   Option,

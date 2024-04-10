@@ -1,4 +1,4 @@
-import * as colors from 'colors'
+import * as colors from 'https://deno.land/std@0.221.0/fmt/colors.ts'
 import {AsyncResult, Debug, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 
