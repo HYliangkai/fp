@@ -1,5 +1,5 @@
 const id_counter: any = {}
-/** ## unique_id : 获取唯一id值
+/** ## unique_id : 获取全局唯一id值
 @param prefix 前缀, 默认`$chzky$`
 @example 
 ```ts

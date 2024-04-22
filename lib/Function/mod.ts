@@ -11,6 +11,7 @@ export * from './shapeChecking.ts'
 export * from './uniqueId.ts' //唯一id
 export * from './lazyPipe.ts' //lazy版的pipe
 export * from './algebraicEffect.ts' //代数效应
+export * from './objectConverter.ts'
 
 /** ##  Default : global default value 
   @category Constant

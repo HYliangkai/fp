@@ -1,3 +1,5 @@
+import {Result} from '../../mod.ts'
+
 /** ## Serialize : 序列化
 @explain 正反序列化恒等性 : `Serialize<A, B> ==  `{@link DeSerialize}`<B, A>`
 @example
@@ -38,4 +40,20 @@ const can_serialize: DeSerialize<string, object> & Serialize<object, string> = {
 export interface DeSerialize<B, A> {
   deserialize(data: B): A
   serialize(data: A): B
+}
+
+/** ## MaybeSerialize : 可能会失败的序列化
+@catrgory Interface
+  */
+export interface MaybeSerialize<A, B, E> {
+  serialize(data: A): Result<B, E>
+  deserialize(data: B): Result<A, E>
+}
+
+/** ##MaybeSerialize : 可能会失败的反序列化
+@catrgory Interface
+  */
+export interface MaybeDeSerialize<B, A, E> {
+  deserialize(data: B): Result<A, E>
+  serialize(data: A): Result<B, E>
 }
