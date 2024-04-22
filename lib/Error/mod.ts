@@ -1,4 +1,3 @@
-import * as colors from 'https://deno.land/std@0.221.0/fmt/colors.ts'
 import {AsyncResult, Debug, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 
@@ -91,20 +90,11 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug {
   /** format log error */
   log() {
     console.log(
-      `------------------ ${colors.red('Error')} ------------------\n` +
-        `${colors.green('*')} type : ${match(
-          this.type,
-          ['Error', colors.red],
-          ['Warn', colors.yellow],
-          ['Info', colors.blue],
-          ['Debug', colors.green],
-          ['Fatal', colors.cyan],
-          ['Panic', colors.red],
-          [Def, (item: string) => item]
-        )(this.type)}\n` +
-        `${this.name ? `${colors.yellow('*')} name : ${colors.bgWhite(this.name)}\n` : ''}` +
-        `${this.cause ? `${colors.blue('*')} cause : ${this.cause}\n` : ''}` +
-        `${colors.red('*')} strack : ${this.strack}\n`
+      `------------------ ${'Error'} ------------------\n` +
+        `${'*'} type : ${match(this.type, [Def, (item: string) => item])(this.type)}\n` +
+        `${this.name ? `${'*'} name : ${this.name}\n` : ''}` +
+        `${this.cause ? `${'*'} cause : ${this.cause}\n` : ''}` +
+        `${'*'} strack : ${this.strack}\n`
     )
     debugger
   }

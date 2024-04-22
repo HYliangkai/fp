@@ -1,14 +1,14 @@
 {
-	"deno.enable": true,
-	"deno.config": "./deno.jsonc",
-	"deno.unstable": true,
-	"deno.cacheOnSave": true,
-	"editor.formatOnSave": true,
-	"deno.lint": true,
-	"[typescript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
-	"[javascript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"	},
-	"explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.patterns": {
-		"deno.jsonc": ".gitignore, .gitmodules,package-lock.json,package.json,pnpm-lock.yaml,deno.lock"
-	},
+  "deno.enable": true,
+  "deno.config": "./deno.json",
+  "deno.unstable": true,
+  "deno.cacheOnSave": true,
+  "editor.formatOnSave": true,
+  "deno.lint": true,
+  "[typescript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+  "[javascript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "deno.json": ".gitignore, .gitmodules,package-lock.json,package.json,pnpm-lock.yaml,deno.lock"
+  }
 }

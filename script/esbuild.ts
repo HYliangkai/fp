@@ -19,10 +19,11 @@ const {__dirname} = path().unwarp()
 const dirname = __dirname.unwarp()
 const relative_to_absolute = (relative: string) => join(dirname, relative)
 
+const OUTPUT_DIR = '../deno.json'
 await emptyDir(relative_to_absolute('../dist'))
 result(async () => {
   const jsonc = JSON.parse(
-    new TextDecoder('utf-8').decode(await Deno.readFile(relative_to_absolute('../deno.jsonc')))
+    new TextDecoder('utf-8').decode(await Deno.readFile(relative_to_absolute(OUTPUT_DIR)))
   )
   const version = jsonc.version
   const version_array = version.split('.')
@@ -31,7 +32,7 @@ result(async () => {
   const res = prefix.join('.')
   jsonc.version = res
 
-  await Deno.writeTextFile(relative_to_absolute('../deno.jsonc'), JSON.stringify(jsonc))
+  await Deno.writeTextFile(relative_to_absolute(OUTPUT_DIR), JSON.stringify(jsonc))
   result(async () => {
     await build({
       test: false,

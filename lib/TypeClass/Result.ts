@@ -1,5 +1,4 @@
 /** Result */
-
 import {AnyError, AnyResult, ErrorLevel, match_error} from '../../mod.ts'
 import {Either, Left, None, Option, Right, Some} from './mod.ts'
 
