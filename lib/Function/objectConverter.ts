@@ -1,8 +1,4 @@
-import {Err, MaybeSerialize, Ok, zod, type Result} from '../../mod.ts'
-
-type ZodInfer<T extends zod.ZodSchema> = zod.infer<T>
-type KOZodInfer<T extends zod.ZodSchema> = keyof zod.infer<T>
-
+import {Err, KOZodInfer, MaybeSerialize, Ok, ZodInfer, zod} from '../../mod.ts'
 /** ## object_converter : 提供一个object的key名快速转换操作
 @example
 ```ts

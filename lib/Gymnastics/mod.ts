@@ -1,3 +1,5 @@
+import {zod} from '../../mod.ts'
+
 export * from './func.ts'
 
 /** ## ValueOrFunc<T> : 可能是T也可能是返回值为T的函数
@@ -30,3 +32,8 @@ export type JudeCondition<T> = (val: T) => boolean
 @category Gymnastics
 */
 export type Condition<T> = T | JudeCondition<T>
+
+/** Faster zod.infer<> */
+export type ZodInfer<T extends zod.ZodSchema> = zod.infer<T>
+/** Faster keyof zod.infer<> */
+export type KOZodInfer<T extends zod.ZodSchema> = keyof zod.infer<T>
