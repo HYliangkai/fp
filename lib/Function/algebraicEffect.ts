@@ -26,13 +26,13 @@ const func1 = async () => {//mock async incident
   return pro1
 }
 
-async function func1(){
+async function func2(){
   const pro2: string = await new Promise(res =>
     setTimeout(() => {res('No') }, 2000)  )
   return pro2
 }
 
-const running=()=>{
+const running =()=> {
   const A=wait(func1)
   console.log(A.unwarp()) // 'Yes'
   const B=wait(func2)

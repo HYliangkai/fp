@@ -2,12 +2,13 @@ type Fn<A, B> = (a: A) => B
 /** ## lzpipe : Run the functions nested in parallel,but lazy run 
 @example
 ```ts
-console.log(lzpipe(
+const run = lzpipe(
   1,//1
   (x: number) => x + 1,//2
   (x: number) => x * 2,//4
   (x: number) => x + 1,//5
-)()) // 5
+)
+console.log(run()) // 5
 ```
 @category Function
  */

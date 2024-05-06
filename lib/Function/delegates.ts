@@ -1,4 +1,5 @@
 /** ## delegates : 使用运算符重载实现的事件委托
+@warn 实验性质,不予生产使用
 @example
 ```ts
   const ACall = delegates()

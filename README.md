@@ -4,13 +4,12 @@
 - 🚀 编程 FP 化
 
 ## Usage
-1. 使用[jsr](https://jsr.io/@chzky/fp)安装
++ 使用[jsr](https://jsr.io/@chzky/fp)安装
 
++ 使用[npm](https://www.npmjs.com/package/@chzky/fp)安装
 
 # Features
 
-## Option
-
-## Result
+[x] Option / Result / Either
 
 
