@@ -1,5 +1,6 @@
 import {zod} from '../../mod.ts'
 
+export * from './arr.ts'
 export * from './func.ts'
 
 /** ## ValueOrFunc<T> : 可能是T也可能是返回值为T的函数

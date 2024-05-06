@@ -1,4 +1,4 @@
-import {Err, Ok, Some, None, Debug, Copy, panic} from '../../mod.ts'
+import {Err, Ok, Some, None, Debug, Copy, panic, Result, Option} from '../../mod.ts'
 
 type CallBack<T, R = void> = (value: T, index: number) => R
 
@@ -8,6 +8,7 @@ type ITB<T = any> = Iterable<T>
 
 /** ## Vector :  一个惰性求值的迭代器封装 , 操作具有迭代器的一次性性质
   @deprecated [tc39最新提案中已经有了类似的功能](https://github.com/tc39/proposal-iterator-helpers)
+  @deprecated [目前已经有api了](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Iterator/@@iterator)
 */
 export class Vector<T> implements Debug, Copy {
   private generator: ITR<unknown>
