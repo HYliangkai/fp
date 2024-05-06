@@ -30,9 +30,8 @@ result(async () => {
   const prefix = version_array.slice(0, -1)
   prefix.push(String(Number(version_array.at(-1)) + 1))
   const res = prefix.join('.')
-  jsonc.version = res
-
-  await Deno.writeTextFile(relative_to_absolute(OUTPUT_DIR), JSON.stringify(jsonc))
+  // jsonc.version = res
+  // await Deno.writeTextFile(relative_to_absolute(OUTPUT_DIR), JSON.stringify(jsonc))
   result(async () => {
     await build({
       test: false,
@@ -45,7 +44,7 @@ result(async () => {
       package: {
         author: 'https://github.com/HYliangkai',
         name: '@chzky/fp',
-        version: res,
+        version,
         main: './esm/mod.js',
         access: 'public',
       },
