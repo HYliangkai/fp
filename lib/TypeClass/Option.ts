@@ -26,9 +26,9 @@ export type DeepOption<T extends object> = {
 export interface opt<T> {
   readonly _tag: typeof some_tag | typeof none_tag
   /** 是否为Some*/
-  is_some: boolean
+  readonly is_some: boolean
   /** 是否为None */
-  is_none: boolean
+  readonly is_none: boolean
   /**  获取值,如果为None就抛异 */
   unwarp(level?: ErrorLevel): T
   /** 抛异,如果为None就抛异,msg作为错误信息 */
@@ -69,8 +69,8 @@ class some<T> implements Some<T> {
     this.is_none = false
   }
   _tag: typeof some_tag
-  is_some: boolean
-  is_none: boolean
+  readonly is_some: boolean
+  readonly is_none: boolean
   unwarp(level?: ErrorLevel) {
     return this.value
   }
