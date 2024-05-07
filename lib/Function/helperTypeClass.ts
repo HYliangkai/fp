@@ -19,7 +19,7 @@ export const filter_option = (inp: Option<unknown>): boolean => inp.is_some
 ```ts
 const V = [Some(1),None,Some(2),None]
 const res = V.filter(filter_option).map(unwarp_option)
-assertEqual(res,[1,2])
+assertEquals(res,[1,2])
 ```
 @category Function
 */
@@ -31,7 +31,7 @@ export const unwarp_option = (inp: Option<unknown>) => inp.unwarp()
 ```ts
 const V = [Some(1),None,Some(2),None]
 const res = unwarp_option_array(V)
-assertEqual(res,[1,2])
+assertEquals(res,[1,2])
 ```
 @category Function
 */
