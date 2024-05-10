@@ -4,17 +4,17 @@ import {Def} from './mod.ts'
 /**
 ## match : 简单的模式匹配
 @example
-+ normal match
-```typescript
+```ts
+// 1. 简单的模式匹配
 const name='jiojio'
 const age=match(name,
 ['jiojio',18],
 [(name)=>name==='dio',19],
 [Def,20])
 assert(age===18)//true
-```
-+ match with implements the interface : PartialEq
-```typescript
+
+
+// 2. 实现了PartialEq可直接进行匹配
 class User implements PartialEq {
   constructor(public name: string, public age: number) {}
 

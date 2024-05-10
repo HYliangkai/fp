@@ -22,16 +22,6 @@ const relative_to_absolute = (relative: string) => join(dirname, relative)
 const OUTPUT_DIR = '../deno.json'
 await emptyDir(relative_to_absolute('../dist'))
 result(async () => {
-  const jsonc = JSON.parse(
-    new TextDecoder('utf-8').decode(await Deno.readFile(relative_to_absolute(OUTPUT_DIR)))
-  )
-  const version = jsonc.version
-  const version_array = version.split('.')
-  const prefix = version_array.slice(0, -1)
-  prefix.push(String(Number(version_array.at(-1)) + 1))
-  const res = prefix.join('.')
-  // jsonc.version = res
-  // await Deno.writeTextFile(relative_to_absolute(OUTPUT_DIR), JSON.stringify(jsonc))
   result(async () => {
     await build({
       test: false,
@@ -44,7 +34,9 @@ result(async () => {
       package: {
         author: 'https://github.com/HYliangkai',
         name: '@chzky/fp',
-        version,
+        version: JSON.parse(
+          new TextDecoder('utf-8').decode(await Deno.readFile(relative_to_absolute(OUTPUT_DIR)))
+        ).version,
         main: './esm/mod.js',
         access: 'public',
       },

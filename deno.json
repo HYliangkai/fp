@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.5.17",
+  "version": "0.6.0",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
@@ -8,12 +8,19 @@
     "test": "deno test  test/* test/*/* -A --unstable ",
     "coverage": "deno task test --coverage && deno coverage --html ",
     "build": "deno run -A ./script/esbuild.ts",
+    "update": "deno run -A ./script/updateVersion.ts",
     "publish": "deno publish",
     "npm:publish": "cd ./dist && npm publish",
     "build:FFI": "deno_bindgen -o binding"
   },
-  "fmt": {"semiColons": false, "singleQuote": true, "indentWidth": 2, "exclude": ["dist/"]},
+  "fmt": {
+    "semiColons": false,
+    "singleQuote": true,
+    "indentWidth": 2,
+    "exclude": ["dist/"]
+  },
   "lint": {"files": {"include": ["src/"]}},
+  "unstable": ["bare-node-builtins", "sloppy-imports", "cron", "kv", "ffi"],
   "exclude": ["dist/", "node_modules/"],
   "compilerOptions": {},
   "imports": {

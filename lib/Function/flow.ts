@@ -1,4 +1,4 @@
-type Fn<A, B> = (a: A) => B
+type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
 
 /** ##  flow : Corey form of pipe function
 @example
@@ -6,58 +6,62 @@ type Fn<A, B> = (a: A) => B
 const fn = flow(
   (x: number) => x + 1,
   (x: number) => x * 2,
-  (x: number) => x + 1,
+  async (x: number) => x + 1,
 )
-console.log(fn(1)) // 5
+assert(await fn(1) === 5)
 ```
 @category Function
 */
-export function flow<A, B>(ab: Fn<A, B>): Fn<A, B>
-export function flow<A, B, C>(ab: Fn<A, B>, bc: Fn<B, C>): Fn<A, C>
-export function flow<A, B, C, D>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>): Fn<A, D>
+export function flow<A, B>(ab: PFn<A, B>): PFn<A, B>
+export function flow<A, B, C>(ab: PFn<A, B>, bc: PFn<B, C>): PFn<A, C>
+export function flow<A, B, C, D>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>): PFn<A, D>
 export function flow<A, B, C, D, E>(
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-  de: Fn<D, E>
-): Fn<A, E>
+  ab: PFn<A, B>,
+  bc: PFn<B, C>,
+  cd: PFn<C, D>,
+  de: PFn<D, E>
+): PFn<A, E>
 export function flow<A, B, C, D, E, F>(
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-  de: Fn<D, E>,
-  ef: Fn<E, F>
-): Fn<A, F>
+  ab: PFn<A, B>,
+  bc: PFn<B, C>,
+  cd: PFn<C, D>,
+  de: PFn<D, E>,
+  ef: PFn<E, F>
+): PFn<A, F>
 export function flow<A, B, C, D, E, F, G>(
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-  de: Fn<D, E>,
-  ef: Fn<E, F>,
-  fg: Fn<F, G>
-): Fn<A, G>
+  ab: PFn<A, B>,
+  bc: PFn<B, C>,
+  cd: PFn<C, D>,
+  de: PFn<D, E>,
+  ef: PFn<E, F>,
+  fg: PFn<F, G>
+): PFn<A, G>
 export function flow<A, B, C, D, E, F, G, H>(
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-  de: Fn<D, E>,
-  ef: Fn<E, F>,
-  fg: Fn<F, G>,
-  gh: Fn<G, H>
-): Fn<A, H>
+  ab: PFn<A, B>,
+  bc: PFn<B, C>,
+  cd: PFn<C, D>,
+  de: PFn<D, E>,
+  ef: PFn<E, F>,
+  fg: PFn<F, G>,
+  gh: PFn<G, H>
+): PFn<A, H>
 export function flow<A, B, C, D, E, F, G, H, I>(
-  ab: Fn<A, B>,
-  bc: Fn<B, C>,
-  cd: Fn<C, D>,
-  de: Fn<D, E>,
-  ef: Fn<E, F>,
-  fg: Fn<F, G>,
-  gh: Fn<G, H>,
-  hi: Fn<H, I>
-): Fn<A, I>
+  ab: PFn<A, B>,
+  bc: PFn<B, C>,
+  cd: PFn<C, D>,
+  de: PFn<D, E>,
+  ef: PFn<E, F>,
+  fg: PFn<F, G>,
+  gh: PFn<G, H>,
+  hi: PFn<H, I>
+): PFn<A, I>
 
-export function flow(...fns: Array<Fn<any, any>>) {
-  return function (x: any) {
-    return fns.reduce((acc, fn) => fn(acc), x)
+export function flow(...fns: Array<PFn<any, any>>) {
+  return async function (x: any) {
+    let ret = x
+    for (let i = 0; i < fns.length - 1; i++) {
+      ret = await fns[i](ret)
+    }
+    return ret
   }
 }
