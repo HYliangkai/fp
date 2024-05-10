@@ -119,15 +119,14 @@ export function match(
 ): any {
   for (const index in args) {
     const [condition, result] = args[index]
-    if (condition === match_value) {
-      return result
-    } else if (typeof condition === 'function' && (condition as JudeCondition<any>)(match_value)) {
-      return result
-    } else if (typeof match_value['eq'] === 'function' && typeof condition['eq'] === 'function') {
-      if (match_value['eq'](condition)) {
-        return result
-      }
-    } else if (condition === Def) {
+    if (
+      condition === match_value ||
+      (typeof condition === 'function' && (condition as JudeCondition<any>)(match_value)) ||
+      (typeof match_value['eq'] === 'function' &&
+        typeof condition['eq'] === 'function' &&
+        match_value['eq'](condition)) ||
+      condition === Def
+    ) {
       return result
     }
   }

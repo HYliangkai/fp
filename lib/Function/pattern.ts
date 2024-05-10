@@ -92,18 +92,15 @@ export function pattern(...args: ([Condition<any>, unknown] | [typeof Def, unkno
   return (pattern_value: any) => {
     for (const index in args) {
       const [condition, result] = args[index]
-      if (condition === pattern_value) {
-        return result
-      } else if (typeof condition === 'function' && (condition as Condition<any>)(pattern_value)) {
-        return result
-      } else if (
-        typeof pattern_value['eq'] === 'function' &&
-        typeof condition['eq'] === 'function'
+
+      if (
+        condition === pattern_value ||
+        (typeof condition === 'function' && (condition as Condition<any>)(pattern_value)) ||
+        (typeof pattern_value['eq'] === 'function' &&
+          typeof condition['eq'] === 'function' &&
+          pattern_value['eq'](condition)) ||
+        condition === Def
       ) {
-        if (pattern_value['eq'](condition)) {
-          return result
-        }
-      } else if (condition === Def) {
         return result
       }
     }
