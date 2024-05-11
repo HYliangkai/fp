@@ -83,7 +83,7 @@ export function flow<A, B, C, D, E, F, G, H, I>(
 export function flow(...fns: Array<PFn<any, any>>) {
   return async function (x: any) {
     let ret = x
-    for (let i = 0; i < fns.length - 1; i++) {
+    for (let i = 0; i < fns.length; i++) {
       ret = await fns[i](ret)
     }
     return ret
