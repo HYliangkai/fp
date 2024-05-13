@@ -9,6 +9,6 @@ assert(data == 'default data')
 ```
 @category Interface
  */
-export interface Default {
-  default: () => unknown
+export interface Default<T = unknown> {
+  default: () => T
 }

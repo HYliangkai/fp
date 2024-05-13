@@ -7,21 +7,26 @@ const fib = memo(function (n) {
 })
 fib(10) // 55
 fib(10) // 55 --> fast , because of cache
+
+
+const sum = memo((a, b)=>({a,b}),(i)=>i.a)
+sum(1,2) // {a:1,b:2}
+sum(2,2) // {a:2,b:2}
+sum(1,3) // {a:1,b:2} --> cache with key a:1
+
 ```
 @param func 要缓存的函数
+@param resolver 生成缓存的key的函数,默认使用第一个参数作为key
 @returns 返回一个缓存函数
 @category Function
 */
-export const memo = <T>(func: CFn<T>): CFn<T> => {
+export const memo = <T>(func: CFn<T>, resolver?: (...val: any[]) => any): CFn<T> => {
   if (typeof func !== 'function') throw new TypeError('Expected a function')
-
-  const memoized = function (...args: any[]) {
-    const key = args[0]
+  const memoized = function (...arg: any) {
+    const key = resolver ? resolver(...arg) : arg[0]
     const cache = memoized.cache
-    if (cache.has(key)) {
-      return cache.get(key)
-    }
-    const result = func(...args)
+    if (cache.has(key)) return cache.get(key)
+    const result = func(arg)
     memoized.cache = cache.set(key, result) || cache
     return result
   }

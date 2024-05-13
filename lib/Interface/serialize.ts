@@ -17,8 +17,8 @@ const can_serialize: Serialize<object, string> & DeSerialize<string, object> = {
 @catrgory Interface
 */
 export interface Serialize<A, B> {
-  serialize(data: A): B
-  deserialize(data: B): A
+  readonly serialize: (data: A) => B
+  readonly deserialize: (data: B) => A
 }
 
 /** ## DeSerialize : 反序列化 
@@ -38,22 +38,22 @@ const can_serialize: DeSerialize<string, object> & Serialize<object, string> = {
 @catrgory Interface
 */
 export interface DeSerialize<B, A> {
-  deserialize(data: B): A
-  serialize(data: A): B
+  readonly deserialize: (data: B) => A
+  readonly serialize: (data: A) => B
 }
 
 /** ## MaybeSerialize : 可能会失败的序列化
 @catrgory Interface
   */
 export interface MaybeSerialize<A, B, E> {
-  serialize(data: A): Result<B, E>
-  deserialize(data: B): Result<A, E>
+  readonly serialize: (data: A) => Result<B, E>
+  readonly deserialize: (data: B) => Result<A, E>
 }
 
 /** ##MaybeSerialize : 可能会失败的反序列化
 @catrgory Interface
   */
 export interface MaybeDeSerialize<B, A, E> {
-  deserialize(data: B): Result<A, E>
-  serialize(data: A): Result<B, E>
+  readonly deserialize: (data: B) => Result<A, E>
+  readonly serialize: (data: A) => Result<B, E>
 }

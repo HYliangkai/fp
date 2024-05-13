@@ -7,7 +7,7 @@ type
 ```
 @category Gymnastics
  */
-declare type TypeLiteral<T> = LiteralInfer<T> extends never ? 'object' : LiteralInfer<T>
+export type TypeLiteral<T> = LiteralInfer<T> extends never ? 'object' : LiteralInfer<T>
 type LiteralInfer<T> = T extends string
   ? `${T}`
   : T extends number
@@ -27,3 +27,7 @@ type LiteralInfer<T> = T extends string
   : T extends Array<any>
   ? 'array'
   : never
+/** ## NaN : NaN的类型表示方法,虽然可以是任意数字类型
+@category Gymnastics
+*/
+export type NaN = number

@@ -1,4 +1,4 @@
-/**  ## PartialEq : 提供一个相等性判断的接口
+/**  ## PartialEq : 提供一个同类型数据相等性判断的功能
 @example 
 ```ts
 class User implements PartialEq {
@@ -17,5 +17,5 @@ class User implements PartialEq {
 */
 
 export interface PartialEq {
-  eq: (other: this) => boolean
+  readonly eq: (other: this) => boolean
 }
