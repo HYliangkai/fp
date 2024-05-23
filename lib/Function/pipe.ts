@@ -1,3 +1,5 @@
+import {is_async_func} from './mod.ts'
+
 /** 带解包的fn */
 type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
 
@@ -92,10 +94,22 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
 // 依此类推，根据需要添加更多的重载签名(手动)
 
 //使用 any版本做函数的具体实现
-export async function pipe(...fns: Array<PFn<any, any>>): Promise<any> {
+
+export function pipe(...fns: Array<PFn<any, any>>): any {
   let ret = fns[0]
-  for (let i = 1; i < fns.length; i++) {
-    ret = await fns[i](ret)
+  const is_async = fns.some(i => is_async_func(i))
+
+  if (is_async) {
+    new Promise(async res => {
+      for (let i = 1; i < fns.length; i++) {
+        ret = await fns[i](ret)
+      }
+      res(ret)
+    })
+  } else {
+    for (let i = 1; i < fns.length; i++) {
+      ret = fns[i](ret)
+    }
+    return ret
   }
-  return ret
 }

@@ -1,3 +1,5 @@
+import {is_async_func} from './mod.ts'
+
 type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
 
 type PromiseLine<A, B> = A extends Promise<any>
@@ -81,11 +83,22 @@ export function flow<A, B, C, D, E, F, G, H, I>(
 >
 
 export function flow(...fns: Array<PFn<any, any>>) {
-  return async function (x: any) {
-    let ret = x
-    for (let i = 0; i < fns.length; i++) {
-      ret = await fns[i](ret)
+  const is_async = fns.some(i => is_async_func(i))
+  if (is_async) {
+    return async function (x: any) {
+      let ret = x
+      for (let i = 0; i < fns.length; i++) {
+        ret = await fns[i](ret)
+      }
+      return ret
     }
-    return ret
+  } else {
+    return function (x: any) {
+      let ret = x
+      for (let i = 0; i < fns.length; i++) {
+        ret = fns[i](ret)
+      }
+      return ret
+    }
   }
 }
