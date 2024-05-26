@@ -12,7 +12,8 @@ export * from './algebraicEffect.ts' //代数效应
 export const Def = Symbol('default')
 
 export const is_async_func = (fn: Function) => {
-  if (fn.constructor.name === 'AsyncFunction') return true
+  if (typeof fn !== 'function') return false
+  if (fn.constructor && fn.constructor.name === 'AsyncFunction') return true
   //@ts-ignore : 使用Promise A+ 规范来判断Promise
   if ('function' == typeof fn.then) return true
   return false
