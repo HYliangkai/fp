@@ -1,4 +1,4 @@
-import {pipe} from './mod.ts'
+import {Async_Tag, is_async_func, pipe} from './mod.ts'
 
 type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
 
@@ -84,5 +84,7 @@ export function flow<A, B, C, D, E, F, G, H, I>(
 
 export function flow(...fns: Array<PFn<any, any>>) {
   //@ts-ignore : 参数缺省
-  return (x: any) => pipe(x, ...fns)
+  const ret = (x: any) => pipe(x, ...fns)
+  if (fns.some(i => is_async_func(i))) ret.fntag = Async_Tag
+  return ret
 }

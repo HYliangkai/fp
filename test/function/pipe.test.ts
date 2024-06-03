@@ -1,5 +1,6 @@
 import {assertEquals} from '@std/assert/mod.ts'
-import {pipe} from 'lib'
+import {join} from 'jsr:@std/path@^0.218.2/join'
+import {flow, pipe} from 'lib'
 
 Deno.test('同步pipe', () => {
   const origin = 0
@@ -30,3 +31,9 @@ Deno.test('异步pipe', async () => {
   const res = await pipe(origin, first, second, third)
   assertEquals(res, 3)
 })
+
+// Deno.test('嵌套pipe', async () => {
+//   // const relative_to_absolute = (relative: string) => join(import.meta.dirname!, relative)
+//   // const flo = flow(relative_to_absolute, Deno.readTextFile)
+//   // await flow(flo, res => JSON.parse(res))('../../deno.json')
+// })

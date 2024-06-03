@@ -13,3 +13,6 @@ export * from './algebraicEffect.ts' //代数效应
   @category Constant
 */
 export const Def = Symbol('default')
+
+/** ## Async_Tag : the flag judge a function is async function */
+export const Async_Tag = Symbol('async')

@@ -1,4 +1,4 @@
-import {is_async_func} from './mod.ts'
+import {Async_Tag, is_async_func} from './mod.ts'
 
 /** 带解包的fn */
 type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
@@ -33,7 +33,8 @@ type PipeResult<A, B> = A extends Promise<any> ? A : B extends Promise<any> ? Pr
   ```
   @warning
   1. 不要把Array.prototype上的函数作为参数传入,会运行不出来
-  2. 如何异步函数有都不带async关键字(譬如都返回Promise),pipe会当作同步函数运行而不进行内部await操作 
+  2. 允许使用await关键字运行的情况 :
+    + 传入的函数中有一个是带async关键字的函数
 
   @category Function
 */
