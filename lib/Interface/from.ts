@@ -27,7 +27,7 @@
   assert(Nb.into() instanceof A)
 ```
 @category Interface
- */
+ */ 
 export interface From<T> {
   readonly from: (val: T) => this
 }

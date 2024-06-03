@@ -1,4 +1,4 @@
-/** ## Eq : 提供一个不同类型数据相等性判断的功能
+/** ## Eq : 提供一个`不同类型`数据相等性判断的功能
 @example
   ```ts
   class A implements Eq<number> {

@@ -1,4 +1,4 @@
-/**  ## PartialEq : 提供一个同类型数据相等性判断的功能
+/**  ## PartialEq : 提供一个`同类型`数据相等性判断的功能
 @example 
 ```ts
 class User implements PartialEq {

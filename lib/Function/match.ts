@@ -17,7 +17,6 @@ assert(age===18)//true
 // 2. 实现了PartialEq可直接进行匹配
 class User implements PartialEq {
   constructor(public name: string, public age: number) {}
-
   eq(other: this) {
     return other.name == this.name && other.age == this.age
   }
