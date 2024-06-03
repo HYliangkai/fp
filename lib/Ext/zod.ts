@@ -17,6 +17,7 @@ import {
   some_tag,
 } from '../mod.ts'
 
+/** @ zod.option */
 export const option = <S extends z.Schema>(
   value: S
 ): z.ZodEffects<z.ZodAny, Option<z.infer<S>>, Option<z.infer<S>>> =>
@@ -28,6 +29,7 @@ export const option = <S extends z.Schema>(
       : ctx.addIssue({code: 'custom', message: 'not a Option type'})
   })
 
+/** @ zod.resule */
 export const result = <T extends z.Schema, E extends z.Schema>(
   ok: T,
   err: E
@@ -40,6 +42,7 @@ export const result = <T extends z.Schema, E extends z.Schema>(
       : ctx.addIssue({code: 'custom', message: 'not a Result type'})
   })
 
+/** @ zod.either */
 export const either = <L extends z.Schema, R extends z.Schema>(
   left: z.infer<L>,
   right: z.infer<R>

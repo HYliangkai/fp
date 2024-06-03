@@ -1,4 +1,4 @@
-import {is_async_func} from './mod.ts'
+import {pipe} from './mod.ts'
 
 type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
 type PromiseLine<A, B> = A extends Promise<any>
@@ -10,7 +10,7 @@ type PromiseLine<A, B> = A extends Promise<any>
 /** ## PipeResult<A<B> : if A or B is Promise,return Promise ; else return NoPromise  */
 type PipeResult<A, B> = A extends Promise<any> ? A : B extends Promise<any> ? Promise<A> : A
 
-/** ## lzpipe : Run the functions nested in parallel,but lazy run 
+/** ## lzpipe : 惰性pipe,返回一个函数执行{@link pipe}
 @example
 ```ts
 const run = lzpipe(
@@ -86,22 +86,6 @@ export function lzpipe<A, B, C, D, E, F, G, H, I>(
 >
 
 export function lzpipe(...fns: Array<PFn<any, any>>) {
-  const is_async = fns.some(i => is_async_func(i))
-  if (is_async) {
-    return async () => {
-      let ret = fns[0]
-      for (let i = 1; i < fns.length; i++) {
-        ret = await fns[i](ret)
-      }
-      return ret
-    }
-  } else {
-    return () => {
-      let ret = fns[0]
-      for (let i = 1; i < fns.length; i++) {
-        ret = fns[i](ret)
-      }
-      return ret
-    }
-  }
+  //@ts-ignore : 参数缺省
+  return () => pipe(...fns)
 }

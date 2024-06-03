@@ -31,6 +31,10 @@ type PipeResult<A, B> = A extends Promise<any> ? A : B extends Promise<any> ? Pr
     async (x: string) => x + 'b',
   )) // sab
   ```
+  @warning
+  1. 不要把Array.prototype上的函数作为参数传入,会运行不出来
+  2. 如何异步函数有都不带async关键字(譬如都返回Promise),pipe会当作同步函数运行而不进行内部await操作 
+
   @category Function
 */
 
@@ -91,18 +95,13 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
   I,
   PromiseLine<H, PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>>
 >
-// 依此类推，根据需要添加更多的重载签名(手动)
-
-//使用 any版本做函数的具体实现
 
 export function pipe(...fns: Array<PFn<any, any>>): any {
   let ret = fns[0]
-  const is_async = fns.some(i => is_async_func(i))
-
-  if (is_async) {
-    new Promise(async res => {
+  if (fns.some(i => is_async_func(i))) {
+    return new Promise(async res => {
       for (let i = 1; i < fns.length; i++) {
-        ret = await fns[i](ret)
+        ret = await Promise.resolve(fns[i](ret))
       }
       res(ret)
     })

@@ -9,6 +9,3 @@ export const Functor = (expression: string): any => {
   }
   return Function(...args, `return ${expression}`)
 }
-
-const rr = [1, 2, 3].map(Functor('$0 + 1'))
-console.log(rr)

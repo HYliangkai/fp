@@ -1,4 +1,4 @@
-import {is_async_func} from './mod.ts'
+import {pipe} from './mod.ts'
 
 type PFn<A, B> = (a: A extends Promise<infer U> ? U : A) => B
 
@@ -13,7 +13,7 @@ type FlowResult<T, A, B> = (
   a: T
 ) => A extends Promise<any> ? A : B extends Promise<any> ? Promise<A> : A
 
-/** ##  flow : Corey form of pipe function
+/** ##  flow : {@link pipe}函数的科里化版本
 @example
 ```ts
 const fn = flow(
@@ -83,22 +83,6 @@ export function flow<A, B, C, D, E, F, G, H, I>(
 >
 
 export function flow(...fns: Array<PFn<any, any>>) {
-  const is_async = fns.some(i => is_async_func(i))
-  if (is_async) {
-    return async function (x: any) {
-      let ret = x
-      for (let i = 0; i < fns.length; i++) {
-        ret = await fns[i](ret)
-      }
-      return ret
-    }
-  } else {
-    return function (x: any) {
-      let ret = x
-      for (let i = 0; i < fns.length; i++) {
-        ret = fns[i](ret)
-      }
-      return ret
-    }
-  }
+  //@ts-ignore : 参数缺省
+  return (x: any) => pipe(x, ...fns)
 }
