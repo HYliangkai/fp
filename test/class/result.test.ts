@@ -1,12 +1,12 @@
-import {AnyError, Err, Ok} from 'lib'
-import {assertEquals, assertThrows} from '../mod.ts'
+import { AnyError, Err, Ok } from 'lib'
+import { assertEquals, assertThrows } from '../mod.ts'
 
 Deno.test('map_err', () => {
   const err2 = Err(AnyError.new('Debug', 'test'))
 
   const res = err2
-    .map_err(({error, debug}) => {
-      error(val => Err(val))
+    .map_err(({ error, debug }) => {
+      error((val) => Err(val))
       debug(() => {
         return Ok('test')
       })
@@ -15,8 +15,8 @@ Deno.test('map_err', () => {
   assertEquals(res, 'test')
 
   const err3 = Err(AnyError.new('Error', 'test'))
-  const res1 = err3.map_err(({error, debug}) => {
-    error(val => Err(val))
+  const res1 = err3.map_err(({ error, debug }) => {
+    error((val) => Err(val))
     debug(() => {
       return Ok('test')
     })

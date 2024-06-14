@@ -1,7 +1,4 @@
-import {panic, anyresult, ErrorLevel, AnyResult} from '../mod.ts'
-
-export const some_tag = Symbol('some')
-export const none_tag = Symbol('none')
+import { panic, anyresult, ErrorLevel, AnyResult, none_tag, some_tag } from '../mod.ts'
 
 /** ## Option : 一个可能为{@link None}或{@link Some}的数据类型 
   @category TypeClass */

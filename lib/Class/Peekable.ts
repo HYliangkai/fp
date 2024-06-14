@@ -1,7 +1,8 @@
 import {None, Option, Some} from '../../mod.ts'
 
-/** ## Can 'peek' with Iterator
-example:
+/** ## ## Peekable : 可提前`前瞻`iterable下一个数据
+由于iterable具有一次消耗性,调用next()之后就无法返回.Peekable能提前`看`下一个数据,能解决这一问题场景
+@example:
 ```ts
   const arr: Iterable<number> = [1, 2, 33, 4, 5]
   const peek = new Peekable(arr)
@@ -13,6 +14,7 @@ example:
   assert(peek.peeked.unwarp() == peek.next().unwarp())
   assert(peek.next().unwarp() !== peek.peeked.unwarp())
 ```
+@category Class
  */
 export class Peekable<V, T extends Iterable<V> | Iterator<V>> {
   private iter: Iterator<V>

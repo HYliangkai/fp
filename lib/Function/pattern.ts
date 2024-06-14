@@ -1,5 +1,5 @@
-import {Condition} from '../../mod.ts'
-import {Def} from './mod.ts'
+import { Condition, Def } from '../../mod.ts'
+import { match } from './mod.ts'
 /** pattern : 科里化的match函数
 @example
 ```ts
@@ -89,20 +89,6 @@ export function pattern<T, V, C, D, F, G, H, I, J, K, L>(
   jk: [typeof Def, L]
 ): (value: V) => V | C | D | F | G | H | I | J | K | L
 export function pattern(...args: ([Condition<any>, unknown] | [typeof Def, unknown])[]): any {
-  return (pattern_value: any) => {
-    for (const index in args) {
-      const [condition, result] = args[index]
-
-      if (
-        condition === pattern_value ||
-        (typeof condition === 'function' && (condition as Condition<any>)(pattern_value)) ||
-        (typeof pattern_value['eq'] === 'function' &&
-          typeof condition['eq'] === 'function' &&
-          pattern_value['eq'](condition)) ||
-        condition === Def
-      ) {
-        return result
-      }
-    }
-  }
+  //@ts-ignore : 简化调用
+  return (pattern_value: any) => match(pattern_value, ...args)
 }

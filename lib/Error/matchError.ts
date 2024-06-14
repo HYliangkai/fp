@@ -1,6 +1,12 @@
 import {AnyError, ErrorLevel} from './mod.ts'
 
-/**   error match  */
+/**  ## match_error : 对于AnyErr 类型数据的快速模式匹配
+@example
+```ts
+
+```
+@category Error
+ */
 export const match_error = (
   error: any
 ): {

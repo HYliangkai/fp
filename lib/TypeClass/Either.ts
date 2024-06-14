@@ -1,7 +1,5 @@
-import {Err, Ok, Result} from './mod.ts'
-
-export const left_tag = Symbol('left')
-export const right_tag = Symbol('right')
+import { left_tag, right_tag } from 'lib'
+import { Err, Ok, Result } from './mod.ts'
 
 interface either<L, R> {
   readonly _tag: typeof left_tag | typeof right_tag
@@ -49,10 +47,10 @@ export type Either<L, R> = Left<L> | Right<R>
 export type AsyncEither<L, R> = Promise<Either<L, R>>
 
 const leftback = <T>(val: T) => {
-  throw {tag: left_tag, value: val}
+  throw { tag: left_tag, value: val }
 }
 const rightback = <T>(val: T) => {
-  throw {tag: right_tag, value: val}
+  throw { tag: right_tag, value: val }
 }
 
 export const Either = <L, R>(
@@ -80,7 +78,7 @@ export const Left = <L, R = never>(value: L): Either<L, R> => {
     left: value,
     is_left: true,
     is_right: false,
-    left_do: cb => {
+    left_do: (cb) => {
       cb(value)
     },
     right_do: () => {},
@@ -88,12 +86,12 @@ export const Left = <L, R = never>(value: L): Either<L, R> => {
       le(value)
     },
     map: (le, _ri) => Left(le(value)),
-    unwarp_left_or: _val => value,
-    unwarp_right_or: val => val,
+    unwarp_left_or: (_val) => value,
+    unwarp_right_or: (val) => val,
     to_result: () => Ok(value),
     exchange: () => Right(value),
     merge: () => value,
-    tap: handle => {
+    tap: (handle) => {
       handle(value)
       return Left(value)
     },
@@ -107,19 +105,19 @@ export const Right = <R, L = never>(value: R): Either<L, R> => {
     is_left: false,
     is_right: true,
     left_do: () => {},
-    right_do: cb => {
+    right_do: (cb) => {
       cb(value)
     },
     match: (_le, ri) => {
       ri(value)
     },
     map: (_le, ri) => Right(ri(value)),
-    unwarp_left_or: val => val,
-    unwarp_right_or: _val => value,
+    unwarp_left_or: (val) => val,
+    unwarp_right_or: (_val) => value,
     to_result: () => Err(value),
     exchange: () => Left(value),
     merge: () => value,
-    tap: handle => {
+    tap: (handle) => {
       handle(value)
       return Right(value)
     },

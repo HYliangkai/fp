@@ -30,7 +30,7 @@ export const memo = <T>(func: CFn<T>, resolver?: (...val: any[]) => any): CFn<T>
     memoized.cache = cache.set(key, result) || cache
     return result
   }
-  memoized.cache = new (memo.Cache || Map)()
+  memoized.cache = new (memo.Cache || WeakMap)()
   return memoized
 }
-memo.Cache = Map
+memo.Cache = WeakMap

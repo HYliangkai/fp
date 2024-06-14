@@ -4,5 +4,5 @@ export * from './Function/mod.ts'
 export * from './Interface/mod.ts'
 export * from './Error/mod.ts'
 export * from './Class/mod.ts'
-
+export * from './Constant/mod.ts'
 export * from './Gymnastics/mod.ts'

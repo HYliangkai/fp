@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.6.11",
+  "version": "0.7.0",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
@@ -17,28 +17,15 @@
     "semiColons": false,
     "singleQuote": true,
     "indentWidth": 2,
-    "exclude": [
-      "dist/"
-    ]
+    "exclude": ["dist/"]
   },
   "lint": {
     "files": {
-      "include": [
-        "src/"
-      ]
+      "include": ["src/"]
     }
   },
-  "unstable": [
-    "bare-node-builtins",
-    "sloppy-imports",
-    "cron",
-    "kv",
-    "ffi"
-  ],
-  "exclude": [
-    "dist/",
-    "node_modules/"
-  ],
+  "unstable": ["bare-node-builtins", "sloppy-imports", "cron", "kv", "ffi"],
+  "exclude": ["dist/", "node_modules/"],
   "compilerOptions": {},
   "imports": {
     "@/": "./src/",

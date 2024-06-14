@@ -1,6 +1,6 @@
 /** Result */
-import {AnyError, AnyResult, ErrorLevel, match_error} from '../../mod.ts'
-import {Either, Left, None, Option, Right, Some} from './mod.ts'
+import { AnyError, AnyResult, ErrorLevel, empty_tag, error_tag, match_error, ok_tag } from '../../mod.ts'
+import { Either, Left, None, Option, Right, Some } from './mod.ts'
 
 interface ErrorHandle {
   debug: (func: (v: AnyError<'Debug'>) => AnyResult<unknown>) => void
@@ -10,10 +10,6 @@ interface ErrorHandle {
   fatal: (func: (v: AnyError<'Fatal'>) => AnyResult<unknown>) => void
   panic: (func: (v: AnyError<'Panic'>) => AnyResult<unknown>) => void
 }
-
-export const error_tag = Symbol('error')
-export const ok_tag = Symbol('ok')
-const empty_tag = Symbol('empty')
 
 /** ## Result : 一个可能为Ok或者Err的数据类型
   @category TypeClass */
@@ -189,7 +185,7 @@ class err<E> implements Err<E> {
       const panic = (func: (v: AnyError<'Panic'>) => AnyResult<unknown>) => {
         wqdq121.type == 'Panic' ? (retdswd = func(wqdq121)) : null
       }
-      fn({debug, info, error, warn, fatal, panic})
+      fn({ debug, info, error, warn, fatal, panic })
       return retdswd
     } else {
       return AnyErr('Info', 'must be AnyError can use map_err', 'map_err')
@@ -222,11 +218,8 @@ export function Err<E>(value: E): Result<never, E> {
   ```
   @category TypeClass
 */
-export const AnyErr = <T extends ErrorLevel>(
-  type: T,
-  cause?: string,
-  name?: string
-): Result<never, AnyError<T>> => Err(AnyError.new(type, cause, name))
+export const AnyErr = <T extends ErrorLevel>(type: T, cause?: string, name?: string): Result<never, AnyError<T>> =>
+  Err(AnyError.new(type, cause, name))
 
 /** @Helper_Function  */
 
@@ -267,7 +260,9 @@ export function result<T, E = unknown>(fn: () => T): Result<T, E> {
   }
 }
 
-/** ## result : 将一个可能throw的 `异步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型数据
+/** ## async_result : {@link result}的异步版本
+  @description
+    将一个可能throw的普通`异步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型数据
   @example
   ```ts
   const res = result(() => {
@@ -312,26 +307,6 @@ export function anyresult<T>(fn: () => T): AnyResult<T> {
   try {
     return Ok(fn())
   } catch (err) {
-    return err instanceof BackTrack
-      ? Ok(err.return_val as T)
-      : Err(match_error(err).handle_throw(err => err))
+    return err instanceof BackTrack ? Ok(err.return_val as T) : Err(match_error(err).handle_throw((err) => err))
   }
-}
-
-/** ## is_result : 运行时判断是否Result类型 
-  @example
-  ```ts
-  const res = result(() => {
-    if (Math.random() > 0.5) {
-      return 1
-    } else {
-      throw new Error('test error')
-    }
-  })
-  console.log(is_result(res)) // true
-  ```
-  @category TypeClass
-*/
-export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {
-  return val._tag === ok_tag || val._tag === error_tag
 }

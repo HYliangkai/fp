@@ -1,5 +1,4 @@
-import {Condition, JudeCondition} from '../../mod.ts'
-import {Def} from './mod.ts'
+import { Condition, Def, JudeCondition, implements_equal, implements_partial_eq } from '../../mod.ts'
 
 /**
 ## match : 简单的模式匹配
@@ -13,8 +12,7 @@ const age=match(name,
 [Def,20])
 assert(age===18)//true
 
-
-// 2. 实现了PartialEq可直接进行匹配
+// 2. 实现了PartialEq/Equal的数据结构 可直接进行匹配
 class User implements PartialEq {
   constructor(public name: string, public age: number) {}
   eq(other: this) {
@@ -25,6 +23,10 @@ const User1 = new User('Tom', 18)
 const User2 = new User('Tom', 18)
 const res = match(User1, [User2, true], [Def, false])
 assert(res)//true
+@tips:
+  1. 匹配出现多个Def已最后一个为准
+  2. Def出现的位置不影响匹配结果,如果所有模式都匹配不上才使用Def作为结果
+  3. 默认匹配结果是null
 ```
 @category Function
 */
@@ -112,21 +114,20 @@ export function match<T, V, C, D, F, G, H, I, J, K, L>(
   ij: [Condition<T>, K],
   jk: [typeof Def, L]
 ): V | C | D | F | G | H | I | J | K | L
-export function match(
-  match_value: any,
-  ...args: ([Condition<any>, unknown] | [typeof Def, unknown])[]
-): any {
+export function match(match_value: any, ...args: ([Condition<any>, unknown] | [typeof Def, unknown])[]): any {
+  let def = null
   for (const index in args) {
     const [condition, result] = args[index]
-    if (
-      condition === match_value ||
-      (typeof condition === 'function' && (condition as JudeCondition<any>)(match_value)) ||
-      (typeof match_value['eq'] === 'function' &&
-        typeof condition['eq'] === 'function' &&
-        match_value['eq'](condition)) ||
-      condition === Def
-    ) {
-      return result
-    }
+
+    if (condition === Def) def = result
+
+    if (condition === match_value) return result
+
+    if (typeof condition === 'function' && (condition as JudeCondition<any>)(match_value)) return result
+
+    if (implements_partial_eq(match_value) && implements_partial_eq(condition) && match_value['eq'](condition)) return result
+
+    if (implements_equal(match_value) && implements_equal(condition) && match_value['equals'](condition)) return result
   }
+  return def
 }

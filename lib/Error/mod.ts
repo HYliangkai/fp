@@ -1,6 +1,7 @@
 import {AsyncResult, Debug, Def, Result, match} from '../../mod.ts'
 export * from './matchError.ts'
 
+/** ## ErrorInfo : 错误信息 */
 type ErrorInfo = {
   type: ErrorLevel
   name: string

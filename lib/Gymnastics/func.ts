@@ -10,6 +10,11 @@ export type FnReturn<T> = () => T
  */
 export type Fn<T, R> = (val: T) => R
 
+/** ## Fns<T> 
+  参数为任意个,返回值为`T`的函数
+ */
+export type Fns<T> = (...args: any[]) => T
+
 /** ## ValueOrFunc<T> : 可能是T也可能是返回值为T的函数
 @example
   ```ts
