@@ -1,4 +1,4 @@
-import { left_tag, right_tag } from 'lib'
+import { left_tag, right_tag } from '../../mod.ts'
 import { Err, Ok, Result } from './mod.ts'
 
 interface either<L, R> {
