@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
@@ -10,6 +10,7 @@
     "build": "deno run -A ./script/esbuild.ts",
     "update": "deno run -A ./script/updateVersion.ts",
     "publish": "deno publish",
+    "test:build": "deno task buikd && deno task test",
     "npm:publish": "cd ./dist && npm publish",
     "build:FFI": "deno_bindgen -o binding"
   },

@@ -22,3 +22,6 @@ export const some_tag = Symbol('some')
 
 /** @category Constant */
 export const none_tag = Symbol('none')
+
+/** @category Constant */
+export const future_tag = Symbol('future')
