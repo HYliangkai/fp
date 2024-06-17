@@ -1,5 +1,5 @@
 import { future_tag } from '../../mod.ts'
-import { AsyncResult } from './Result'
+import { AsyncResult } from './Result.ts'
 /** ## Future : 异步返回数据 */
 
 class Future<T, E> {
