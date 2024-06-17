@@ -1,5 +1,5 @@
-import { future_tag } from '../../mod.ts'
-import { AsyncResult } from './Result.ts'
+import { future_tag, AsyncResult, Result } from '../../mod.ts'
+
 /** ## Future : 异步返回数据 */
 
 class Future<T, E> {
@@ -28,14 +28,6 @@ class Future<T, E> {
 
   async unwrap_or_else(fn: (err: E) => T) {
     return (await this.fn()).unwrap_or_else(fn)
-  }
-
-  async map<V = T>(func: (val: T) => V) {
-    return (await this.fn()).map(func as any)
-  }
-
-  async map_err<V>(fn: (err: E) => V) {
-    return (await this.fn()).map_err(fn as any)
   }
 
   async and_then<V>(fn: (val: T) => AsyncResult<V, E>) {
