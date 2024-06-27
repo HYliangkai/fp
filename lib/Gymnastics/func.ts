@@ -34,7 +34,7 @@ export type ValueOrFunc<T> = T | (() => T)
   ```
 @category Gymnastics
 */
-export type JudeCondition<T> = (val: T) => boolean
+export type JudeCondition<T> = Fn<T, boolean>
 
 /** ## Condition<T> : 条件
 @example

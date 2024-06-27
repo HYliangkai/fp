@@ -5,28 +5,16 @@ zod是一个Schema验证库,用于弥补Ts在运行时不具有类型检查的�
 */
 export * from 'npm:zod@3.22.4'
 import * as z from 'npm:zod@3.22.4'
-import {
-  Either,
-  Option,
-  Result,
-  error_tag,
-  left_tag,
-  none_tag,
-  ok_tag,
-  right_tag,
-  some_tag,
-} from '../mod.ts'
+import { Either, Option, Result, error_tag, left_tag, none_tag, ok_tag, right_tag, some_tag } from '../mod.ts'
 
 /** @ zod.option */
-export const option = <S extends z.Schema>(
-  value: S
-): z.ZodEffects<z.ZodAny, Option<z.infer<S>>, Option<z.infer<S>>> =>
+export const option = <S extends z.Schema>(value: S): z.ZodEffects<z.ZodAny, Option<z.infer<S>>, Option<z.infer<S>>> =>
   z.any().superRefine((val, ctx) => {
     val && (val._tag === some_tag || val._tag === none_tag)
       ? value.safeParse(val.value).success
         ? null
-        : ctx.addIssue({code: 'custom', message: ' invalid option value type '})
-      : ctx.addIssue({code: 'custom', message: 'not a Option type'})
+        : ctx.addIssue({ code: 'custom', message: ' invalid option value type ' })
+      : ctx.addIssue({ code: 'custom', message: 'not a Option type' })
   })
 
 /** @ zod.resule */
@@ -38,8 +26,8 @@ export const result = <T extends z.Schema, E extends z.Schema>(
     val && (val._tag === ok_tag || val._tag === error_tag)
       ? ok.safeParse(val.value).success || err.safeParse(val.value).success
         ? null
-        : ctx.addIssue({code: 'custom', message: ' invalid result value type '})
-      : ctx.addIssue({code: 'custom', message: 'not a Result type'})
+        : ctx.addIssue({ code: 'custom', message: ' invalid result value type ' })
+      : ctx.addIssue({ code: 'custom', message: 'not a Result type' })
   })
 
 /** @ zod.either */
@@ -51,8 +39,8 @@ export const either = <L extends z.Schema, R extends z.Schema>(
     val && (val._tag === left_tag || val._tag === right_tag)
       ? left.safeParse(val.left).success || right.safeParse(val.right).success
         ? null
-        : ctx.addIssue({code: 'custom', message: ' invalid either value type '})
-      : ctx.addIssue({code: 'custom', message: 'not a Eihter type'})
+        : ctx.addIssue({ code: 'custom', message: ' invalid either value type ' })
+      : ctx.addIssue({ code: 'custom', message: 'not a Eihter type' })
   })
 
 // // z.ZodType.prototype

@@ -1,6 +1,6 @@
 /* 提供一系列原语指令 */
 
-import {None, Option, ValueOrFunc, option} from '../../mod.ts'
+import { None, Option, ValueOrFunc, option, todo } from '../../mod.ts'
 
 interface provided {
   <T>(condition: boolean, handle: ValueOrFunc<T>): false | T
@@ -55,3 +55,47 @@ Object.defineProperty(provided, 'option', {
     return condition ? option(typeof handle === 'function' ? (handle as Function)() : handle) : None
   },
 })
+
+/** ## and : [and](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Logical_AND)运算符的函数形式
+@example
+```ts
+  const judgT = 'A' == 'A'
+  const judgF = 1 + 2 == 2
+
+  const r1 = and(judgT, judgT)
+  assertEquals(r1, true)
+
+  const r2 = and(judgT, judgF)
+  assertEquals(r2, false)
+
+  const r3 = and(judgF, judgT)
+  assertEquals(r3, false)
+
+  const r4 = and(judgF, judgF)
+  assertEquals(r4, false)
+```
+@category Function
+*/
+export const and = (...args: Array<any>) => args.every((item) => item)
+
+/** ## or : [or](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Logical_OR)运算符的函数形式 
+@example
+```ts
+  const judgT = 'A' == 'A'
+  const judgF = 1 + 2 == 2
+
+  const r1 = or(judgT, judgT)
+  assertEquals(r1, true)
+
+  const r2 = or(judgT, judgF)
+  assertEquals(r2, true)
+
+  const r3 = or(judgF, judgT)
+  assertEquals(r3, true)
+
+  const r4 = or(judgF, judgF)
+  assertEquals(r4, false)
+```
+@category Function
+*/
+export const or = (...args: Array<any>) => args.some((item) => item)

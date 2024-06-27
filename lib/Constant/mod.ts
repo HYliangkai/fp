@@ -1,3 +1,5 @@
+export * from './functor.ts'
+
 /** ##  Default : global default value 
   @category Constant
 */

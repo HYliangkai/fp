@@ -1,94 +1,54 @@
-import { Condition, Def } from '../../mod.ts'
-import { match } from './mod.ts'
-/** pattern : 科里化的match函数
-@example
-```ts
-const name='jiojio'
-const age=pattern(
-['jiojio',18],
-[(name)=>name==='dio',19],
-[Def,20])
-assert(age(name)===18)//true
-```
+import {
+  Condition,
+  Def,
+  Fn,
+  JudeCondition,
+  None,
+  Option,
+  PartialEq,
+  Some,
+  implements_equal,
+  implements_partial_eq,
+} from '../../mod.ts'
+
+/** ## Pattern : 链式调用的模式匹配
+
 @category Function
-  */
-export function pattern<T, V>(ab: [typeof Def, V]): (value: V) => V
-export function pattern<T, V, C>(ab: [Condition<T>, V], bc: [typeof Def, C]): (value: V) => V | C
-export function pattern<T, V, C, D>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [typeof Def, D]
-): (value: V) => V | C | D
-export function pattern<T, V, C, D, F>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [typeof Def, F]
-): (value: V) => V | C | D | F
+*/
+// interface Pattern<T, R> {
+//   /** ### when : 进行其中一个的模式匹配处理 */
+//   when<V>(item: MatchingItem<T>, value: V): Pattern<T, R | V>
 
-export function pattern<T, V, C, D, F, G>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [Condition<T>, F],
-  ef: [typeof Def, G]
-): (value: V) => V | C | D | F | G
+//   /** ### done : 获取匹配结果 */
+//   done(): R
+// }
 
-export function pattern<T, V, C, D, F, G, H>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [Condition<T>, F],
-  ef: [Condition<T>, G],
-  fg: [typeof Def, H]
-): (value: V) => V | C | D | F | G | H
+class Pattern<T, R = never> {
+  constructor(private value: T, private pattern: Array<[Condition<any>, any]> = []) {}
 
-export function pattern<T, V, C, D, F, G, H, I>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [Condition<T>, F],
-  ef: [Condition<T>, G],
-  fg: [Condition<T>, H],
-  gh: [typeof Def, I]
-): (value: V) => V | C | D | F | G | H | I
+  when<V>(item: Condition<T | typeof Def>, value: V): Pattern<T, R | V> {
+    this.pattern.push([item, value])
+    return new Pattern<T, R | V>(this.value, this.pattern)
+  }
 
-export function pattern<T, V, C, D, F, G, H, I, J>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [Condition<T>, F],
-  ef: [Condition<T>, G],
-  fg: [Condition<T>, H],
-  gh: [Condition<T>, I],
-  hi: [typeof Def, J]
-): (value: V) => V | C | D | F | G | H | I | J
+  done(): Option<R> {
+    let def = None
+    for (const [condition, result] of this.pattern) {
+      if (condition === this.value) return Some(result)
+      if (typeof condition === 'function' && (condition as JudeCondition<any>)(this.value)) return result
 
-export function pattern<T, V, C, D, F, G, H, I, J, K>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [Condition<T>, F],
-  ef: [Condition<T>, G],
-  fg: [Condition<T>, H],
-  gh: [Condition<T>, I],
-  hi: [Condition<T>, J],
-  ij: [typeof Def, K]
-): (value: V) => V | C | D | F | G | H | I | J | K
+      const partial =
+        implements_partial_eq(this.value) && implements_partial_eq(condition) && (this.value as PartialEq)['eq'](condition)
 
-export function pattern<T, V, C, D, F, G, H, I, J, K, L>(
-  ab: [Condition<T>, V],
-  bc: [Condition<T>, C],
-  cd: [Condition<T>, D],
-  de: [Condition<T>, F],
-  ef: [Condition<T>, G],
-  fg: [Condition<T>, H],
-  gh: [Condition<T>, I],
-  hi: [Condition<T>, J],
-  ij: [Condition<T>, K],
-  jk: [typeof Def, L]
-): (value: V) => V | C | D | F | G | H | I | J | K | L
-export function pattern(...args: ([Condition<any>, unknown] | [typeof Def, unknown])[]): any {
-  //@ts-ignore : 简化调用
-  return (pattern_value: any) => match(pattern_value, ...args)
+      const equal = implements_equal(this.value) && implements_equal(condition) && this.value['equals'](condition)
+
+      if (partial || equal) return result
+    }
+
+    return def
+  }
+}
+
+export function pattern<T>(value: T): Pattern<T> {
+  return new Pattern(value)
 }

@@ -8,7 +8,3 @@ export * from './primitive.ts' //原语
 export * from './is.ts' //类型判断
 export * from './algebraicEffect.ts' //代数效应
 export * from './functor.ts' //函数解析器 : 测试阶段
-
-
-
-

@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+echo "检查代码中的 TODO..."
+
+deno task check:todo
+
+
+# 获取上面脚本的退出码
+exitCode="$?"
+exit $exitCode
+

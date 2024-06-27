@@ -1,5 +1,5 @@
-import {AnyError, match_error, panic} from 'lib'
-import {assert, assertEquals, assertFalse, assertThrows} from '../mod.ts'
+import { AnyError, match_error, panic } from 'lib'
+import { assert, assertEquals, assertFalse, assertThrows } from '../mod.ts'
 
 Deno.test('error-init', () => {
   const error = new AnyError()
@@ -29,7 +29,7 @@ Deno.test('error-fn', () => {
 Deno.test('match_error : Function', () => {
   const pattern = match_error(AnyError.new())
   pattern.error(
-    error => {
+    (error) => {
       assert(error instanceof AnyError)
     },
     () => {}
