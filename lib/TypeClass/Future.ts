@@ -5,7 +5,7 @@ class Future {
   _tag = future_tag
 }
 
-todo({ title: 'Future', desc: '完成 Future 类', matur_day: '2024-06-28', matur_version: '0.7.3' })
+todo({ title: 'Future', desc: '完成 Future 类', matur_version: '0.7.4' })
 export function future<T, E>() {
   return new Future()
 }

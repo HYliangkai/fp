@@ -1,4 +1,4 @@
-/* must top-first */ export * from './Function/todo.ts'
+export * from './todo.ts'
 /* must frist  */ export * from './Constant/mod.ts'
 export * from './TypeClass/mod.ts'
 export * from './Ext/mod.ts'

@@ -18,10 +18,12 @@ const filter_list = output_todo().filter(({ matur_day, matur_version }) => {
   return false
 })
 
-const code = filter_list.length > 0 ? 1 : 0
+const exit_code = filter_list.length > 0 ? 1 : 0
 
-if (code) {
+if (exit_code) {
   console.log('%c当前项目有未完成的待办事项,无法提交代码:', 'color:#F56C6C')
   print_todo(filter_list)
-  Deno.exit(code)
+  Deno.exit(exit_code)
 }
+
+

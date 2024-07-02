@@ -40,6 +40,11 @@ function call_stack(): string {
   try {
     throw new Error('TODO')
   } catch (e) {
-    return e.stack?.split('\n')?.at(STACK_POSITION)?.trim() || undefined
+    return (
+      e.stack
+        .split('\n')
+        .at(STACK_POSITION || 3)
+        .trim() || undefined
+    )
   }
 }
