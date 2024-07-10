@@ -3,9 +3,11 @@
 zod是一个Schema验证库,用于弥补Ts在运行时不具有类型检查的缺陷,能实现全链路的类型安全
 @category ext
 */
+
 export * from 'npm:zod@3.22.4'
-import * as z from 'npm:zod@3.22.4'
-import { Either, Option, Result, error_tag, left_tag, none_tag, ok_tag, right_tag, some_tag } from '../mod.ts'
+import { zod as z } from '../dep.ts'
+import { Either, Option, Result, error_tag, left_tag, none_tag, ok_tag, right_tag, some_tag } from '../../mod.ts'
+import { todo } from '../todo/mod.ts'
 
 /** @ zod.option */
 export const option = <S extends z.Schema>(value: S): z.ZodEffects<z.ZodAny, Option<z.infer<S>>, Option<z.infer<S>>> =>
@@ -42,6 +44,12 @@ export const either = <L extends z.Schema, R extends z.Schema>(
         : ctx.addIssue({ code: 'custom', message: ' invalid either value type ' })
       : ctx.addIssue({ code: 'custom', message: 'not a Eihter type' })
   })
+
+todo({
+  title: 'zod - validate',
+  desc: '完善zod.validate函数',
+  matur_version: '0.7.5',
+})
 
 // // z.ZodType.prototype
 // Object.defineProperty(z.ZodType.prototype, 'validate', {

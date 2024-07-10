@@ -1,5 +1,5 @@
 import pack from '../deno.json' with { type: 'json' }
-import { output_todo, print_todo } from 'lib'
+import { output_todo, print_todo } from '../lib/todo/mod.ts'
 import { dayjs } from '../mod.ts'
 
 const now_version = (pack.version || '0.0.0').split('.')
@@ -21,7 +21,7 @@ const filter_list = output_todo().filter(({ matur_day, matur_version }) => {
 const exit_code = filter_list.length > 0 ? 1 : 0
 
 if (exit_code) {
-  console.log('%c当前项目有未完成的待办事项,无法提交代码:', 'color:#F56C6C')
+  console.log('%c当前项目有未完成的待办事项:', 'color:#F56C6C')
   print_todo(filter_list)
   Deno.exit(exit_code)
 }

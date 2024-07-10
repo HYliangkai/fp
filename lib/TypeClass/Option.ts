@@ -1,4 +1,5 @@
 import { panic, anyresult, ErrorLevel, AnyResult, none_tag, some_tag } from '../mod.ts'
+import { todo } from '../todo/mod.ts'
 
 /** ## Option : 一个可能为{@link None}或{@link Some}的数据类型 
   @category TypeClass */
@@ -164,8 +165,10 @@ export function option<T>(value: T): Option<T> {
   assertEquals(b.is_none, true)
   ```
   @category TypeClass
+
 */
-function deep_option<T>(value: T) {
+todo('deep_option', '0.7.5')
+function deep_option<T>(value: T): unknown {
   if (typeof value !== 'object') return option(value)
   const cache = new WeakMap()
   {

@@ -115,15 +115,15 @@ interface Flow extends AutoFlow {
   readonly async: AsyncFlow
 }
 
-function sync_flow(...fns: Array<Fn<any, any>>) {
+function sync_flow(...fns: Array<Fn<any, any>>): any {
   return (a: any) => pipe.sync(a, ...fns)
 }
 
-function async_flow(...fns: Array<Fn<any, any>>) {
+function async_flow(...fns: Array<Fn<any, any>>): any {
   return async (a: any) => await pipe.async(a, ...fns)
 }
 
-function auto_flow(...fns: Array<Fn<any, any>>) {
+function auto_flow(...fns: Array<Fn<any, any>>): any {
   return fns.some((i) => is_async_func(i)) ? async_flow(...fns) : sync_flow(...fns)
 }
 

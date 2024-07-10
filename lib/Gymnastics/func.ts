@@ -1,3 +1,5 @@
+import { functor } from '../../mod.ts'
+
 /** ## FnReturn 
   参数为空,返回值为`T`的函数
   @category Gymnastics

@@ -7,6 +7,4 @@ a-calc是一个js计算库,解决js计算精度问题,然后还附带了一些�
   2. 提供常用的计算方法
 @category ext
 */
-import * as a_calc from 'npm:a-calc'
-
-export { a_calc }
+export { a_calc } from '../dep.ts'

@@ -82,19 +82,19 @@ class ok<T = void> implements Ok<T> {
     this.is_ok = true
     this.is_err = false
   }
-  unwarp() {
+  unwarp(): T {
     return this.value
   }
-  expect<V>(_msg: V) {
+  expect<V>(_msg: V): T {
     return this.value
   }
-  unwarp_or(_def: T) {
+  unwarp_or(_def: T): T {
     return this.value
   }
-  unwarp_err() {
+  unwarp_err(): AnyError<ErrorLevel> {
     return AnyError.new('Error', 'Ok value not error')
   }
-  unwrap_or_else(_fn: Function) {
+  unwrap_or_else(_fn: Function): T {
     return this.value
   }
   to_option() {
@@ -191,14 +191,14 @@ class err<E> implements Err<E> {
       return AnyErr('Info', 'must be AnyError can use map_err', 'map_err')
     }
   }
-  and_then(_fn: Function) {
+  and_then(_fn: Function): this {
     return this
   }
-  match_ok(_fn: Function) {}
-  match_err(fn: Function) {
+  match_ok(_fn: Function): void {}
+  match_err(fn: Function): void {
     fn(this.value)
   }
-  to_either() {
+  to_either(): Either<never, E> {
     return Right(this.value)
   }
 }
@@ -231,7 +231,7 @@ export class BackTrack<T> {
 }
 
 /** 解决result()中嵌套过深无法返回的问题,可以作为result()函数中的return使用 */
-export function backtrack<T>(val: T) {
+export function backtrack<T>(val: T): void {
   throw new BackTrack(val)
 }
 

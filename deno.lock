@@ -14,6 +14,8 @@
       "jsr:@std/path@^0.218.2": "jsr:@std/path@0.218.2",
       "npm:@ts-morph/bootstrap@0.22": "npm:@ts-morph/bootstrap@0.22.0",
       "npm:@types/node": "npm:@types/node@18.16.19",
+      "npm:a-calc": "npm:a-calc@2.2.6",
+      "npm:a-calc@2.2.6": "npm:a-calc@2.2.6",
       "npm:code-block-writer@^13.0.1": "npm:code-block-writer@13.0.1",
       "npm:dayjs": "npm:dayjs@1.11.9",
       "npm:dayjs@1.11.10": "npm:dayjs@1.11.10",
@@ -120,6 +122,12 @@
       "@types/node@18.16.19": {
         "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
         "dependencies": {}
+      },
+      "a-calc@2.2.6": {
+        "integrity": "sha512-YXcX9aWu6aLPrXwMn4spaD0aqGyIN/XBmOGDS3HXKI/dk2B9agEk1WFy1iuLGax8EoGgGhYJkoPy3MzCjyw+dQ==",
+        "dependencies": {
+          "typescript-treasure": "typescript-treasure@0.0.9"
+        }
       },
       "balanced-match@1.0.2": {
         "integrity": "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==",
@@ -310,6 +318,10 @@
       },
       "typed-function@4.1.1": {
         "integrity": "sha512-Pq1DVubcvibmm8bYcMowjVnnMwPVMeh0DIdA8ad8NZY2sJgapANJmiigSUwlt+EgXxpfIv8MWrQXTIzkfYZLYQ==",
+        "dependencies": {}
+      },
+      "typescript-treasure@0.0.9": {
+        "integrity": "sha512-QPmpqJvQqZ7rt2iVNzPrtQNSFs1zVuTuP+jzE3np7qytEUcfSKtAW8RTDslldeAwaJjVJa0UM3ps1uVddpEMqQ==",
         "dependencies": {}
       },
       "zod@3.22.2": {

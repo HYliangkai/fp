@@ -1,3 +1,4 @@
+import { Fns } from '../../mod.ts'
 import { PartialEq, Equal, Result, error_tag, ok_tag } from '../mod.ts'
 /** ## is_async_func : 运行时判断函是否是 async函数
 @tips 只能判断
@@ -17,7 +18,7 @@ import { PartialEq, Equal, Result, error_tag, ok_tag } from '../mod.ts'
 ```
 @catrgory Function
   */
-export const is_async_func = (fn: Function): fn is () => Promise<unknown> => {
+export const is_async_func = (fn: Fns<any>): fn is () => Promise<unknown> => {
   if (typeof fn !== 'function') return false
   if (fn.constructor && fn.constructor.name === 'AsyncFunction') return true
   return false
@@ -30,7 +31,7 @@ export const is_async_func = (fn: Function): fn is () => Promise<unknown> => {
 
   @category Function
  */
-export const is_number = (val: any): boolean => {
+export const is_number = (val: unknown): boolean => {
   if (typeof val !== 'number' && typeof val !== 'string') return false
   return !isNaN(Number(val)) || val === Infinity || val === -Infinity
 }
@@ -38,15 +39,15 @@ export const is_number = (val: any): boolean => {
 /** ## implements_partial_eq : duck type to judge PartialEq type 
   @category Function
   */
-export function implements_partial_eq(value: any): value is PartialEq {
-  return typeof value === 'object' && typeof value['eq'] === 'function'
+export function implements_partial_eq(value: unknown): value is PartialEq {
+  return typeof value === 'object' && typeof (value as PartialEq)['eq'] === 'function'
 }
 
 /** ## implements_equal : duck type to judge Equal type 
   @category Function
 */
-export function implements_equal(value: any): value is Equal<any> {
-  return typeof value === 'object' && typeof value['equals'] === 'function'
+export function implements_equal(value: unknown): value is Equal<any> {
+  return typeof value === 'object' && typeof (value as Equal<any>)['equals'] === 'function'
 }
 
 /** ## is_result : 运行时判断是否Result类型 
@@ -63,6 +64,6 @@ export function implements_equal(value: any): value is Equal<any> {
   ```
   @category Function
 */
-export function is_result<T = unknown, E = unknown>(val: any): val is Result<T, E> {
+export function is_result<T = unknown, E = unknown>(val: { _tag?: any }): val is Result<T, E> {
   return val._tag === ok_tag || val._tag === error_tag
 }

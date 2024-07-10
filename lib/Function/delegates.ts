@@ -1,3 +1,5 @@
+import { Fns } from '../../mod.ts'
+
 /** ## delegates : 使用运算符重载实现的事件委托
 @warn 实验性质,不予生产使用
 @example
@@ -24,32 +26,32 @@
 @category Function
 */
 const delegates = (() => {
-  const global_delegates: Function[] = []
+  const global_delegates: Fns<any>[] = []
 
-  Function.prototype.valueOf = function () {
-    const self = this as Function & {global_index: number | undefined}
+  Function.prototype.valueOf = function (): number {
+    const self = this as Fns<any> & { global_index: number | undefined }
     if (self.global_index !== undefined) return self.global_index
     const index = global_delegates.length
     Object.defineProperty(this, 'global_index', {
-      get() {
+      get(): number {
         return index //存储创建时候的索引值
       },
     })
-    global_delegates.push(this)
+    global_delegates.push(this as any)
     return index
   }
 
-  return function delegates() {
-    const handlers: Record<string | number | symbol, Array<Function>> = {}
-    const callers: Record<string | number | symbol, Function> = {}
+  return function delegates(): Record<string | number | symbol, any> {
+    const handlers: Record<string | number | symbol, Array<Fns<any>>> = {}
+    const callers: Record<string | number | symbol, Fns<any>> = {}
     return new Proxy(
       {},
       {
         //当进行属性访问的时候调用 , 返回一个遍历执行handlers[key]的函数
-        get(target, key) {
+        get(target, key): any {
           handlers[key] ??= []
-          return (callers[key] ??= function (...args: unknown[]) {
-            return handlers[key]?.map((fn: Function) => fn(...args))
+          return (callers[key] ??= function (...args: unknown[]): any {
+            return handlers[key]?.map((fn: Fns<any>) => fn(...args))
           })
         },
 
@@ -59,7 +61,7 @@ const delegates = (() => {
         + 指定继承者的属性值：Object.create(proxy)[foo] = bar
         + Reflect.set()
         */
-        set(target, p, newvalue) {
+        set(target, p, newvalue): any {
           switch (typeof newvalue) {
             case 'function': {
               const event = (handlers[p] ??= [])
@@ -74,7 +76,7 @@ const delegates = (() => {
                 handlers[p].push(delegate)
               } else {
                 handlers[p].splice(
-                  handlers[p].findIndex((fn: Function) => fn === delegate),
+                  handlers[p].findIndex((fn: Fns<any>) => fn === delegate),
                   1
                 )
               }

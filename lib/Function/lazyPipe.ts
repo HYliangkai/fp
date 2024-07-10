@@ -145,10 +145,10 @@ interface LazyPipe extends AutoLazyPipe {
   readonly async: AsyncLazyPipe
 }
 
-function sync_lzpipe(...fns: Array<Fn<any, any>>) {
+function sync_lzpipe(...fns: Array<Fn<any, any>>): any {
   return () => pipe.sync(...fns)
 }
-function async_lzpipe(...fns: Array<PFn<any, any>>) {
+function async_lzpipe(...fns: Array<PFn<any, any>>): any {
   return async () => await pipe.async(...fns)
 }
 

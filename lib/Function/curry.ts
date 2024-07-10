@@ -1,5 +1,4 @@
-import { any } from '../Ext/zod.ts'
-
+import { Fns } from '../../mod.ts'
 /** ## curry : 函数科里化
 @example
 ```ts
@@ -40,7 +39,7 @@ export function curry<T, U, V, W, X, Y, Z, A, B>(
 
 export function curry<T>(fn: (...args: unknown[]) => T, level: number): T
 
-export function curry(fn: any, level = 1) {
+export function curry(fn: Fns<any>, level = 1): any {
   return (arg: any) => {
     if (level === 1) return fn(arg)
     return curry(fn.bind(null, arg), level - 1)
