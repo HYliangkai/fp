@@ -5,7 +5,7 @@ zod是一个Schema验证库,用于弥补Ts在运行时不具有类型检查的�
 */
 
 export * from 'npm:zod@3.22.4'
-import { zod as z } from '../dep.ts'
+import * as z from 'npm:zod@3.22.4'
 import { Either, Option, Result, error_tag, left_tag, none_tag, ok_tag, right_tag, some_tag } from '../../mod.ts'
 import { todo } from '../todo/mod.ts'
 
@@ -48,7 +48,7 @@ export const either = <L extends z.Schema, R extends z.Schema>(
 todo({
   title: 'zod - validate',
   desc: '完善zod.validate函数',
-  matur_version: '0.7.6',
+  matur_version: '0.8.0',
 })
 
 // // z.ZodType.prototype

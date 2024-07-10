@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
@@ -55,8 +55,7 @@
         "no-empty-enum",
         "no-empty-interface",
         "no-empty-pattern",
-        "no-ex-assign",
-        "no-external-import"
+        "no-ex-assign"
       ]
     }
   },
