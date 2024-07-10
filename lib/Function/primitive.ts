@@ -1,6 +1,6 @@
 /* 提供一系列原语指令 */
 
-import { None, Option, ValueOrFunc, option, todo } from '../../mod.ts'
+import { None, Option, ValueOrFunc, option } from '../../mod.ts'
 
 interface provided {
   <T>(condition: boolean, handle: ValueOrFunc<T>): false | T
