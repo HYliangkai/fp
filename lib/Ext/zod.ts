@@ -48,7 +48,7 @@ export const either = <L extends z.Schema, R extends z.Schema>(
 todo({
   title: 'zod - validate',
   desc: '完善zod.validate函数',
-  matur_version: '0.7.5',
+  matur_version: '0.7.6',
 })
 
 // // z.ZodType.prototype

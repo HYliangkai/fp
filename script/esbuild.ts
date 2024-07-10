@@ -39,6 +39,9 @@ result(async () => {
         main: './esm/mod.js',
         access: 'public',
       },
+      compilerOptions: {
+        target: 'ES2016',
+      },
     })
   }).unwarp()
 }).unwarp()

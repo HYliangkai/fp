@@ -7,7 +7,7 @@ class Future {
   constructor() {}
 }
 
-todo({ title: 'Future', desc: '完成 Future 类', matur_version: '0.7.5' })
+todo({ title: 'Future', desc: '完成 Future 类', matur_version: '0.8.0' })
 export function future<T, E>(): Future {
   return new Future()
 }

@@ -167,7 +167,7 @@ export function option<T>(value: T): Option<T> {
   @category TypeClass
 
 */
-todo('deep_option', '0.7.5')
+todo('deep_option', '0.8.0')
 function deep_option<T>(value: T): unknown {
   if (typeof value !== 'object') return option(value)
   const cache = new WeakMap()
