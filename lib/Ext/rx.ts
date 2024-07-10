@@ -8,4 +8,6 @@ Rxjs是一个响应式编程库,用于处理异步数据流,能实现全链路�
 
 @category ext
 */
-export * as rxjx from 'npm:rxjs@7.8.1'
+
+import * as rjx from 'npm:rxjs@7.8.1'
+export { rjx }

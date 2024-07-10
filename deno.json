@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
