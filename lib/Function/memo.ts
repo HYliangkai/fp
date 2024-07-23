@@ -21,8 +21,8 @@ sum(1,3) // {a:1,b:2} --> cache with key a:1
 @category Function
 */
 export const memo = <T>(func: CFn<T>, resolver?: (...val: any[]) => any): CFn<T> => {
-  if (typeof func !== 'function') throw new TypeError('Expected a function')
-  const memoized = function (...arg: any) {
+  if (typeof func !== 'function') throw new TypeError('Expected a fun ction')
+  const memoized = function (...arg: any): T {
     const key = resolver ? resolver(...arg) : arg[0]
     const cache = memoized.cache
     if (cache.has(key)) return cache.get(key)

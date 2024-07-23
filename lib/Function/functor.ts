@@ -1,4 +1,4 @@
-import { Err, Fns, Functor_Param_Tag, Ok, Proxy_Value, Result } from '../../mod.ts'
+import { Err, type Fns, Functor_Param_Tag, Ok, Proxy_Value, type Result } from '../../mod.ts'
 /** ## functor : 函数解析器,用于简化函数调用 
 - 启发于Swift的闭包简写,可以将函数表达式转换为函数对象,并且可以传入参数 ; 
   将难看的闭包调用转换为简单的字符串表达式,增加代码可读性
@@ -37,7 +37,7 @@ export const functor = <T = unknown>(strings: TemplateStringsArray, ...args: any
   Functor(args.reduce((prev, cur, i) => prev + parse_param(cur) + strings[i + 1], strings[0]))
 
 function parse_param(param: any): string {
-  if (typeof param == 'string') return param
+  if (typeof param === 'string' || typeof param === 'number') return String(param)
   if (typeof param === 'object' && param[Functor_Param_Tag] === true) return param[Proxy_Value]
   throw new TypeError('param must be a string or funtor params ')
 }
@@ -45,7 +45,7 @@ function parse_param(param: any): string {
 function Functor(expression: string): any {
   if (typeof expression !== 'string') throw new TypeError('expression must be a string')
   const max = find_max_idx(expression).unwarp()
-  const args = Array.from({ length: max }, (_, i) => `$${i}`)
+  const args = Array.from({ length: max }, (_, idx) => `$${idx}`)
   return Function(...args, `return ${expression}`)
 }
 

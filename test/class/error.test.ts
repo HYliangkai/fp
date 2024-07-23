@@ -16,7 +16,7 @@ Deno.test('error-init', () => {
 Deno.test('error-fn', () => {
   const error = AnyError.new('Error', 'testing')
   let flag = false
-  for (const stark of error.strack_trace().split('\n')) {
+  for (const stark of error.stack_trace().split('\n')) {
     if (stark.includes(import.meta.url)) {
       flag = true
     }

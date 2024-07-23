@@ -1,7 +1,8 @@
 /** 利用zod的类型校验达到显著的运行时安全效果 */
 
-import {Err, Left, Ok, Right, Some, zod} from 'lib'
-import {assert, assertFalse} from '../mod.ts'
+import { Err, Left, Ok, Right, Some, zod } from 'lib'
+
+import { assert, assertEquals, assertFalse, assertThrows } from '@std/assert/mod.ts'
 
 Deno.test('test-option-and-zod', () => {
   //先定义shema
@@ -13,7 +14,7 @@ Deno.test('test-option-and-zod', () => {
   const B = '12' // string and no option
   assertFalse(schema.safeParse(B).success)
 
-  const C = {_tag: 'some', value: '12'} // no string and like option
+  const C = { _tag: 'some', value: '12' } // no string and like option
   assertFalse(schema.safeParse(C).success)
 
   const D = Some(12) // option and no string
@@ -33,7 +34,7 @@ Deno.test('test-result-and-zod', () => {
   const B = '12' // string and no result
   assertFalse(schema.safeParse(B).success)
 
-  const C = {_tag: 'Ok', value: '12'} // no string and like result
+  const C = { _tag: 'Ok', value: '12' } // no string and like result
   assertFalse(schema.safeParse(C).success)
 
   const D = Some(12) // result and no string
@@ -59,7 +60,7 @@ Deno.test('test-either-and-zod', () => {
   const B = '12' // string and no either
   assertFalse(schema.safeParse(B).success)
 
-  const C = {_tag: 'Ok', value: '12'} // no string and like either
+  const C = { _tag: 'Ok', value: '12' } // no string and like either
   assertFalse(schema.safeParse(C).success)
 
   const D = Some(12) // either and no string
@@ -73,4 +74,12 @@ Deno.test('test-either-and-zod', () => {
 
   const G = Right(12) // string and  either
   assert(schema.safeParse(G).success) // pass test
+})
+
+Deno.test('zod-validation', () => {
+  assertThrows(() => {
+    zod.string().validate(114514).unwarp()
+  })
+
+  assertEquals(zod.string().validate('114514').unwarp(), '114514')
 })

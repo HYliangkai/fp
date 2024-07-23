@@ -1,4 +1,4 @@
-import {Result} from '../../mod.ts'
+import type { Result } from '../../mod.ts'
 
 /** ## Serialize : 序列化
 @explain 正反序列化恒等性 : `Serialize<A, B> ==  `{@link DeSerialize}`<B, A>`

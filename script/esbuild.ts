@@ -1,9 +1,10 @@
 /** Build deno package to npm package */
 
 import { build, emptyDir } from '@deno/dnt'
-import { Err, Ok, Option, Result, option, pipe, result } from '../mod.ts'
+import { Err, Ok, Option, Result, option, result } from 'npm:@chzky/fp@0.7.8'
 import { join } from 'https://deno.land/std@0.204.0/path/mod.ts'
 type Path = { __dirname: Option<string>; __filename: Option<string> }
+const NAME = '@chzky/fp'
 const path = (): Result<Path, string> => {
   const url = new URL(import.meta.url)
   if (url.protocol === 'file:') {
@@ -34,8 +35,10 @@ result(async () => {
       packageManager: 'pnpm',
       package: {
         author: 'https://github.com/HYliangkai',
-        name: '@chzky/fp',
-        version: JSON.parse(new TextDecoder('utf-8').decode(await Deno.readFile(relative_to_absolute(OUTPUT_DIR)))).version,
+        name: NAME,
+        version: JSON.parse(
+          new TextDecoder('utf-8').decode(await Deno.readFile(relative_to_absolute(OUTPUT_DIR)))
+        ).version,
         main: './esm/mod.js',
         access: 'public',
       },

@@ -6,20 +6,60 @@ zod是一个Schema验证库,用于弥补Ts在运行时不具有类型检查的�
 
 export * from 'npm:zod@3.22.4'
 import * as z from 'npm:zod@3.22.4'
-import { Either, Option, Result, error_tag, left_tag, none_tag, ok_tag, right_tag, some_tag } from '../../mod.ts'
-import { todo } from '../todo/mod.ts'
+import {
+  type Fn,
+  type Either,
+  type Option,
+  type Result,
+  error_tag,
+  left_tag,
+  none_tag,
+  ok_tag,
+  right_tag,
+  some_tag,
+  Err,
+  Ok,
+} from '../../mod.ts'
 
-/** @ zod.option */
-export const option = <S extends z.Schema>(value: S): z.ZodEffects<z.ZodAny, Option<z.infer<S>>, Option<z.infer<S>>> =>
+declare module 'npm:zod@3.22.4' {
+  interface ZodType {
+    /* validate : zod验证函数,返回一个result类型数据 */
+    validate: <T>(value: T, params?: Partial<z.ParseParams>) => Result<T, z.ZodError<T>>
+  }
+}
+
+/** @ zod.option
+@example 
+```ts
+const option = z.option(z.string())
+const res = option.safeParse(Some('jiojio'))
+assert(res.success)
+```
+@category Ext - zod
+ */
+export const option = <S extends z.Schema>(
+  value: S
+): z.ZodEffects<z.ZodAny, Option<z.infer<S>>, Option<z.infer<S>>> =>
   z.any().superRefine((val, ctx) => {
     val && (val._tag === some_tag || val._tag === none_tag)
       ? value.safeParse(val.value).success
         ? null
-        : ctx.addIssue({ code: 'custom', message: ' invalid option value type ' })
+        : ctx.addIssue({
+            code: 'custom',
+            message: ' invalid option value type ',
+          })
       : ctx.addIssue({ code: 'custom', message: 'not a Option type' })
   })
 
-/** @ zod.resule */
+/** @ zod.resule 
+@example
+```ts
+const result = z.result(z.string(), z.number())
+const res = result.safeParse(Ok('jiojio'))
+assert(res.success)
+```
+@category Ext - zod
+*/
 export const result = <T extends z.Schema, E extends z.Schema>(
   ok: T,
   err: E
@@ -28,11 +68,23 @@ export const result = <T extends z.Schema, E extends z.Schema>(
     val && (val._tag === ok_tag || val._tag === error_tag)
       ? ok.safeParse(val.value).success || err.safeParse(val.value).success
         ? null
-        : ctx.addIssue({ code: 'custom', message: ' invalid result value type ' })
+        : ctx.addIssue({
+            code: 'custom',
+            message: ' invalid result value type ',
+          })
       : ctx.addIssue({ code: 'custom', message: 'not a Result type' })
   })
 
-/** @ zod.either */
+/** @ zod.either 
+@example
+```ts
+const either = z.either(z.string(), z.number())
+const res = either.safeParse(Left('jiojio'))
+assert(res.success)
+```
+@category Ext - zod
+
+*/
 export const either = <L extends z.Schema, R extends z.Schema>(
   left: z.infer<L>,
   right: z.infer<R>
@@ -41,26 +93,38 @@ export const either = <L extends z.Schema, R extends z.Schema>(
     val && (val._tag === left_tag || val._tag === right_tag)
       ? left.safeParse(val.left).success || right.safeParse(val.right).success
         ? null
-        : ctx.addIssue({ code: 'custom', message: ' invalid either value type ' })
+        : ctx.addIssue({
+            code: 'custom',
+            message: ' invalid either value type ',
+          })
       : ctx.addIssue({ code: 'custom', message: 'not a Eihter type' })
   })
 
-todo({
-  title: 'zod - validate',
-  desc: '完善zod.validate函数',
-  matur_version: '0.8.0',
-})
+/**
 
-// // z.ZodType.prototype
-// Object.defineProperty(z.ZodType.prototype, 'validate', {
-//   value: function (
-//     data: unknown,
-//     params?: Partial<z.ParseParams>
-//   ): Result<typeof data, z.ZodError<any>> {
-//     console.log(this)
-//     const res = this.safeParse.call(this, data, params)
-//     return res.success ? Ok(data) : Err(res.error)
-//   },
-//   writable: false,
-//   configurable: false,
-// })
+`zod.validate(pattern)(value)`用于验证value是否符合pattern的类型  
+`zod.validate(pattern) == pattern.safeParse().success`
+@example
+```ts
+const pattern = z.string()
+const res = zod.validate(pattern)('jiojio')
+assert(res)
+```
+@category Ext - zod
+ */
+export const validate =
+  <T extends z.Schema<unknown>>(pattern: T): Fn<T['_type'], boolean> =>
+  (value: T['_type']) =>
+    pattern.safeParse(value).success
+
+Object.defineProperty(z.ZodType.prototype, 'validate', {
+  value: function (
+    data: unknown,
+    params?: Partial<z.ParseParams>
+  ): Result<typeof data, z.ZodError<any>> {
+    const res = this.safeParse.call(this, data, params)
+    return res.success ? Ok(data) : Err(res.error)
+  },
+  writable: false,
+  configurable: false,
+})

@@ -1,29 +1,35 @@
-import { AnyError, Err, Ok } from 'lib'
+import { AnyErr, AnyError, AnyResult, Default, Err, Ok, Result } from 'lib'
 import { assertEquals, assertThrows } from '../mod.ts'
+import { assert } from '@std/assert/mod.ts'
 
-Deno.test('map_err', () => {
-  const err2 = Err(AnyError.new('Debug', 'test'))
+Deno.test('result-method', () => {
+  const defable: Default<boolean> = { default: () => true }
+  class DefAble {
+    static default() {
+      return true
+    }
+  }
+  const oterr = AnyError.new('Error', 'test error', 'Test')
+  const err = AnyErr('Error', 'test error', 'Test')
+  const ok = Ok(true)
+  const result: AnyResult<boolean> = Date.now() % 2 === 0 ? ok : err
 
-  const res = err2
-    .map_err(({ error, debug }) => {
-      error((val) => Err(val))
-      debug(() => {
-        return Ok('test')
-      })
-    })
-    .unwarp()
-  assertEquals(res, 'test')
+  assertThrows(err.unwarp)
+  assert(result.unwarp_or(true))
+  try {
+    err.expect('Test')
+  } catch (e) {
+    assert(e === 'Test')
+  }
 
-  const err3 = Err(AnyError.new('Error', 'test'))
-  const res1 = err3.map_err(({ error, debug }) => {
-    error((val) => Err(val))
-    debug(() => {
-      return Ok('test')
-    })
-  })
-  assertThrows(() => {
-    res1.match_err((err: AnyError) => {
-      if (err instanceof AnyError) throw err
-    })
-  })
+  assert(err.unwarp_err().eq(oterr))
+  assert(ok.unwarp_err().eq(AnyError.new('Error', 'Ok value not error', 'ResultError')))
+  assert(result.unwrap_or_else((e) => e.eq(oterr)))
+  assert(err.unwarp_or_default(defable))
+  assert(err.unwarp_or_default(DefAble))
+
+  assert(ok.into('option').is_some)
+  assert(err.into('option').is_none)
+  assert(ok.into('either').is_left)
+  assert(err.into('either').is_right)
 })

@@ -5,7 +5,11 @@ const weak_states: WeakMap<Fns<any>, 'pending' | 'fulfulled' | 'error'> = new We
 const weak_datas: WeakMap<Fns<any>, any> = new WeakMap()
 
 function is_promise(pro: Promise<any> | null): pro is Promise<any> {
-  return pro !== null && (typeof pro === 'object' || typeof pro === 'function') && typeof pro.then === 'function'
+  return (
+    pro !== null &&
+    (typeof pro === 'object' || typeof pro === 'function') &&
+    typeof pro.then === 'function'
+  )
 }
 
 /**
@@ -36,9 +40,11 @@ const running =()=> {
   return A.unwarp()+B.unwarp()
 }
 
-run_effect(running,(res)=>{
+run_effect(
+  running,
+  (res)=>{
   console.log(res.unwarp())//'YesNo'
-})
+  })
 ```
 ### 注意事项⚠️
 +  除了`wait()`内的函数,`run_effect()`内执行过程必须是[**纯函数**](https://zh.wikipedia.org/zh-hant/%E7%BA%AF%E5%87%BD%E6%95%B0)
@@ -74,7 +80,10 @@ export const wait = <T, E = unknown>(fn: () => Promise<T>): Result<T, E> => {
   )
 }
 /** 运行环境 */
-export function run_effect<T extends Result<any, any>>(fn: () => T, callback?: (res: T) => any): void
+export function run_effect<T extends Result<any, any>>(
+  fn: () => T,
+  callback?: (res: T) => any
+): void
 export function run_effect<T, E = unknown>(fn: () => T, callback?: (res: Result<T, E>) => any): void
 export function run_effect(fn: () => any, callback?: (res: any) => any): void {
   try {

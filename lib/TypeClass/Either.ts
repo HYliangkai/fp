@@ -1,5 +1,4 @@
-import { left_tag, right_tag } from '../../mod.ts'
-import { Err, Ok, Result } from './mod.ts'
+import { left_tag, right_tag, Err, Ok, type Result } from '../../mod.ts'
 
 interface either<L, R> {
   readonly _tag: typeof left_tag | typeof right_tag

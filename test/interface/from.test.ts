@@ -1,16 +1,16 @@
-import {assert} from '@std/assert/mod.ts'
-import {From, InTo} from 'lib'
+import { assert } from '@std/assert/mod.ts'
+import { From, Into } from 'lib'
 
 Deno.test('base-from', () => {
   class A implements From<B> {
     constructor(public a?: number) {}
 
-    from(val: B): this {
-      return new A(val.a) as this
+    from(val: B) {
+      return new A(val.a)
     }
   }
 
-  class B implements InTo<A> {
+  class B implements Into<A, unknown> {
     constructor(public a?: number) {}
 
     into(flag?: unknown): A {

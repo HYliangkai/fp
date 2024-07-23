@@ -1,4 +1,5 @@
-import {join} from 'jsr:@std/path@^0.218.2/join'
+import { join } from 'jsr:@std/path@^0.218.2/join'
+
 const JSON_PATH = join(import.meta.dirname!, '../deno.json')
 
 const pack = JSON.parse(await Deno.readTextFile(JSON_PATH))

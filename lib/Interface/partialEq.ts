@@ -19,3 +19,10 @@ class User implements PartialEq {
 export interface PartialEq {
   readonly eq: (other: this) => boolean
 }
+
+/** ## implements_partial_eq : duck type to judge PartialEq type 
+  @category Interface
+  */
+export function implements_partial_eq(value: unknown): value is PartialEq {
+  return typeof value === 'object' && typeof (value as PartialEq)['eq'] === 'function'
+}

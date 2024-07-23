@@ -1,5 +1,5 @@
 /** ## Copy : 提供一个自定义克隆接口,`深度遍历`
-* - clone():this 
+* - clone():Copy 
 @example
 ```ts
 class A implements Copy{
@@ -14,5 +14,5 @@ assert(a!=b)
 @category Interface
 */
 export interface Copy {
-  readonly clone: () => this
+  readonly clone: () => Copy
 }

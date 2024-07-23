@@ -1,9 +1,7 @@
-import { Fns } from '../../mod.ts'
-import { PartialEq, Equal, Result, error_tag, ok_tag } from '../mod.ts'
+import { type Fns, type Result, error_tag, ok_tag, zod } from '../../mod.ts'
 /** ## is_async_func : 运行时判断函是否是 async函数
 @tips 只能判断
-      1. 一个函数是否带`async`关键字，不能判断函数是否返回Promise(函数返回只能在运行时判断)
-      2. 对象是否具有`fntag`属性切值为{@link Async_Tag}
+      1. 一个函数是否带`async`关键字，不能判断函数是否返回Promise(函数返回只能在运行时判断) 
 @example
 ```ts
   const sync = (x: number) => x + 1
@@ -31,24 +29,9 @@ export const is_async_func = (fn: Fns<any>): fn is () => Promise<unknown> => {
 
   @category Function
  */
-export const is_number = (val: unknown): boolean => {
-  if (typeof val !== 'number' && typeof val !== 'string') return false
-  return !isNaN(Number(val)) || val === Infinity || val === -Infinity
-}
-
-/** ## implements_partial_eq : duck type to judge PartialEq type 
-  @category Function
-  */
-export function implements_partial_eq(value: unknown): value is PartialEq {
-  return typeof value === 'object' && typeof (value as PartialEq)['eq'] === 'function'
-}
-
-/** ## implements_equal : duck type to judge Equal type 
-  @category Function
-*/
-export function implements_equal(value: unknown): value is Equal<any> {
-  return typeof value === 'object' && typeof (value as Equal<any>)['equals'] === 'function'
-}
+export const is_number = (val: unknown): boolean =>
+  (typeof val === 'string' || typeof val === 'number') &&
+  zod.number().safeParse(Number(val)).success
 
 /** ## is_result : 运行时判断是否Result类型 
   @example

@@ -12,6 +12,3 @@ export type Day = day.Dayjs
 
 /** @immer */
 export * from './immer.ts'
-
-/** @acalc */
-export * from './aCalc.ts'

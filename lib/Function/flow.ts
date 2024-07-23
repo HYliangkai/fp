@@ -1,4 +1,13 @@
-import { FlowResult, FlowReturn, PFn, PromiseLine, pipe, FlowPromiseChange, Fn, is_async_func } from '../../mod.ts'
+import {
+  type Fn,
+  type PFn,
+  type FlowResult,
+  type FlowReturn,
+  type PromiseLine,
+  type FlowPromiseChange,
+  pipe,
+  is_async_func,
+} from '../../mod.ts'
 
 interface AutoFlow {
   /** ## FLow : pipe的科里化版本 */
@@ -10,11 +19,13 @@ interface AutoFlow {
     E,
     PromiseLine<D, PromiseLine<C, B>>
   >
-  <A, B, C, D, E, F>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>, de: PFn<D, E>, ef: PFn<E, F>): FlowResult<
-    A,
-    F,
-    PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>
-  >
+  <A, B, C, D, E, F>(
+    ab: PFn<A, B>,
+    bc: PFn<B, C>,
+    cd: PFn<C, D>,
+    de: PFn<D, E>,
+    ef: PFn<E, F>
+  ): FlowResult<A, F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>
   <A, B, C, D, E, F, G>(
     ab: PFn<A, B>,
     bc: PFn<B, C>,
@@ -31,7 +42,11 @@ interface AutoFlow {
     ef: PFn<E, F>,
     fg: PFn<F, G>,
     gh: PFn<G, H>
-  ): FlowResult<A, H, PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>>
+  ): FlowResult<
+    A,
+    H,
+    PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+  >
   <A, B, C, D, E, F, G, H, I>(
     ab: PFn<A, B>,
     bc: PFn<B, C>,
@@ -41,7 +56,14 @@ interface AutoFlow {
     fg: PFn<F, G>,
     gh: PFn<G, H>,
     hi: PFn<H, I>
-  ): FlowResult<A, I, PromiseLine<H, PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>>>
+  ): FlowResult<
+    A,
+    I,
+    PromiseLine<
+      H,
+      PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+    >
+  >
   (...fns: Array<PFn<any, any>>): (a: unknown) => unknown
 }
 
@@ -50,8 +72,21 @@ interface SyncFlow {
   <A, B, C>(ab: Fn<A, B>, bc: Fn<B, C>): FlowReturn<A, C>
   <A, B, C, D>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>): FlowReturn<A, D>
   <A, B, C, D, E>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>): FlowReturn<A, E>
-  <A, B, C, D, E, F>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>, ef: Fn<E, F>): FlowReturn<A, F>
-  <A, B, C, D, E, F, G>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>, ef: Fn<E, F>, fg: Fn<F, G>): FlowReturn<A, G>
+  <A, B, C, D, E, F>(
+    ab: Fn<A, B>,
+    bc: Fn<B, C>,
+    cd: Fn<C, D>,
+    de: Fn<D, E>,
+    ef: Fn<E, F>
+  ): FlowReturn<A, F>
+  <A, B, C, D, E, F, G>(
+    ab: Fn<A, B>,
+    bc: Fn<B, C>,
+    cd: Fn<C, D>,
+    de: Fn<D, E>,
+    ef: Fn<E, F>,
+    fg: Fn<F, G>
+  ): FlowReturn<A, G>
   <A, B, C, D, E, F, G, H>(
     ab: Fn<A, B>,
     bc: Fn<B, C>,
@@ -78,8 +113,17 @@ interface AsyncFlow {
   <A, B>(ab: PFn<A, B>): FlowPromiseChange<A, B>
   <A, B, C>(ab: PFn<A, B>, bc: PFn<B, C>): FlowPromiseChange<A, C>
   <A, B, C, D>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>): FlowPromiseChange<A, D>
-  <A, B, C, D, E>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>, de: PFn<D, E>): FlowPromiseChange<A, E>
-  <A, B, C, D, E, F>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>, de: PFn<D, E>, ef: PFn<E, F>): FlowPromiseChange<A, F>
+  <A, B, C, D, E>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>, de: PFn<D, E>): FlowPromiseChange<
+    A,
+    E
+  >
+  <A, B, C, D, E, F>(
+    ab: PFn<A, B>,
+    bc: PFn<B, C>,
+    cd: PFn<C, D>,
+    de: PFn<D, E>,
+    ef: PFn<E, F>
+  ): FlowPromiseChange<A, F>
   <A, B, C, D, E, F, G>(
     ab: PFn<A, B>,
     bc: PFn<B, C>,
@@ -115,15 +159,15 @@ interface Flow extends AutoFlow {
   readonly async: AsyncFlow
 }
 
-function sync_flow(...fns: Array<Fn<any, any>>): any {
+const sync_flow = (...fns: Array<Fn<any, any>>): any => {
   return (a: any) => pipe.sync(a, ...fns)
 }
 
-function async_flow(...fns: Array<Fn<any, any>>): any {
+const async_flow = (...fns: Array<Fn<any, any>>): any => {
   return async (a: any) => await pipe.async(a, ...fns)
 }
 
-function auto_flow(...fns: Array<Fn<any, any>>): any {
+const auto_flow = (...fns: Array<Fn<any, any>>): any => {
   return fns.some((i) => is_async_func(i)) ? async_flow(...fns) : sync_flow(...fns)
 }
 

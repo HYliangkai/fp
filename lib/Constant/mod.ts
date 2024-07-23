@@ -27,3 +27,6 @@ export const none_tag = Symbol('none')
 
 /** @category Constant */
 export const future_tag = Symbol('future')
+
+/** @category Constant */
+export const match_return_tag = Symbol('match_return')

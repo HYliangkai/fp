@@ -1,23 +1,21 @@
-/** 参数函子 */
-
 export const Proxy_Value = Symbol('PV')
 export const Functor_Param_Tag = Symbol('FPT')
-
-const proxy_functor_param = (val: string | Symbol): any =>
+/** 参数函子,配合functor使用 : `$0.name.age` --> `$0['name']['age']` */
+const proxy_functor_param = (val: string): any =>
   new Proxy(
     {},
     {
+      has: () => true,
+      set: () => false,
+      deleteProperty: () => false,
+      defineProperty: () => false,
+      isExtensible: () => false,
       get: (_target, key) => {
         if (key === Proxy_Value) return val
         if (key === Functor_Param_Tag) return true
         if (key === Symbol.toStringTag) return 'Functor Param'
         return proxy_functor_param(`${val}['${String(key)}']`)
       },
-      has: () => true,
-      set: () => false,
-      deleteProperty: () => false,
-      defineProperty: () => false,
-      isExtensible: () => false,
     }
   )
 
