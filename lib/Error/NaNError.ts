@@ -1,4 +1,5 @@
-import { AnyError, type AnyResult, Err } from '../../mod.ts'
+import { Err } from '../../mod.ts'
+import { AnyError, type AnyResult } from './anyError/mod.ts'
 
 /** ## NaNError : 结果为NaN的错误
 @class Error
