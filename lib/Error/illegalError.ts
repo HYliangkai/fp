@@ -1,4 +1,4 @@
-import { AnyError, Err } from '../../mod.ts'
+import { AnyError, AnyResult, Err } from '../../mod.ts'
 
 /** ## IllegalOperatError : 表示非法操作导致的错误,通常是致命的
 + 一般直接报错处理
@@ -10,11 +10,11 @@ export class IllegalOperatError extends AnyError<'Fatal'> {
     super('Fatal', cause, 'IllegalOperatError')
   }
 
-  static override new(cause = 'this operation is illegal') {
+  static override new(cause = 'this operation is illegal'): IllegalOperatError {
     return new IllegalOperatError(cause)
   }
 
-  static override err(cause = 'this operation is illegal') {
+  static override err(cause = 'this operation is illegal'): AnyResult<never, 'Fatal'> {
     return Err(IllegalOperatError.new(cause))
   }
 }

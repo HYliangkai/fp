@@ -1,5 +1,4 @@
-import { Err } from '../../mod.ts'
-import { AnyError, type AnyResult } from './anyError/mod.ts'
+import { AnyError, type AnyResult, Err } from '../../mod.ts'
 
 const CAUSE = 'not implements'
 /** ## NotImplementsError : 未实现对应接口错误错误
