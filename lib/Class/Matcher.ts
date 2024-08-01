@@ -1,6 +1,6 @@
 import {
   None,
-  Some,
+  option,
   match_return_tag,
   implements_equal,
   implements_partial_eq,
@@ -125,7 +125,7 @@ function match_return(
 ): any {
   return type === 'Some'
     ? def === undefined
-      ? Some(match_result(match_value, result, caseinfo))
+      ? option(match_result(match_value, result, caseinfo))
       : result
     : def === undefined
     ? None
