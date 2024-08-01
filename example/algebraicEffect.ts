@@ -26,7 +26,7 @@ const running = () => {
 
 function main() {
   run_effect(running, (res) => {
-    console.log(res.unwarp())
+    console.log(res.unwrap())
     console.log('执行完毕')
   })
 }

@@ -26,23 +26,23 @@ class err<E> implements Err<E> {
     throw new TypeError('not match as')
   }
 
-  unwarp(): never {
+  unwrap(): never {
     throw this.value
   }
   expect<R>(err: R): never {
     throw err
   }
-  unwarp_or<R>(def: R): R {
+  unwrap_or<R>(def: R): R {
     return def
   }
-  unwarp_err(): E {
+  unwrap_err(): E {
     return this.value
   }
 
   unwrap_or_else<R>(fn: Fn<E, R>): R {
     return fn(this.value)
   }
-  unwarp_or_default<D>(def: Default<D>): never | D {
+  unwrap_or_default<D>(def: Default<D>): never | D {
     return def.default()
   }
 

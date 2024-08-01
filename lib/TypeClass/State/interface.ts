@@ -18,8 +18,8 @@ export interface State<M, S> {
   */
   draft: <O = M, V = S>(f: Fn<Draft<[Refer<O>, Refer<V>]>, unknown>) => State<O, V>
 
-  /** ### unwarp : 获取main数据*/
-  unwarp: () => M
+  /** ### unwrap : 获取main数据*/
+  unwrap: () => M
   /** ### effect : 获取effect数据*/
   effect: () => S
 }

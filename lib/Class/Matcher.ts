@@ -48,7 +48,7 @@ export class Matcher<T, R = never> {
     .when('diojio', functor<boolean>`false`)
     .when('JioJio', () => true)
     .done()
-    .unwarp()
+    .unwrap()
   assert(result)
   ```
    */
@@ -76,6 +76,8 @@ export class Matcher<T, R = never> {
     this.cases.push([conditions, value, { immediate: false }])
     return new Matcher(this.match_value, this.cases)
   }
+
+  /** ###  */
 
   /** ### done :  收集match结果
   @param def : 默认值,如果不传递默认值,则返回`Option<R>`,否则返回`R|V`

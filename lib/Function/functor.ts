@@ -44,7 +44,7 @@ function parse_param(param: any): string {
 
 function Functor(expression: string): any {
   if (typeof expression !== 'string') throw new TypeError('expression must be a string')
-  const max = find_max_idx(expression).unwarp()
+  const max = find_max_idx(expression).unwrap()
   const args = Array.from({ length: max }, (_, idx) => `$${idx}`)
   return Function(...args, `return ${expression}`)
 }

@@ -48,7 +48,7 @@ class State<M, S> implements STATE<M, S> {
     return State.new(main.value as unknown as O, effect.value as unknown as V)
   }
 
-  unwarp() {
+  unwrap() {
     return this.struct.main
   }
   effect() {
@@ -67,7 +67,7 @@ class State<M, S> implements STATE<M, S> {
   //在main函数中,不变的是info信息,而is_man是变化的,所以可以使用State-effect来存储is_man的状态
   function main_change(state: State<INFO, IS_MAN>) {
     if_then(state.effect(), () => {
-      assertEquals(state.unwarp(), info)
+      assertEquals(state.unwrap(), info)
     })
   }
 ```
@@ -81,7 +81,7 @@ class State<M, S> implements STATE<M, S> {
     return state(info, comput_freq)
   }
   function step2(state: State<INFO, number>) {
-    if_then(state.unwarp().name == 'jiojio', () => {
+    if_then(state.unwrap().name == 'jiojio', () => {
       main_change(state.rep(true))
     })
     // 更新数据,进行数据隔离
@@ -92,9 +92,9 @@ class State<M, S> implements STATE<M, S> {
       effect.value = 2
     })
     // 旧数据 
-    assert(state.unwarp().age === 19)
+    assert(state.unwrap().age === 19)
     // 新数据 
-    assert(as2.unwarp().age === 20)
+    assert(as2.unwrap().age === 20)
     
     assert(as2.effect() === 2)
   }

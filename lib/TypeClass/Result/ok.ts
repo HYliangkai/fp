@@ -11,7 +11,6 @@ import {
 } from '../../../mod.ts'
 import type { Result, ResultIntoFlag, Ok } from './interface.ts'
 
-
 class ok<O = void> implements Ok<O> {
   readonly value: O
   readonly _tag: typeof ok_tag
@@ -30,27 +29,27 @@ class ok<O = void> implements Ok<O> {
     throw new TypeError('not match as')
   }
 
-  unwarp(): O {
+  unwrap(): O {
     return this.value
   }
   expect<V>(_err: V): O {
-    return this.unwarp()
+    return this.unwrap()
   }
-  unwarp_or<R>(_def: R): O {
-    return this.unwarp()
+  unwrap_or<R>(_def: R): O {
+    return this.unwrap()
   }
-  unwarp_err(): AnyError<'Error'> {
+  unwrap_err(): AnyError<'Error'> {
     return AnyError.new('Error', 'Ok value not error', 'ResultError')
   }
   unwrap_or_else<R>(_fn: Fn<never, R>): O {
-    return this.unwarp()
+    return this.unwrap()
   }
-  unwarp_or_default<D>(_def: Default<D>): O | D {
-    return this.unwarp()
+  unwrap_or_default<D>(_def: Default<D>): O | D {
+    return this.unwrap()
   }
 
   map<R>(fn: Fn<O, R>): Result<R, never> {
-    return Ok(fn(this.unwarp()))
+    return Ok(fn(this.unwrap()))
   }
   map_err(_fn: Fn<never, never>): Result<O, never> {
     return this
@@ -60,18 +59,18 @@ class ok<O = void> implements Ok<O> {
   }
 
   match_ok(fn: Fn<O, void>): void {
-    fn(this.unwarp())
+    fn(this.unwrap())
   }
   match_err(_fn: Fn<never, void>): void {}
   match(ok: Fn<O, void>, _err: Fn<never, void>): void {
-    ok(this.unwarp())
+    ok(this.unwrap())
   }
 
   into<R extends ResultIntoFlag>(
     flag: R
   ): R extends 'option' ? Option<O> : R extends 'either' ? Either<O, never> : never {
-    if (flag == 'option') return option(this.unwarp()) as any
-    else if (flag === 'either') return Left(this.unwarp()) as any
+    if (flag == 'option') return option(this.unwrap()) as any
+    else if (flag === 'either') return Left(this.unwrap()) as any
     throw new TypeError('not match into')
   }
 }

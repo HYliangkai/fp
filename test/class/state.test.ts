@@ -6,10 +6,10 @@ Deno.test('state-base', () => {
   const sub = { name: 'jiojio', age: 18 }
   const s1 = state(main, sub)
 
-  assert(s1.unwarp())
+  assert(s1.unwrap())
   assertEquals(s1.effect().age, 18)
 
-  assert(!s1.map((v) => !v).unwarp())
+  assert(!s1.map((v) => !v).unwrap())
   assert(s1.rep(true).effect())
   assert(s1.chain(([m, s]) => [!m, { ...s, age: 20 }]).effect().age === 20)
   assert(s1.ap(() => true).effect())
@@ -30,7 +30,7 @@ Deno.test('state-case', () => {
   //在main函数中,不变的是info信息,而is_man是变化的,所以可以使用State-effect来存储is_man的状态
   function main_change(state: State<INFO, IS_MAN>) {
     if_then(state.effect(), () => {
-      assertEquals(state.unwarp(), info)
+      assertEquals(state.unwrap(), info)
     })
   }
   /** **Usage2**  配合`pipe`函数存储过程数据  :  
@@ -42,9 +42,9 @@ Deno.test('state-case', () => {
     return state(info, comput_freq)
   }
   function step2(state: State<INFO, number>) {
-    if_then(state.unwarp().name == 'jiojio', () => {
+    if_then(state.unwrap().name == 'jiojio', () => {
       main_change(state.rep(true))
-    }).unwarp()
+    }).unwrap()
     /** 更新数据,进行数据隔离 */
     const as2 = state.draft(([main, effect]) => {
       //要更新数据必须先取出value值,然后进行操作
@@ -52,9 +52,9 @@ Deno.test('state-case', () => {
       effect.value = 2
     })
     /* 旧数据 */
-    assert(state.unwarp().age === 19)
+    assert(state.unwrap().age === 19)
     /** 新数据 */
-    assert(as2.unwarp().age === 20)
+    assert(as2.unwrap().age === 20)
     assert(as2.effect() === 2)
   }
   pipe(info, step1, step2)

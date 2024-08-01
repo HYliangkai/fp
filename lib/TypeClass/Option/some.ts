@@ -33,23 +33,23 @@ class some<T> implements Some<T> {
   readonly is_some: boolean
   readonly is_none: boolean
 
-  unwarp(): T {
+  unwrap(): T {
     return this.value
   }
   expect(_err: unknown): T {
-    return this.unwarp()
+    return this.unwrap()
   }
   unwrap_or<R>(_def: R): T {
-    return this.unwarp()
+    return this.unwrap()
   }
   unwrap_or_else<R>(_fn: FnReturn<R>): T {
-    return this.unwarp()
+    return this.unwrap()
   }
   unwrap_or_default<R>(_value: Default<R>): T | R {
-    return this.unwarp()
+    return this.unwrap()
   }
   map<R>(callback: Fn<T, R>): Option<R> {
-    const r = callback(this.unwarp())
+    const r = callback(this.unwrap())
     if (r === undefined || r === null) return None
     return new some(r)
   }
@@ -61,7 +61,7 @@ class some<T> implements Some<T> {
   }
   none_do(_fn: FnReturn<unknown>): void {}
   match(some: Fn<T, unknown>, _none: FnReturn<unknown>): void {
-    some(this.unwarp())
+    some(this.unwrap())
   }
 
   into<R extends 'result' | 'either'>(

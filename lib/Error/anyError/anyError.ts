@@ -101,7 +101,7 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
       .case('Fatal', '#BF062E')
       .case('Panic', '#840021')
       .done()
-      .unwarp()
+      .unwrap()
 
     console.log(
       `%c------------------ ${'Error'} ------------------\n` +

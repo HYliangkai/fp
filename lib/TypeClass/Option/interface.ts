@@ -20,8 +20,8 @@ export interface option<T> extends As<boolean, 'boolean'> {
   readonly is_some: boolean
   /** 是否为None */
   readonly is_none: boolean
-  /** ### unwarp : 获取值,如果为`None`就抛异:{@link NoneError} */
-  unwarp(): T
+  /** ### unwrap : 获取值,如果为`None`就抛异:{@link NoneError} */
+  unwrap(): T
   /** ### expect : 获取值抛异,如果为`None`就抛异,err作为错误抛出 */
   expect<E = unknown>(err: E): T
   /** ### unwrap_or : 获取值,如果为None就返回`def` */

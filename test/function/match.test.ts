@@ -40,7 +40,7 @@ Deno.test('matcher-test', () => {
       .case('jiojio', true)
       .case('123', false)
       .done()
-      .unwarp()
+      .unwrap()
   )
 
   assert(match(new Typer2('jiojio')).case('dio', false).case('123', false).done(true))
@@ -65,6 +65,6 @@ Deno.test('matcher-test-when', () => {
     .when('diojio', functor<boolean>`false`)
     .when('JioJio', () => true)
     .done()
-    .unwarp()
+    .unwrap()
   assert(result)
 })

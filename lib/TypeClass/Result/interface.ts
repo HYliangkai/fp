@@ -23,24 +23,24 @@ export interface Result<O, E> extends As<boolean, 'boolean'> {
   readonly is_ok: boolean
   readonly is_err: boolean
 
-  /** ### unwarp
+  /** ### unwrap
   返回包含的 `Ok` 值 , 如果值是 `Err` 则抛出异常 */
-  unwarp(): O
+  unwrap(): O
   /** ### expect
   返回包含的 `Ok` 值 , 如果值是 `Err` 则抛出异常 err, 相当于做`Err替换`*/
   expect(err: unknown): O
-  /** ### unwarp_or
+  /** ### unwrap_or
   返回包含的 `Ok` 值 , 如果值是 `Err` 则返回默认值 def */
-  unwarp_or<R>(def: R): O | R
-  /** ### unwarp_or_else
+  unwrap_or<R>(def: R): O | R
+  /** ### unwrap_or_else
   返回包含的 `Ok` 值 , 如果值是 `Err` 则返回 fn() */
   unwrap_or_else<R>(fn: Fn<E, R>): R | O
-  /** ### unwarp_or_default
+  /** ### unwrap_or_default
   返回包含的 `Ok` 值 , 如果值是 `Err` 则返回传入的值的default调用 */
-  unwarp_or_default<D>(def: Default<D>): O | D
-  /** ### unwarp_err
+  unwrap_or_default<D>(def: Default<D>): O | D
+  /** ### unwrap_err
   返回包含的 `Err` 值 , 如果值是 `Ok` 则返回`AnyError<'Error'>` */
-  unwarp_err(): E | AnyError<'Error'>
+  unwrap_err(): E | AnyError<'Error'>
 
   /** ### map
   通过将提供的函数应用于 `Ok` 的包含值并保持 `Err` 值不变，将 `Result<T, E>` 转换为 `Result<U, E>` */

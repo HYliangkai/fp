@@ -25,11 +25,11 @@ Deno.test('option-methods', () => {
   const none = None
   const option = Date.now() % 2 === 0 ? some : none
 
-  assert(some.unwarp())
+  assert(some.unwrap())
   assert(some.expect(UnexpectedError))
   assert(some.unwrap_or(false))
   try {
-    none.unwarp()
+    none.unwrap()
   } catch (e) {
     ;(e as AnyError).eq(NoneError.new())
   }
@@ -38,5 +38,4 @@ Deno.test('option-methods', () => {
   } catch (e) {
     ;(e as AnyError).eq(UnexpectedError.new())
   }
-  
 })

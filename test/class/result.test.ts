@@ -28,19 +28,19 @@ Deno.test('result-method', () => {
   const ok = Ok(true)
   const result: AnyResult<boolean> = Date.now() % 2 === 0 ? ok : err
 
-  assertThrows(err.unwarp)
-  assert(result.unwarp_or(true))
+  assertThrows(err.unwrap)
+  assert(result.unwrap_or(true))
   try {
     err.expect('Test')
   } catch (e) {
     assert(e === 'Test')
   }
 
-  assert(err.unwarp_err().eq(oterr))
-  assert(ok.unwarp_err().eq(AnyError.new('Error', 'Ok value not error', 'ResultError')))
+  assert(err.unwrap_err().eq(oterr))
+  assert(ok.unwrap_err().eq(AnyError.new('Error', 'Ok value not error', 'ResultError')))
   assert(result.unwrap_or_else((e) => e.eq(oterr)))
-  assert(err.unwarp_or_default(defable))
-  assert(err.unwarp_or_default(DefAble))
+  assert(err.unwrap_or_default(defable))
+  assert(err.unwrap_or_default(DefAble))
 
   assert(ok.into('option').is_some)
   assert(err.into('option').is_none)
@@ -54,7 +54,7 @@ Deno.test('result-method', () => {
 Deno.test('result-constaructor', () => {
   const one = Some(true)
   const two = None
-  assert(result.from(one).unwarp())
+  assert(result.from(one).unwrap())
   assert(result.from(two).is_err)
 
   const res1 = result<number, AnyError<'Debug'>>(() => {

@@ -34,16 +34,16 @@ async function func2(){
 
 const running =()=> {
   const A=wait(func1)
-  console.log(A.unwarp()) // 'Yes'
+  console.log(A.unwrap()) // 'Yes'
   const B=wait(func2)
-  console.log(B.unwarp())//'No'
-  return A.unwarp()+B.unwarp()
+  console.log(B.unwrap())//'No'
+  return A.unwrap()+B.unwrap()
 }
 
 run_effect(
   running,
   (res)=>{
-  console.log(res.unwarp())//'YesNo'
+  console.log(res.unwrap())//'YesNo'
   })
 ```
 ### 注意事项⚠️

@@ -16,14 +16,14 @@ export interface Either<L, R> extends As<boolean, 'boolean'> {
   /** ### merge : 获取值 */
   merge: () => L | R
 
-  /** ### unwarp : 获取`left`值,如果不存在抛出异常 */
-  unwarp_left: () => L
-  /** ### unwarp : 获取`right`值,如果不存在抛出异常 */
-  unwarp_right: () => R
-  /** ### unwarp_lor : 获取`left`值,如果不存在使用`or`替换 */
-  unwarp_lor: <O>(or: O) => L | O
-  /** ### unwarp_ror : 获取`right`值,如果不存在使用`or`替换 */
-  unwarp_ror: <O>(or: O) => R | O
+  /** ### unwrap : 获取`left`值,如果不存在抛出异常 */
+  unwrap_left: () => L
+  /** ### unwrap : 获取`right`值,如果不存在抛出异常 */
+  unwrap_right: () => R
+  /** ### unwrap_lor : 获取`left`值,如果不存在使用`or`替换 */
+  unwrap_lor: <O>(or: O) => L | O
+  /** ### unwrap_ror : 获取`right`值,如果不存在使用`or`替换 */
+  unwrap_ror: <O>(or: O) => R | O
 
   /** ### exchange : 交换`left`值`right`值  */
   exchange: () => Either<R, L>

@@ -16,8 +16,8 @@ const path = (): Result<Path, string> => {
     return Err('No Local documents')
   }
 }
-const { __dirname } = path().unwarp()
-const dirname = __dirname.unwarp()
+const { __dirname } = path().unwrap()
+const dirname = __dirname.unwrap()
 const relative_to_absolute = (relative: string) => join(dirname, relative)
 
 const OUTPUT_DIR = '../deno.json'
@@ -46,5 +46,5 @@ result(async () => {
         target: 'ES2016',
       },
     })
-  }).unwarp()
-}).unwarp()
+  }).unwrap()
+}).unwrap()

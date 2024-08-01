@@ -7,12 +7,12 @@ import { None, type Option, Some } from '../../mod.ts'
   const arr: Iterable<number> = [1, 2, 33, 4, 5]
   const peek = new Peekable(arr)
 
-  assert(peek.next().unwarp() === 1)
+  assert(peek.next().unwrap() === 1)
 
-  assert(peek.peeked.unwarp() === 2)
+  assert(peek.peeked.unwrap() === 2)
 
-  assert(peek.peeked.unwarp() == peek.next().unwarp())
-  assert(peek.next().unwarp() !== peek.peeked.unwarp())
+  assert(peek.peeked.unwrap() == peek.next().unwrap())
+  assert(peek.next().unwrap() !== peek.peeked.unwrap())
 ```
 @category Class
  */

@@ -29,11 +29,11 @@ type CalcReturn<T> =
 @example
 ```ts
   //normal type
-  const r2 = calc('1+1000', {}, { fmt: [','] }).unwarp()
+  const r2 = calc('1+1000', {}, { fmt: [','] }).unwrap()
   assertEquals(r2, '1,001')
 
   //curry type
-  const r3 = calc({ a: '1.123', b: '2.23' }, { unit: true })('a+b').unwarp()
+  const r3 = calc({ a: '1.123', b: '2.23' }, { unit: true })('a+b').unwrap()
   assertEquals(r3, '3.353')
 
   //catch NaNError

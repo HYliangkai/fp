@@ -23,7 +23,7 @@ export const None: None = {
   is_some: false,
   is_none: true,
 
-  unwarp(): never {
+  unwrap(): never {
     throw NoneError.new()
   },
   expect(err: unknown): never {

@@ -78,8 +78,8 @@ Deno.test('test-either-and-zod', () => {
 
 Deno.test('zod-validation', () => {
   assertThrows(() => {
-    zod.string().validate(114514).unwarp()
+    zod.string().validate(114514).unwrap()
   })
 
-  assertEquals(zod.string().validate('114514').unwarp(), '114514')
+  assertEquals(zod.string().validate('114514').unwrap(), '114514')
 })

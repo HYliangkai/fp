@@ -18,16 +18,16 @@ export class left<T> implements Left<T> {
   merge(): T | never {
     return this.left
   }
-  unwarp_left(): T {
+  unwrap_left(): T {
     return this.merge()
   }
-  unwarp_right(): never {
-    throw AnyError.new('Error', 'cannot unwarp_right from left', 'EitherError')
+  unwrap_right(): never {
+    throw AnyError.new('Error', 'cannot unwrap_right from left', 'EitherError')
   }
-  unwarp_lor<O>(_or: O): T | O {
+  unwrap_lor<O>(_or: O): T | O {
     return this.merge()
   }
-  unwarp_ror<O>(or: O): O {
+  unwrap_ror<O>(or: O): O {
     return or
   }
   exchange(): Either<never, T> {

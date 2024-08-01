@@ -22,7 +22,7 @@ async function _async_result<T, E = unknown>(fn: () => Promise<T>): AsyncResult<
 
 function _form<T>(val: Option<T>): Result<T, NoneError> {
   if (val.is_none) return Err(NoneError.new())
-  if (val.is_some) return Ok(val.unwarp())
+  if (val.is_some) return Ok(val.unwrap())
   throw UnexpectedError.new('Option is not Some or None')
 }
 

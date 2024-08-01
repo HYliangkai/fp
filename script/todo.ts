@@ -50,10 +50,10 @@ export const print_todo = (list = TODO_LIST): void => {
   list.forEach(({ title, desc, stack, matur_day, matur_version }) => {
     const fmstr =
       `%cTODO : %c${title}` +
-      `%c${desc.is_none ? '' : `\n       ${desc.unwarp()}`}` +
-      `%c${stack.is_none ? '' : `\n       ${stack.unwarp()}`}` +
-      `%c${matur_day.is_none ? '' : `\n       ${matur_day.unwarp()}`}` +
-      `${matur_version.is_none ? '' : `\n       V${matur_version.unwarp()}`}`
+      `%c${desc.is_none ? '' : `\n       ${desc.unwrap()}`}` +
+      `%c${stack.is_none ? '' : `\n       ${stack.unwrap()}`}` +
+      `%c${matur_day.is_none ? '' : `\n       ${matur_day.unwrap()}`}` +
+      `${matur_version.is_none ? '' : `\n       V${matur_version.unwrap()}`}`
     console.log(
       fmstr,
       'color:#67C23A',
