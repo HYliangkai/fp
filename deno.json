@@ -2,6 +2,12 @@
   "name": "@chzky/fp",
   "version": "0.8.2",
   "exports": "./mod.ts",
+  "imports": {
+    "@/": "./src/",
+    "@chzky/fp": "./lib/mod.ts",
+    "@std/": "https://deno.land/std@0.206.0/"
+  },
+
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
     "watch": "deno run -A --unstable --watch main.ts",
@@ -86,9 +92,5 @@
     }
   },
 
-  "exclude": ["dist/", "node_modules/"],
-  "imports": {
-    "@/": "./src/",
-    "lib": "./lib/mod.ts"
-  }
+  "exclude": ["dist/", "node_modules/"]
 }
