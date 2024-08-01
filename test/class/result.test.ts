@@ -1,4 +1,18 @@
-import { AnyErr, AnyError, AnyResult, Default, Err, Ok, Result } from 'lib'
+import {
+  AnyErr,
+  AnyError,
+  AnyResult,
+  Default,
+  Err,
+  flow,
+  functor,
+  None,
+  Ok,
+  panic,
+  result,
+  Result,
+  Some,
+} from '@chzky/fp'
 import { assertEquals, assertThrows } from '../mod.ts'
 import { assert } from '@std/assert/mod.ts'
 
@@ -32,4 +46,27 @@ Deno.test('result-method', () => {
   assert(err.into('option').is_none)
   assert(ok.into('either').is_left)
   assert(err.into('either').is_right)
+
+  assert(ok.as('boolean'))
+  assert(!err.as('boolean'))
+})
+
+Deno.test('result-constaructor', () => {
+  const one = Some(true)
+  const two = None
+  assert(result.from(one).unwarp())
+  assert(result.from(two).is_err)
+
+  const res1 = result<number, AnyError<'Debug'>>(() => {
+    if (Date.now() % 2 === 0) panic('Debug', '测试错误', 'Test')
+    return 1
+  })
+  res1.match(
+    (ok) => {
+      assert(ok === 1)
+    },
+    (err) => {
+      assert(err.eq(AnyError.new('Debug', '测试错误', 'Test')))
+    }
+  )
 })

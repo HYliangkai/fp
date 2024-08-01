@@ -6,9 +6,7 @@ export { zod }
 export * from './rx.ts'
 
 /** @dayjs */
-import day from 'npm:dayjs@1.11.10'
-export const dayjs = day
-export type Day = day.Dayjs
+export * from './day.ts'
 
 /** @immer */
 export * from './immer.ts'

@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
@@ -16,16 +16,10 @@
     "check:alltodo": "deno run  -A --unstable-sloppy-imports ./script/checkTodo.ts --all",
     "build:FFI": "deno_bindgen -o binding"
   },
-  "fmt": {
-    "semiColons": false,
-    "singleQuote": true,
-    "indentWidth": 2,
-    "exclude": ["dist/"]
-  },
+
   "lint": {
-    "files": {
-      "include": ["src/", "lib/"]
-    },
+    "include": ["src/", "lib/"],
+
     "rules": {
       "tags": [],
       "include": [
@@ -92,13 +86,9 @@
     }
   },
 
-  "unstable": ["bare-node-builtins", "sloppy-imports", "cron", "kv", "ffi"],
   "exclude": ["dist/", "node_modules/"],
-  "compilerOptions": {},
   "imports": {
     "@/": "./src/",
-    "@deno/dnt": "jsr:@deno/dnt@^0.41.1",
-    "@std/": "https://deno.land/std@0.206.0/",
     "lib": "./lib/mod.ts"
   }
 }

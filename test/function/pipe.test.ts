@@ -1,5 +1,5 @@
 import { assertEquals, assertNotEquals } from '@std/assert/mod.ts'
-import { flow, lzpipe, pipe } from 'lib'
+import { flow, lzpipe, pipe } from '@chzky/fp'
 
 Deno.test('auto-pipe', () => {
   const origin = 0

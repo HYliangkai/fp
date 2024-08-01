@@ -1,5 +1,5 @@
 import { assert } from '@std/assert/mod.ts'
-import { From, Into } from 'lib'
+import { From, Into } from '@chzky/fp'
 
 Deno.test('base-from', () => {
   class A implements From<B> {

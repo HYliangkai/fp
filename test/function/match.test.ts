@@ -1,5 +1,5 @@
 import { assert } from '@std/assert/mod.ts'
-import { $0, Equal, functor, match, PartialEq, zod } from 'lib'
+import { $0, Equal, functor, match, PartialEq, zod } from '@chzky/fp'
 
 Deno.test('matcher-test', () => {
   const match_value = { name: 'jiojio', age: 18 }

@@ -1,6 +1,6 @@
 /** 函数缓存的示例 */
 
-import {memo} from 'lib'
+import { memo } from '@chzky/fp'
 
 //斐波那契算法
 const fibonacci = (n: number): number => {

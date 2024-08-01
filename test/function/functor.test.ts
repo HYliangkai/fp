@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/mod.ts'
-import { $0, $1, Proxy_Value, functor, pipe } from 'lib'
+import { $0, $1, Proxy_Value, functor, pipe } from '@chzky/fp'
 Deno.test('test-functor', () => {
   const Arr = [1, 2, 3, 4]
   const val = 1
@@ -38,9 +38,8 @@ Deno.test('test-functor-param', () => {
 
   assertEquals(
     ['ZXaaa', 'xxxUAaaa'],
-    functor<[string, string]>`[${($0 as typeof user).info.address.before},${($1 as typeof user).info.address.now}]`(
-      user,
-      user
-    )
+    functor<[string, string]>`[${($0 as typeof user).info.address.before},${
+      ($1 as typeof user).info.address.now
+    }]`(user, user)
   )
 })

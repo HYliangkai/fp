@@ -1,4 +1,5 @@
 import { type AnyResult, type Debug, Def, Err, match, type PartialEq } from '../../../mod.ts'
+import { Default } from '../../mod.ts'
 
 /** ## ErrorInfo : 错误信息 */
 type ErrorInfo = {
@@ -23,7 +24,7 @@ const ERRORLEVELS = ['Debug', 'Info', 'Warn', 'Error', 'Fatal', 'Panic'] as cons
 /** ## AnyError : 表示AnyError类型的错误
   @description
     + `type`：错误级别 - {@link ErrorLevel}
-    + `cause`：错误原因 
+    + `cause`：错误原因
     + `name`：错误名称
   @example
   ```ts
@@ -49,11 +50,12 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
     this.name = name || 'AnyError'
     this.type = type || 'Error'
     this.strack = new Error().stack || 'no stack'
-
-    if (!ERRORLEVELS.some((i) => i === this.type)) throw new Error('ErrorLevel not found')
+    if (!ERRORLEVELS.some((i) => i === this.type)) {
+      throw new Error('ErrorLevel not found')
+    }
   }
 
-  /** 
+  /**
   实现{@link PartialEq}接口 ：  当一个错误的`type`&&`cause`&&`name`三者相同时可以认为是同一种错误
   @example
   ```ts
@@ -68,36 +70,63 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
 
   /** ## new : 实现{@link NewAble}接口 */
   static new<T extends ErrorLevel = 'Error'>(
-    type?: T /** @Default - Error */,
+    type?: T,
     cause?: string,
-    name?: string /** @Default - AnyError */
+    name?: string
   ): AnyError<ErrorLevel> {
     return new AnyError<ErrorLevel>(type, cause, name)
   }
 
   /** ## err : 快速生成`Err`类型数据 */
   static err<T extends ErrorLevel = 'Error'>(
-    type?: T /** @Default - Error */,
+    type?: T,
     cause?: string,
-    name?: string /** @Default - AnyError */
+    name?: string
   ): AnyResult<never, 'Error'> {
     return Err(new AnyError<ErrorLevel>(type, cause, name))
   }
 
+  /** ## default : 实现{@link Default}接口 */
+  static default() {
+    return this.new()
+  }
+
   /** ### log : 实现{@link Debug}接口 */
   log(): void {
+    const type_color = match(this.type)
+      .case('Error', '#E5133A')
+      .case('Info', '#909399')
+      .case('Debug', '#67C23A')
+      .case('Warn', '#E6A23C')
+      .case('Fatal', '#BF062E')
+      .case('Panic', '#840021')
+      .done()
+      .unwarp()
+
     console.log(
-      `------------------ ${'Error'} ------------------\n` +
-        `${'*'} type : ${match(this.type, [Def, (item: string) => item])(this.type)}\n` +
+      `%c------------------ ${'Error'} ------------------\n` +
+        `%c${'*'} %ctype   : %c${this.type}\n` +
         `${
           this.name
-            ? `${'*'} name : ${
+            ? `%c${'*'} %cname   : ${
                 typeof this.name === 'symbol' ? this.name.description || 'symbol' : this.name
               }\n`
             : ''
         }` +
-        `${this.cause ? `${'*'} cause : ${this.cause}\n` : ''}` +
-        `${'*'} strack : ${this.strack}\n`
+        `%c${this.cause ? `${'*'} %ccause  : ${this.cause}\n` : ''}` +
+        `%c${'*'} %cstrack : ${this.strack}\n` +
+        `%c------------------ ${'End'} ------------------\n`,
+      'color:#F56C6C',
+      'color:#fff',
+      'color:#409EFF',
+      `color:${type_color}`,
+      'color:#fff',
+      'color:#67C23A',
+      'color:#fff',
+      'color:#E6A23C;',
+      'color:#fff',
+      'color:#909399',
+      'color:#F56C6C'
     )
   }
 
@@ -121,4 +150,3 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
     throw this.value()
   }
 }
-//静态部分测试

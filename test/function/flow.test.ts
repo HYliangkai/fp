@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/mod.ts'
-import { flow } from 'lib'
+import { flow } from '@chzky/fp'
 
 //完成flow函数的单元测试
 Deno.test('flow', async () => {

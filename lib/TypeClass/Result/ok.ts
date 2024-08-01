@@ -9,15 +9,15 @@ import {
   type Either,
   type Default,
 } from '../../../mod.ts'
-import type { Result, ResultIntoFlag } from './interface.ts'
+import type { Result, ResultIntoFlag, Ok } from './interface.ts'
 
-interface Ok<O> extends Result<O, never> {}
 
 class ok<O = void> implements Ok<O> {
-  value: O
-  _tag: typeof ok_tag
-  is_ok: true
-  is_err: false
+  readonly value: O
+  readonly _tag: typeof ok_tag
+  readonly is_ok: true
+  readonly is_err: false
+
   constructor(val: O) {
     this.value = val
     this._tag = ok_tag
@@ -25,10 +25,15 @@ class ok<O = void> implements Ok<O> {
     this.is_err = false
   }
 
+  as<R extends 'boolean'>(flag: R): R extends 'boolean' ? true : never {
+    if (flag === 'boolean') return true as any
+    throw new TypeError('not match as')
+  }
+
   unwarp(): O {
     return this.value
   }
-  expect<V>(_msg: V): O {
+  expect<V>(_err: V): O {
     return this.unwarp()
   }
   unwarp_or<R>(_def: R): O {
@@ -38,14 +43,14 @@ class ok<O = void> implements Ok<O> {
     return AnyError.new('Error', 'Ok value not error', 'ResultError')
   }
   unwrap_or_else<R>(_fn: Fn<never, R>): O {
-    return this.value
+    return this.unwarp()
   }
-  unwarp_or_default<D>(def: Default<D>): O | D {
-    return this.value
+  unwarp_or_default<D>(_def: Default<D>): O | D {
+    return this.unwarp()
   }
 
   map<R>(fn: Fn<O, R>): Result<R, never> {
-    return Ok(fn(this.value))
+    return Ok(fn(this.unwarp()))
   }
   map_err(_fn: Fn<never, never>): Result<O, never> {
     return this
@@ -55,18 +60,18 @@ class ok<O = void> implements Ok<O> {
   }
 
   match_ok(fn: Fn<O, void>): void {
-    fn(this.value)
+    fn(this.unwarp())
   }
   match_err(_fn: Fn<never, void>): void {}
   match(ok: Fn<O, void>, _err: Fn<never, void>): void {
-    ok(this.value)
+    ok(this.unwarp())
   }
 
   into<R extends ResultIntoFlag>(
     flag: R
   ): R extends 'option' ? Option<O> : R extends 'either' ? Either<O, never> : never {
-    if (flag == 'option') return option(this.value) as any
-    else if (flag === 'either') return Left(this.value) as any
+    if (flag == 'option') return option(this.unwarp()) as any
+    else if (flag === 'either') return Left(this.unwarp()) as any
     throw new TypeError('not match into')
   }
 }

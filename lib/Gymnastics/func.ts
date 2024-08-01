@@ -26,3 +26,8 @@ export type Fns<T> = (...args: any[]) => T
 */
 export type ValueOrFunc<T> = T | (() => T)
 
+/** ## AnyFunc
+  可表示为任意函数
+  @category Gymnastics
+ */
+export type AnyFunc = (...args: any[]) => any

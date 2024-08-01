@@ -1,3 +1,5 @@
+export * from './as.ts' /* 实现单向类型转化 */
+export * from './ord.ts' /* 实现比较功能 */
 export * from './equals.ts' /* 实现相等判断 */
 export * from './copy.ts' /* 实现深度克隆 */
 export * from './from.ts' /* 实现类型转化 */

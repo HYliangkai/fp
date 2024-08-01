@@ -16,12 +16,12 @@
  */
 
 export interface Equal<A> {
-  equals(val: A): boolean
+  readonly equals: (val: A) => boolean
 }
 
 /** ## implements_equal : duck type to judge Equal type 
   @category Interface
 */
-export function implements_equal(value: unknown): value is Equal<any> {
-  return typeof value === 'object' && typeof (value as Equal<any>)['equals'] === 'function'
+export function implements_equal(value: unknown): value is Equal<unknown> {
+  return typeof value === 'object' && typeof (value as Equal<unknown>)['equals'] === 'function'
 }

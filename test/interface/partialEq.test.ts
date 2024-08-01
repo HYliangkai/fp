@@ -1,5 +1,5 @@
-import {Def, PartialEq, match} from 'lib'
-import {assert, assertFalse} from '../mod.ts'
+import { Def, PartialEq, match } from '@chzky/fp'
+import { assert, assertFalse } from '../mod.ts'
 
 class User implements PartialEq {
   constructor(public name: string, public age: number) {}

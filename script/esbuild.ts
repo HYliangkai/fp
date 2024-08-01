@@ -1,8 +1,8 @@
 /** Build deno package to npm package */
-
+import { Err, Ok, type Option, type Result, option, result } from '@chzky/fp'
 import { build, emptyDir } from '@deno/dnt'
-import { Err, Ok, Option, Result, option, result } from 'npm:@chzky/fp@0.7.8'
-import { join } from 'https://deno.land/std@0.204.0/path/mod.ts'
+import { join } from '@std/path/mod.ts'
+
 type Path = { __dirname: Option<string>; __filename: Option<string> }
 const NAME = '@chzky/fp'
 const path = (): Result<Path, string> => {

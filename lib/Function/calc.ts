@@ -1,19 +1,28 @@
 import { Err, type Fn, NaNError, Ok, type Result, pipe } from '../../mod.ts'
 import { a_calc } from '../Ext/aCalc.ts'
-const { calc: org_calc } = a_calc
 
 type DecimalLimit = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 type OtherFM = ',' | '/' | '+' | '%' | '!e' | '!n' | '!u' | '~-' | '~+' | '~5' | '~6'
 
-type Fmt = `>${DecimalLimit}` | `<${DecimalLimit}` | `=${DecimalLimit}` | `>=${DecimalLimit}` | `<=${DecimalLimit}` | OtherFM
-type FillData = Record<number | string, number | string> | Array<Record<number | string, number | string>>
+type Fmt =
+  | `>${DecimalLimit}`
+  | `<${DecimalLimit}`
+  | `=${DecimalLimit}`
+  | `>=${DecimalLimit}`
+  | `<=${DecimalLimit}`
+  | OtherFM
+type FillData =
+  | Record<number | string, number | string>
+  | Array<Record<number | string, number | string>>
 type CalcConf<T> = {
   fmt?: Array<Fmt> /* 格式化数组 */
   memo?: boolean /* 是否开启结果缓存 */
   unit?: boolean /* 是否带上单位进行计算 */
   error?: Result<never, T> /* 错误替代值 */
 }
-type CalcReturn<T> = Result<string, NaNError | Error | T> | Fn<string, Result<string, NaNError | Error | T>>
+type CalcReturn<T> =
+  | Result<string, NaNError | Error | T>
+  | Fn<string, Result<string, NaNError | Error | T>>
 
 /** ## calc : 对[calc](https://github.com/Autumn-one/a-calc-old/blob/main/README_ZH.md)的二次封装
 用于 js数字精准计算、数字格式化、完备的舍入规则、单位计算
@@ -49,13 +58,25 @@ type CalcReturn<T> = Result<string, NaNError | Error | T> | Fn<string, Result<st
 
 @category Function
  */
-export function calc<T = never>(expr: string, val_map?: FillData, conf?: CalcConf<T>): Result<string, Error | T>
-export function calc<T = never>(val_map: FillData, conf?: CalcConf<T>, other?: never): Fn<string, Result<string, Error | T>>
-export function calc<T = never>(arg1: string | FillData, arg2?: FillData | CalcConf<T>, arg3?: CalcConf<T>): CalcReturn<T> {
-  if (typeof arg1 === 'string') {
+export function calc<T = never>(
+  expr: string | number,
+  val_map?: FillData,
+  conf?: CalcConf<T>
+): Result<string, Error | T>
+export function calc<T = never>(
+  val_map: FillData,
+  conf?: CalcConf<T>,
+  other?: never
+): Fn<string, Result<string, Error | T>>
+export function calc<T = never>(
+  arg1: string | number | FillData,
+  arg2?: FillData | CalcConf<T>,
+  arg3?: CalcConf<T>
+): CalcReturn<T> {
+  if (typeof arg1 === 'string' || typeof arg1 === 'number') {
     try {
       const { fmt = [], memo = false, unit = false, error = undefined } = arg3 || {}
-      const res = org_calc(arg1, {
+      const res = a_calc.calc(String(arg1), {
         _memo: memo,
         _error: error,
         _unit: unit,
@@ -71,8 +92,13 @@ export function calc<T = never>(arg1: string | FillData, arg2?: FillData | CalcC
   } else {
     return (expr: string) => {
       try {
-        const { fmt = [], memo = false, unit = false, error = undefined } = (arg2 as CalcConf<T>) || {}
-        const res = org_calc(expr, {
+        const {
+          fmt = [],
+          memo = false,
+          unit = false,
+          error = undefined,
+        } = (arg2 as CalcConf<T>) || {}
+        const res = a_calc.calc(expr, {
           _memo: memo,
           _error: error,
           _unit: unit,

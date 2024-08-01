@@ -30,10 +30,11 @@ interface AutoPipe {
   assertEquals(res2, 'sab')
   ```
   @tips
-  能自动解包Promise作为参数传递运行的情况 :
+  1. 最好有三个及以上的函数调用才能体现出pipe的优势
+  2. 能自动解包Promise作为参数传递运行的情况 :
+    + 能否当成异步函数运行主要取决于{@link is_async_func}这个函数
     + 传入的函数中有一个是带async关键字的函数 <只需含有一个即可辨别>
     + 可await运行的flow/lzpipe
-    + 能否当成异步函数运行主要取决于{@link is_async_func}这个函数
 
   @category Function
   */

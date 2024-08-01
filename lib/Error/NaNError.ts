@@ -2,6 +2,7 @@ import { Err } from '../../mod.ts'
 import { AnyError, type AnyResult } from './anyError/mod.ts'
 
 /** ## NaNError : 结果为NaN的错误
+@level `Info`
 @class Error
  */
 export class NaNError extends AnyError<'Info'> {
@@ -9,11 +10,11 @@ export class NaNError extends AnyError<'Info'> {
     super('Info', cause, 'NaNError')
   }
 
-  static new(cause = 'value is NaN'): NaNError {
+  static override new(cause = 'value is NaN'): NaNError {
     return new NaNError(cause)
   }
 
-  static err(cause = 'value is NaN'): AnyResult<never, 'Error'> {
+  static override err(cause = 'value is NaN'): AnyResult<never, 'Error'> {
     return Err(NaNError.new(cause))
   }
 }

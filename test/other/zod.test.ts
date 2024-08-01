@@ -1,6 +1,6 @@
 /** 利用zod的类型校验达到显著的运行时安全效果 */
 
-import { Err, Left, Ok, Right, Some, zod } from 'lib'
+import { Err, Left, Ok, Right, Some, zod } from '@chzky/fp'
 
 import { assert, assertEquals, assertFalse, assertThrows } from '@std/assert/mod.ts'
 

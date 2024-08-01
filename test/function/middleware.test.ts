@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/mod.ts'
-import { middleware } from 'lib'
+import { middleware } from '@chzky/fp'
 
 Deno.test('middleware', async () => {
   const val = (data: number) => data + 1

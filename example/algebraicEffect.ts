@@ -1,7 +1,7 @@
-import {run_effect, wait} from 'lib'
+import { run_effect, wait } from '@chzky/fp'
 
 const adtt = async () => {
-  const pro1: string = await new Promise(res => {
+  const pro1: string = await new Promise((res) => {
     setTimeout(() => {
       res('好的')
     }, 3000)
@@ -10,7 +10,7 @@ const adtt = async () => {
 }
 
 const abct = async () => {
-  const pro2: string = await new Promise(res =>
+  const pro2: string = await new Promise((res) =>
     setTimeout(() => {
       res('嗯嗯')
     }, 2000)
@@ -25,7 +25,7 @@ const running = () => {
 }
 
 function main() {
-  run_effect(running, res => {
+  run_effect(running, (res) => {
     console.log(res.unwarp())
     console.log('执行完毕')
   })

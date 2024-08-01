@@ -17,7 +17,6 @@ assertEquals(res,'hello world')
 const res = [1,2,3].map(middleware((v)=>v*2))
 assertEquals(res,[2,4,6])
 ```
-@version 0.8.0
 @category Function
  */
 export const middleware: MiddleWare = function <V, T = void>(

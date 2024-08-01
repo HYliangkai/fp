@@ -7,15 +7,13 @@ import {
   error_tag,
   type Default,
 } from '../../../mod.ts'
-import type { Result, ResultIntoFlag } from './interface.ts'
-
-interface Err<E> extends Result<never, E> {}
+import type { Result, ResultIntoFlag, Err } from './interface.ts'
 
 class err<E> implements Err<E> {
-  value: E
-  _tag: typeof error_tag
-  is_err: true
-  is_ok: false
+  readonly value: E
+  readonly _tag: typeof error_tag
+  readonly is_err: true
+  readonly is_ok: false
   constructor(val: E) {
     this.value = val
     this._tag = error_tag
@@ -23,11 +21,16 @@ class err<E> implements Err<E> {
     this.is_ok = false
   }
 
+  as<R extends 'boolean'>(flag: R): R extends 'boolean' ? false : never {
+    if (flag === 'boolean') return false as any
+    throw new TypeError('not match as')
+  }
+
   unwarp(): never {
     throw this.value
   }
-  expect<R>(msg: R): never {
-    throw msg
+  expect<R>(err: R): never {
+    throw err
   }
   unwarp_or<R>(def: R): R {
     return def

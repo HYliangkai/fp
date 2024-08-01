@@ -1,4 +1,6 @@
-export * from './Ord.ts'
-export * from './Either.ts'
 export * from './Result/mod.ts'
-export * from './Option.ts'
+export * from './Option/mod.ts'
+export * from './Either/mod.ts'
+export * from './State/mod.ts'
+
+

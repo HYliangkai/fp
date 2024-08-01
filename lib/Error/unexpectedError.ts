@@ -1,17 +1,21 @@
 import { Err } from '../../mod.ts'
 import { AnyError, type AnyResult } from './anyError/mod.ts'
 
-/** ## UnexpectedError : 表示非预期的错误,通常是致命的 */
-export class UnexpectedError extends AnyError<'Fatal'> {
+/** ## UnexpectedError : 表示非预期的错误,通常是致命的 
+- 一般直接报错处理
+@level `Panic`
+@category Error
+ */
+export class UnexpectedError extends AnyError<'Panic'> {
   constructor(cause = 'UnexpectedError') {
-    super('Fatal', cause, 'UnexpectedError')
+    super('Panic', cause, 'UnexpectedError')
   }
 
-  static new(cause = 'UnexpectedError'): UnexpectedError {
+  static override new(cause = 'UnexpectedError'): UnexpectedError {
     return new UnexpectedError(cause)
   }
 
-  static err(cause = 'UnexpectedError'): AnyResult<never, 'Fatal'> {
+  static override err(cause = 'UnexpectedError'): AnyResult<never, 'Panic'> {
     return Err(UnexpectedError.new(cause))
   }
 }

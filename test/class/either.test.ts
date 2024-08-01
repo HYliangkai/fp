@@ -1,7 +1,7 @@
 // FILEPATH: /Users/chzky/Code/Deno/FPSystem/test/TypeClass/Either.test.ts
 
-import {Left, Right} from 'lib'
-import {assertEquals} from '../mod.ts'
+import { Left, Right } from '@chzky/fp'
+import { assertEquals } from '@std/assert/mod.ts'
 
 Deno.test('either interface', () => {
   const leftValue = 'left'
@@ -17,29 +17,29 @@ Deno.test('either interface', () => {
 
   // Test left_do and right_do
   let result = ''
-  eitherLeft.left_do(val => (result = val))
+  eitherLeft.left_do((val) => (result = val))
   assertEquals(result, leftValue)
-  eitherRight.right_do(val => (result = val))
+  eitherRight.right_do((val) => (result = val))
   assertEquals(result, rightValue)
 
   // Test match
   eitherLeft.match(
-    val => assertEquals(val, leftValue),
-    val => assertEquals(val, rightValue)
+    (val) => assertEquals(val, leftValue),
+    (val) => assertEquals(val, rightValue)
   )
   eitherRight.match(
-    val => assertEquals(val, leftValue),
-    val => assertEquals(val, rightValue)
+    (val) => assertEquals(val, leftValue),
+    (val) => assertEquals(val, rightValue)
   )
 
   // Test map
   const mappedLeft = eitherLeft.map(
-    val => val + ' mapped',
-    val => val
+    (val) => val + ' mapped',
+    (val) => val
   )
   const mappedRight = eitherRight.map(
-    val => val,
-    val => val + ' mapped'
+    (val) => val,
+    (val) => val + ' mapped'
   )
   assertEquals(mappedLeft.merge(), leftValue + ' mapped')
   assertEquals(mappedRight.merge(), rightValue + ' mapped')
@@ -63,6 +63,6 @@ Deno.test('either interface', () => {
   assertEquals(eitherRight.merge(), rightValue)
 
   // Test tap
-  eitherLeft.tap(val => assertEquals(val, leftValue))
-  eitherRight.tap(val => assertEquals(val, rightValue))
+  eitherLeft.tap((val) => assertEquals(val, leftValue))
+  eitherRight.tap((val) => assertEquals(val, rightValue))
 })

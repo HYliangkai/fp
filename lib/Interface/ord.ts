@@ -38,3 +38,6 @@ assert(Na.compare(0) === 1)
 export interface Ord<T> extends Equal<T> {
   readonly compare: (val: T) => OrdResult
 }
+
+/** ## OrdSelf : `Ord`的特化版本,表示和自身比较的能力 ; 君子协议,ts不能进行规范 */
+export interface OrdSelf<T> extends Ord<T> {}

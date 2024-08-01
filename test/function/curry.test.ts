@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/mod.ts'
-import { curry } from 'lib'
+import { curry } from '@chzky/fp'
 
 Deno.test('curry', () => {
   const first = (a: number, a1: number) => (b: number) => (a + a1) / b

@@ -32,3 +32,14 @@ type LiteralInfer<T> = T extends string
 @category Gymnastics
 */
 export type NaN = number
+
+/** ## Refer : 将任意数据转换为Refer类型数据,值存储在value中
+@category Gymnastics
+*/
+export type Refer<T> = { value: T }
+/** ## refer : 将数据转换为ref类型数据的函数
+@category Gymnastics
+ */
+export function refer<T>(input: T): Refer<T> {
+  return { value: input }
+}

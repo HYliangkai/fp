@@ -12,6 +12,7 @@ import type { Fns } from '../../mod.ts'
   assertEquals(cr_f(2), 2)
 ```
 @category Function
+
 */
 export function curry<T, V>(fn: (arg: T) => V): (arg: T) => V
 export function curry<T, U, V>(fn: (arg: T, arg2: U) => V, level: 2): (arg: T) => (arg2: U) => V

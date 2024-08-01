@@ -1,4 +1,4 @@
-import { None, Option, Some } from 'npm:@chzky/fp@0.7.8'
+import { None, Option, Some } from '@chzky/fp'
 
 type TodoObjOption = {
   title: string
@@ -54,7 +54,14 @@ export const print_todo = (list = TODO_LIST): void => {
       `%c${stack.is_none ? '' : `\n       ${stack.unwarp()}`}` +
       `%c${matur_day.is_none ? '' : `\n       ${matur_day.unwarp()}`}` +
       `${matur_version.is_none ? '' : `\n       V${matur_version.unwarp()}`}`
-    console.log(fmstr, 'color:#67C23A', 'color:#409EFF', 'color:#fff', 'color:#E6A23C;', 'color:#909399')
+    console.log(
+      fmstr,
+      'color:#67C23A',
+      'color:#409EFF',
+      'color:#fff',
+      'color:#E6A23C;',
+      'color:#909399'
+    )
     console.log(`--------------------------------------------`)
   })
 }

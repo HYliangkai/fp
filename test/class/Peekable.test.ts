@@ -1,5 +1,5 @@
-import {Peekable} from 'lib'
-import {assert} from '../mod.ts'
+import { Peekable } from '@chzky/fp'
+import { assert } from '../mod.ts'
 
 Deno.test('Peekable', () => {
   const arr: Iterable<number> = [1, 2, 33, 4, 5]

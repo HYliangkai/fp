@@ -1,4 +1,4 @@
-import { AnyError, match_error, panic } from 'lib'
+import { AnyError, match_error, panic } from '@chzky/fp'
 import { assert, assertEquals, assertFalse, assertThrows } from '../mod.ts'
 
 Deno.test('error-init', () => {

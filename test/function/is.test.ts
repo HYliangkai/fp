@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/mod.ts'
-import { is_async_func, is_number, zod } from 'lib'
+import { is_async_func, is_number, zod } from '@chzky/fp'
 Deno.test('is_async_func', () => {
   const sync = (x: number) => x + 1
   const asyncfn = async (x: number) =>

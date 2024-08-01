@@ -14,6 +14,9 @@ export const ok_tag = Symbol('ok')
 export const empty_tag = Symbol('empty')
 
 /** @category Constant */
+export const state_tag = Symbol('state')
+
+/** @category Constant */
 export const left_tag = Symbol('left')
 
 /** @category Constant */

@@ -24,7 +24,7 @@ export const AnyErr = <T extends ErrorLevel>(
   name?: string
 ): Result<never, AnyError<T>> => Err(new AnyError(type, cause, name))
 
-/** ## panic : 以函数的形式抛出一个AnyError类型的异常
+/** ## panic : 以函数的形式快速抛出一个AnyError类型的异常,通常搭配
 用于解决语句执行中不能随时返回AnyError的问题
 @example
 ```ts
@@ -39,6 +39,6 @@ assertThrow(panic('Error','test error'))//Pass
 ```
 @category Error
  */
-export function panic(type: ErrorLevel = 'Panic', cause = 'error...'): never {
-  throw new AnyError(type, cause, 'panic')
+export function panic(type: ErrorLevel = 'Panic', cause = 'error...', name = 'Painc-Fn'): never {
+  throw new AnyError(type, cause, name)
 }

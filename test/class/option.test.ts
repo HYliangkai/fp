@@ -1,5 +1,5 @@
-import {None, Some, option} from 'lib'
-import {assert, assertEquals} from '../mod.ts'
+import { AnyError, None, NoneError, Some, UnexpectedError, option } from '@chzky/fp'
+import { assert, assertEquals, assertThrows } from '../mod.ts'
 
 Deno.test('option function', () => {
   // Test when value is undefined
@@ -18,4 +18,25 @@ Deno.test('option function', () => {
     Some(value),
     'Should return Some(value) for non-null and non-undefined values'
   )
+})
+
+Deno.test('option-methods', () => {
+  const some = Some(true)
+  const none = None
+  const option = Date.now() % 2 === 0 ? some : none
+
+  assert(some.unwarp())
+  assert(some.expect(UnexpectedError))
+  assert(some.unwrap_or(false))
+  try {
+    none.unwarp()
+  } catch (e) {
+    ;(e as AnyError).eq(NoneError.new())
+  }
+  try {
+    none.unwrap_or(UnexpectedError.new())
+  } catch (e) {
+    ;(e as AnyError).eq(UnexpectedError.new())
+  }
+  
 })

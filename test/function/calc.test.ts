@@ -1,5 +1,5 @@
 import { assert, assertEquals } from '@std/assert/mod.ts'
-import { Err, NaNError, calc, middleware } from 'lib'
+import { Err, NaNError, calc, middleware } from '@chzky/fp'
 
 Deno.test('calc-test', () => {
   const r1 = calc('1+1').unwarp()

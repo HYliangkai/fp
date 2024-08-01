@@ -1,9 +1,10 @@
 /* 读取注释中的todo语句  默认读取已到期todo  | --all 读取所有todo */
-import { join } from 'jsr:@std/path@^0.218.2/join'
+
 import { Block, parse } from 'npm:comment-parser'
 import pack from '../deno.json' with { type: 'json' }
-import { dayjs, flow, None, Ok, pipe, Some } from 'npm:@chzky/fp@0.7.8'
+import { dayjs, flow, None, Ok, pipe, Some } from '@chzky/fp'
 import { output_todo, print_todo, todo } from './todo.ts'
+import { join } from '@std/path/join.ts'
 
 type File = { name: string; full: string; kids: FileTree; type: 'file' | 'dir' }
 type FileTree = Array<File>
