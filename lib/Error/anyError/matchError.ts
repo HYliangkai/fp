@@ -1,5 +1,5 @@
 // deno-lint-ignore-file
-import { AnyError, ErrorLevel } from '../mod.ts'
+import { AnyError, ErrorLevel } from '../../../mod.ts'
 
 /**  ## match_error : 对于AnyErr 类型数据的快速类型匹配
 @category Error

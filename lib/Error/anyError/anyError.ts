@@ -1,5 +1,11 @@
-import { type AnyResult, type Debug, Err, match, type PartialEq } from '../../../mod.ts'
-import type { Default } from '../../mod.ts'
+import {
+  type AnyResult,
+  type Debug,
+  type PartialEq,
+  type Default,
+  Err,
+  match,
+} from '../../../mod.ts'
 
 /** ## ErrorInfo : 错误信息 */
 type ErrorInfo = {
