@@ -1,4 +1,5 @@
 export * from './Ext/mod.ts'
+export * from './Error/anyError/mod.ts'
 export * from './Error/mod.ts'
 export * from './Class/mod.ts'
 export * from './Constant/mod.ts'

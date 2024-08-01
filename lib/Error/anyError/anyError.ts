@@ -1,5 +1,5 @@
-import { type AnyResult, type Debug, Def, Err, match, type PartialEq } from '../../../mod.ts'
-import { Default } from '../../mod.ts'
+import { type AnyResult, type Debug, Err, match, type PartialEq } from '../../../mod.ts'
+import type { Default } from '../../mod.ts'
 
 /** ## ErrorInfo : 错误信息 */
 type ErrorInfo = {
@@ -87,7 +87,7 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
   }
 
   /** ## default : 实现{@link Default}接口 */
-  static default() {
+  static default(): AnyError<'Error'> {
     return this.new()
   }
 
