@@ -9,10 +9,7 @@ import {
   produce,
 } from '../../../mod.ts'
 
-import { State as STATE } from './interface.ts'
-
-enableMapSet()
-enablePatches()
+import type { State as STATE } from './interface.ts'
 
 class State<M, S> implements STATE<M, S> {
   readonly _tag: typeof state_tag = state_tag
@@ -20,25 +17,27 @@ class State<M, S> implements STATE<M, S> {
   readonly struct: { main: M; effect: S }
 
   constructor(main: M, effect: S) {
+    enableMapSet()
+    enablePatches()
     this.struct = { main, effect }
   }
-  static new<M, S>(main: M, effect: S) {
+  static new<M, S>(main: M, effect: S): State<M, S> {
     return new State(main, effect)
   }
 
   map<B>(f: Fn<M, B>): State<B, S> {
     return State.new(f(this.struct.main), this.struct.effect)
   }
-  chain<B, R>(f: Fn<[M, S], [B, R]>) {
+  chain<B, R>(f: Fn<[M, S], [B, R]>): State<B, R> {
     return State.new(...f([this.struct.main, this.struct.effect]))
   }
-  ap<B>(f: Fn<S, B>) {
+  ap<B>(f: Fn<S, B>): State<M, B> {
     return State.new(this.struct.main, f(this.struct.effect))
   }
-  rep<R>(effect: R) {
+  rep<R>(effect: R): State<M, R> {
     return State.new(this.struct.main, effect)
   }
-  draft<O = M, V = S>(f: Fn<[Draft<Refer<O>>, Draft<Refer<V>>], unknown>) {
+  draft<O = M, V = S>(f: Fn<[Draft<Refer<O>>, Draft<Refer<V>>], unknown>): State<O, V> {
     const [main, effect] = produce(
       [refer(this.struct.main), refer(this.struct.effect)],
       (dratf: [Draft<Refer<O>>, Draft<Refer<V>>]) => {
@@ -48,10 +47,10 @@ class State<M, S> implements STATE<M, S> {
     return State.new(main.value as unknown as O, effect.value as unknown as V)
   }
 
-  unwrap() {
+  unwrap(): M {
     return this.struct.main
   }
-  effect() {
+  effect(): S {
     return this.struct.effect
   }
 }
