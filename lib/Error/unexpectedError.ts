@@ -1,4 +1,5 @@
-import { AnyError, type AnyResult, Err } from '../../mod.ts'
+import { type AnyResult, Err } from '../../mod.ts'
+import { AnyError } from './anyError/anyError.ts'
 
 /** ## UnexpectedError : 表示非预期的错误,通常是致命的 
 - 一般直接报错处理

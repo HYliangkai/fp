@@ -1,4 +1,5 @@
-import { AnyError, type AnyResult, Err } from '../../mod.ts'
+import { type AnyResult, Err } from '../../mod.ts'
+import { AnyError } from './anyError/anyError.ts'
 
 /** ## NotFoundError : 表示未找到指定的资源
 @level `Error`

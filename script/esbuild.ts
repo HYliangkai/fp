@@ -43,7 +43,7 @@ result(async () => {
         access: 'public',
       },
       compilerOptions: {
-        target: 'ES2016',
+        target: 'ES2015',
       },
     })
   }).unwrap()

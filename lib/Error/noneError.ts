@@ -1,4 +1,5 @@
-import { AnyError, type AnyResult, Err } from '../../mod.ts'
+import { type AnyResult, Err } from '../../mod.ts'
+import { AnyError } from './anyError/anyError.ts'
 
 /** ## NoneError : 表示None类型的错误
 @level `Error`
