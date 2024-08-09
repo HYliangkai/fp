@@ -1,3 +1,4 @@
+import { zod } from '@chzky/fp'
 /**  ## PartialEq : 提供一个`同类型`数据相等性判断的功能
 @example 
 ```ts
@@ -24,5 +25,5 @@ export interface PartialEq {
   @category Interface
   */
 export function implements_partial_eq(value: unknown): value is PartialEq {
-  return typeof value === 'object' && typeof (value as PartialEq)['eq'] === 'function'
+  return zod.object({ eq: zod.function() }).safeParse(value).success
 }

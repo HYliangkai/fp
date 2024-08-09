@@ -2,7 +2,7 @@
 
 import { Err, Left, Ok, Right, Some, zod } from '@chzky/fp'
 
-import { assert, assertEquals, assertFalse, assertThrows } from '@std/assert/mod.ts'
+import { assert, assertFalse } from '@std/assert/mod.ts'
 
 Deno.test('test-option-and-zod', () => {
   //先定义shema
@@ -74,12 +74,4 @@ Deno.test('test-either-and-zod', () => {
 
   const G = Right(12) // string and  either
   assert(schema.safeParse(G).success) // pass test
-})
-
-Deno.test('zod-validation', () => {
-  assertThrows(() => {
-    zod.string().validate(114514).unwrap()
-  })
-
-  assertEquals(zod.string().validate('114514').unwrap(), '114514')
 })

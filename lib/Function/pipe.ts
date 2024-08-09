@@ -5,7 +5,7 @@ import {
   type PromiseChange,
   type PromiseLine,
   is_async_func,
-} from '../../mod.ts'
+} from '@chzky/fp'
 
 interface AutoPipe {
   /** ## pipe : 函数嵌套参数化运行
@@ -249,6 +249,36 @@ const async_pipe = async (...fns: Array<Fn<any, any>>) => {
 const auto_pipe = (...fns: Array<PFn<any, any>>): any =>
   fns.some((i) => is_async_func(i)) ? async_pipe(...fns) : sync_pipe(...fns)
 
+/** ## pipe : 函数嵌套参数化运行
+  @example
+  ```ts
+
+  //Synchronization function
+  const res = pipe(
+    1,//1
+    (x: number) => x + 1,//2
+    (x: number) => x * 2,//4
+    (x: number) => x + 1,//5
+  )
+  assertEquals(res, 5)
+
+  //Asynchronous function
+  const res2 = await pipe(
+    's',
+    (x: string) => x + 'a',
+    async (x: string) => x + 'b',
+  ))
+  assertEquals(res2, 'sab')
+  ```
+  @tips
+  1. 最好有三个及以上的函数调用才能体现出pipe的优势
+  2. 能自动解包Promise作为参数传递运行的情况 :
+    + 能否当成异步函数运行主要取决于{@link is_async_func}这个函数
+    + 传入的函数中有一个是带async关键字的函数 <只需含有一个即可辨别>
+    + 可await运行的flow/lzpipe
+
+  @category Function
+  */
 export const pipe: Pipe = Object.assign(auto_pipe, {
   sync: sync_pipe,
   async: async_pipe,

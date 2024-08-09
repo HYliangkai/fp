@@ -1,6 +1,6 @@
 /** 快捷的逻辑判断操作 */
 
-import { Err, Ok, Option, None, option, FnReturn, UnexpectedError, type Result } from '../../mod.ts'
+import { Err, Ok, Option, None, option, FnReturn, UnexpectedError, type Result } from '@chzky/fp'
 
 /** ## and : 以函数的形式执行`与`操作
 + 严格只接收`boolean`类型的数据;否则返回`Err` */

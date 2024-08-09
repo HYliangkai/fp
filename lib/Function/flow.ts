@@ -7,7 +7,7 @@ import {
   type FlowPromiseChange,
   pipe,
   is_async_func,
-} from '../../mod.ts'
+} from '@chzky/fp'
 
 interface AutoFlow {
   /** ## FLow : pipe的科里化版本 */
@@ -171,6 +171,7 @@ const auto_flow = (...fns: Array<Fn<any, any>>): any => {
   return fns.some((i) => is_async_func(i)) ? async_flow(...fns) : sync_flow(...fns)
 }
 
+/** ## FLow : pipe的科里化版本 */
 export const flow: Flow = Object.assign(auto_flow, {
   sync: sync_flow,
   async: async_flow,

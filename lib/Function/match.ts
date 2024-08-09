@@ -5,14 +5,12 @@ import {
   implements_equal,
   implements_partial_eq,
   Matcher,
-} from '../../mod.ts'
+} from '@chzky/fp'
 
 /**
 ## match : 模式匹配
-@example -> 普通调用(匹配参数为一个以上时)
+@example Usage : 普通调用(匹配参数为一个以上时)
 ```ts
-
-
 // 1. 简单的模式匹配
 const name='jiojio'
 const age=match(name,
@@ -38,7 +36,8 @@ assert(res)//true
 //  2. Def出现的位置不影响匹配结果,如果所有模式都匹配不上才使用Def作为结果
 //  3. 默认匹配结果是null
 ```
-@example -> 链式调用(没有匹配参数时)
+
+@example Usage : 链式调用(没有匹配参数时)
 ```ts
   //1. 配合zod进行类型(校验)匹配
   const pattern1 = zod.number().min(0).max(10)
@@ -64,6 +63,8 @@ assert(res)//true
   assert(result)
 
   //3. `===` 和 `(val)=>boolean` 的普通匹配
+  
+  
   ...同上
 ```
 

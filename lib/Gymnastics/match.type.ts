@@ -1,4 +1,4 @@
-import type { Equal, Fn } from '../../mod.ts'
+import type { Equal, Fn } from '@chzky/fp'
 
 export type EqualInfer<T> = T extends Equal<infer U> ? U | T : T
 

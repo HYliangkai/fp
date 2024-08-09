@@ -1,10 +1,21 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.9",
-  "exports": "./mod.ts",
+  "version": "0.8.10",
+  "exports": {
+    "./type-class": "./lib/TypeClass/mod.ts",
+    "./interface": "./lib/Interface/mod.ts",
+    "./function": "./lib/Function/mod.ts",
+    "./error": "./lib/Error/mod.ts",
+    "./class": "./lib/Class/mod.ts",
+    "./gymnastics": "./lib/Gymnastics/mod.ts",
+    "./constant": "./lib/Constant/mod.ts",
+    "./ext": "./lib/Ext/mod.ts",
+    ".": "./mod.ts"
+  },
+
   "imports": {
     "@/": "./src/",
-    "@chzky/fp": "./lib/mod.ts",
+    "@chzky/fp": "./mod.ts",
     "@std/": "https://deno.land/std@0.206.0/"
   },
 
@@ -24,7 +35,7 @@
   },
 
   "lint": {
-    "include": ["src/", "lib/"],
+    "include": ["**/src/", "**/lib/"],
 
     "rules": {
       "tags": [],

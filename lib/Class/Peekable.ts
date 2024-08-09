@@ -1,4 +1,4 @@
-import { None, type Option, Some } from '../../mod.ts'
+import { None, type Option, Some } from '@chzky/fp'
 
 /** ## ## Peekable : 可提前`前瞻`iterable下一个数据
 由于iterable具有一次消耗性,调用next()之后就无法返回.Peekable能提前`看`下一个数据,能解决这一问题场景

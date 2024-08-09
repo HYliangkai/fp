@@ -1,4 +1,4 @@
-import { type AnyResult, Err } from '../../mod.ts'
+import { type AnyResult, Err } from '@chzky/fp'
 import { AnyError } from './anyError/anyError.ts'
 
 /** ## IllegalOperatError : 表示非法操作导致的错误,通常是致命的

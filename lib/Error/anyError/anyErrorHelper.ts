@@ -1,4 +1,4 @@
-import { Err, AnyError, type Result, type ErrorLevel, type AsyncResult } from '../../../mod.ts'
+import { Err, AnyError, type Result, type ErrorLevel, type AsyncResult } from "@chzky/fp"
 
 /** ## AnyResult : 错误类型为 {@link AnyError} 的 {@link Result }
   @category Error */

@@ -1,4 +1,4 @@
-import { Err, type Fns, Functor_Param_Tag, Ok, Proxy_Value, type Result } from '../../mod.ts'
+import { Err, type Fns, Functor_Param_Tag, Ok, Proxy_Value, type Result } from '@chzky/fp'
 /** ## functor : 函数解析器,用于简化函数调用 
 - 启发于Swift的闭包简写,可以将函数表达式转换为函数对象,并且可以传入参数 ; 
   将难看的闭包调用转换为简单的字符串表达式,增加代码可读性

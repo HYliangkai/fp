@@ -1,4 +1,4 @@
-import type { Fns } from '../../mod.ts'
+import type { Fns } from '@chzky/fp'
 /** ## curry : 函数科里化
 @example
 ```ts

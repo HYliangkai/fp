@@ -1,4 +1,4 @@
-import type { Fn, MiddleWare } from '../../mod.ts'
+import type { Fn, MiddleWare } from '@chzky/fp'
 
 /** ## middleware : 中间件函数
 用于将函数进行结果转换:

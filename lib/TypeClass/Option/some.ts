@@ -10,12 +10,16 @@ import {
   type Option,
   type Result,
   some_tag,
-} from '../../../mod.ts'
+  zod,
+  PartialEq,
+} from '@chzky/fp'
 import type { option } from './interface.ts'
 
 export interface Some<T> extends option<T> {
   readonly _tag: typeof some_tag
   readonly value: T
+  /** ## eq : 对{@link PartialEq} 的实现 : 全等于判断  */
+  eq(other: some<unknown>): boolean
 }
 
 class some<T> implements Some<T> {
@@ -25,11 +29,11 @@ class some<T> implements Some<T> {
       throw new TypeError('cannot create Some from null or undefined')
 
     this.value = val
-    this._tag = some_tag
+
     this.is_some = true
     this.is_none = false
   }
-  readonly _tag: typeof some_tag
+  readonly _tag: typeof some_tag = some_tag
   readonly is_some: boolean
   readonly is_none: boolean
 
@@ -79,6 +83,14 @@ class some<T> implements Some<T> {
   as<R extends 'boolean'>(flag: R): R extends 'boolean' ? boolean : never {
     if (flag === 'boolean') return true as any
     throw new TypeError('not match as')
+  }
+
+  eq(other: some<unknown>): boolean {
+    return (
+      zod.validate(zod.object({ _tag: zod.any() }))(other) &&
+      other._tag === some_tag &&
+      this.value === other.value
+    )
   }
 }
 

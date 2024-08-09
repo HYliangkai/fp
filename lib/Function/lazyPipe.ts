@@ -6,7 +6,7 @@ import {
   type PromiseLine,
   is_async_func,
   pipe,
-} from '../../mod.ts'
+} from '@chzky/fp'
 
 interface AutoLazyPipe {
   /** ## lzpipe : 惰性运行的{@link pipe}
@@ -208,6 +208,28 @@ const auto_lzpipe = (...fns: Array<PFn<any, any>>): any => {
   return fns.some((i) => is_async_func(i)) ? async_lzpipe(...fns) : sync_lzpipe(...fns)
 }
 
+/** ## lzpipe : 惰性运行的{@link pipe}
+  @example
+  ```ts
+
+  //Synchronization function
+  const res = pipe(
+    1,//1
+    (x: number) => x + 1,//2
+    (x: number) => x * 2,//4
+    (x: number) => x + 1,//5
+  )
+  assertEquals(res(), 5)
+
+  //Asynchronous function
+  const res2 = await pipe(
+    's',
+    (x: string) => x + 'a',
+    async (x: string) => x + 'b',
+  ))
+  assertEquals(res2(), 'sab')
+  ```    
+   */
 export const lzpipe: LazyPipe = Object.assign(auto_lzpipe, {
   sync: sync_lzpipe,
   async: async_lzpipe,

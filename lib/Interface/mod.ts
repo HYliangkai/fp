@@ -1,3 +1,4 @@
+/** @module */
 export * from './as.ts' /* 实现单向类型转化 */
 export * from './ord.ts' /* 实现比较功能 */
 export * from './equals.ts' /* 实现相等判断 */

@@ -1,5 +1,5 @@
-import { assert } from '@std/assert/mod.ts'
-import { $0, Equal, functor, match, PartialEq, zod } from '@chzky/fp'
+import { assert, assertEquals, assertThrows } from '@std/assert/mod.ts'
+import { $0, Equal, functor, match, PartialEq, zod, Some, reversal, Copy } from '@chzky/fp'
 
 Deno.test('matcher-test', () => {
   const match_value = { name: 'jiojio', age: 18 }
@@ -55,8 +55,10 @@ Deno.test('matcher-test-2', () => {
   const res = match(10)
     .some([zod.validate(pattern1), zod.validate(pattern2)], true)
     .done(false)
-
   assert(res)
+
+  const pattern3 = zod.option(pattern1)
+  match(Some(3)).case(zod.validate(pattern3), true).done(false)
 })
 
 Deno.test('matcher-test-when', () => {
@@ -67,4 +69,78 @@ Deno.test('matcher-test-when', () => {
     .done()
     .unwrap()
   assert(result)
+})
+
+Deno.test('matcher-test-every', () => {
+  assertThrows(() => {
+    //@ts-ignore
+    match('jiojio').some([], false)
+  })
+  assertThrows(() => {
+    //@ts-ignore : every必须传入一个有内容的数组,否则会报错
+    match('jiojio').every([], true)
+  })
+
+  const res = match('jiojio')
+    .every(
+      [
+        reversal<String, 'startsWith'>('startsWith', 'jio'),
+        reversal<String, 'endsWith'>('endsWith', 'dio'),
+      ],
+      'jiodio'
+    )
+    .every(
+      [
+        reversal<String, 'startsWith'>('startsWith', 'jio'),
+        reversal<String, 'endsWith'>('endsWith', 'jio'),
+      ],
+      'jiojio'
+    )
+    .done()
+    .unwrap()
+
+  assertEquals(res, 'jiojio')
+})
+
+Deno.test('matcher-test-copy', () => {
+  const cola = match('jiojio').case('dio', 'isdio')
+
+  // New Matcher
+  const colb = cola.clone().case('jiojio', 'isjiojio').done().unwrap()
+  assert(colb === 'isjiojio')
+
+  // Original Matcher
+  assert(cola.done().unwrap_or(true))
+})
+
+Deno.test('matcher-test-rematch', () => {
+  const match_str = 'jiojio-dio-is-a-dog'
+
+  //functional expression
+  const resfp = match(match_str)
+    .when(
+      (v) => v.startsWith('jiojio'),
+      (v) => v?.replace('jiojio', '')
+    )
+    .when(
+      (v) => v.startsWith('dio'),
+      (v) => v?.replace('dio', '')
+    )
+    .rematch() // 结果进行重新匹配
+    .when(reversal('as', 'boolean'), (v) => v?.unwrap().replace('-dio-is-a-', ''))
+    .done()
+    .unwrap()
+
+  // procedural
+  let respd = ''
+  if (match_str.startsWith('jiojio')) {
+    respd = match_str.replace('jiojio', '')
+  } else if (match_str.startsWith('dio')) {
+    respd = match_str.replace('dio', '')
+  }
+  if (respd !== '') {
+    respd = respd.replace('-dio-is-a-', '')
+  }
+
+  assertEquals(resfp, respd)
 })

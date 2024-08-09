@@ -1,4 +1,4 @@
-import {type Option, option} from '../../mod.ts'
+import { type Option, option } from '@chzky/fp'
 
 /** ## value : 获取obj[key]值 ,相当于 {@link option}(value[key])
 @example

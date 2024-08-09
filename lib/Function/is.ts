@@ -1,4 +1,4 @@
-import { type Fns, type Result, error_tag, ok_tag, zod } from '../../mod.ts'
+import { type Fns, type Result, error_tag, ok_tag, zod } from '@chzky/fp'
 /** ## is_async_func : 运行时判断函是否是 async函数
 @tips 只能判断
       1. 一个函数是否带`async`关键字，不能判断函数是否返回Promise(函数返回只能在运行时判断) 

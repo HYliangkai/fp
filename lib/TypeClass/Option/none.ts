@@ -11,11 +11,15 @@ import {
   NoneError,
   implements_default,
   NotImplementsError,
-} from '../../../mod.ts'
+  zod,
+} from '@chzky/fp'
+
 import type { option } from './interface.ts'
 
 export interface None extends option<never> {
   readonly _tag: typeof none_tag
+  /** ## eq : 对{@link PartialEq} 的实现 */
+  eq(other: None): boolean
 }
 
 export const None: None = {
@@ -77,5 +81,9 @@ export const None: None = {
     } else {
       throw new TypeError('not match as')
     }
+  },
+
+  eq(other: None): boolean {
+    return zod.validate(zod.object({ _tag: zod.any() }))(other) && other._tag === none_tag
   },
 } as const

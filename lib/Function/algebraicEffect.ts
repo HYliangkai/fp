@@ -1,5 +1,4 @@
-import { Err, is_result, Ok } from '../../mod.ts'
-import type { Fns, Result } from '../../mod.ts'
+import { Err, is_result, Ok, Fns, Result } from '@chzky/fp'
 
 const weak_states: WeakMap<Fns<any>, 'pending' | 'fulfulled' | 'error'> = new WeakMap()
 const weak_datas: WeakMap<Fns<any>, any> = new WeakMap()
@@ -7,7 +6,7 @@ const weak_datas: WeakMap<Fns<any>, any> = new WeakMap()
 function is_promise(pro: Promise<any> | null): pro is Promise<any> {
   return (
     pro !== null &&
-    (typeof pro === 'object' || typeof pro === 'function') &&
+    ((pro !== null && typeof pro === 'object') || typeof pro === 'function') &&
     typeof pro.then === 'function'
   )
 }
@@ -79,7 +78,7 @@ export const wait = <T, E = unknown>(fn: () => Promise<T>): Result<T, E> => {
     }
   )
 }
-/** 运行环境 */
+/** `wait`函数的运行环境 */
 export function run_effect<T extends Result<any, any>>(
   fn: () => T,
   callback?: (res: T) => any

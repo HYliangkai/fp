@@ -29,6 +29,7 @@ result(async () => {
       test: false,
       entryPoints: [relative_to_absolute('../mod.ts')],
       outDir: relative_to_absolute('../dist'),
+      importMap: relative_to_absolute('../deno.json'),
       shims: {
         deno: true,
       },

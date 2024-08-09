@@ -21,13 +21,6 @@ import {
   Ok,
 } from '../../mod.ts'
 
-declare module 'npm:zod@3.22.4' {
-  interface ZodType {
-    /* validate : zod验证函数,返回一个result类型数据 */
-    validate: <T>(value: T, params?: Partial<z.ParseParams>) => Result<T, z.ZodError<T>>
-  }
-}
-
 /** @ zod.option
 @example 
 ```ts
@@ -100,31 +93,20 @@ export const either = <L extends z.Schema, R extends z.Schema>(
       : ctx.addIssue({ code: 'custom', message: 'not a Eihter type' })
   })
 
+type VisT<T extends { _type: unknown }> = (
+  value: T['_type']
+) => value is T extends z.Schema<infer R> ? R : never
 /**
-
-`zod.validate(pattern)(value)`用于验证value是否符合pattern的类型  
-`zod.validate(pattern) == pattern.safeParse().success`
+### validate : 以科里化的方式进行zod的类型校验
+用于验证`value`是否符合`pattern`的类型    
+`zod.validate(pattern)`  相当于  `pattern.safeParse().success`
 @example
 ```ts
 const pattern = z.string()
-const res = zod.validate(pattern)('jiojio')
+const res = zod.validate(pattern)('jiojio') // res is string
 assert(res)
 ```
 @category Ext - zod
  */
-export const validate =
-  <T extends z.Schema<unknown>>(pattern: T): Fn<T['_type'], boolean> =>
-  (value: T['_type']) =>
-    pattern.safeParse(value).success
-
-Object.defineProperty(z.ZodType.prototype, 'validate', {
-  value: function (
-    data: unknown,
-    params?: Partial<z.ParseParams>
-  ): Result<typeof data, z.ZodError<any>> {
-    const res = this.safeParse.call(this, data, params)
-    return res.success ? Ok(data) : Err(res.error)
-  },
-  writable: false,
-  configurable: false,
-})
+export const validate = <T extends z.Schema<unknown>>(pattern: T): VisT<T> =>
+  ((value: T['_type']) => pattern.safeParse(value).success) as VisT<T>

@@ -1,4 +1,4 @@
-import type { Equal } from '../../mod.ts'
+import type { Equal } from '@chzky/fp'
 
 /** ## OrdResult : 两个数据的比较结果
 @case LT = -1 小于

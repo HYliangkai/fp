@@ -1,3 +1,4 @@
+/** @module */
 export * from './arr.ts'
 export * from './func.ts'
 export * from './time.ts'

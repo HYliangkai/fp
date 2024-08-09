@@ -1,4 +1,4 @@
-import { Err, type Fn, NaNError, Ok, type Result, pipe } from '../../mod.ts'
+import { Err, type Fn, NaNError, Ok, type Result, pipe } from '@chzky/fp'
 import { a_calc } from '../Ext/aCalc.ts'
 
 type DecimalLimit = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'

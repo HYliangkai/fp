@@ -1,3 +1,4 @@
+import { zod } from '@chzky/fp'
 /** ## Eq : 提供一个`不同类型`数据相等性判断的功能
 @example
   ```ts
@@ -23,5 +24,5 @@ export interface Equal<A> {
   @category Interface
 */
 export function implements_equal(value: unknown): value is Equal<unknown> {
-  return typeof value === 'object' && typeof (value as Equal<unknown>)['equals'] === 'function'
+  return zod.object({ equals: zod.function() }).safeParse(value).success
 }

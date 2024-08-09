@@ -1,11 +1,4 @@
-import {
-  type AnyResult,
-  type Debug,
-  type PartialEq,
-  type Default,
-  Err,
-  match,
-} from '../../../mod.ts'
+import { type AnyResult, type Debug, type PartialEq, type Default, Err, match } from '@chzky/fp'
 
 /** ## ErrorInfo : 错误信息 */
 type ErrorInfo = {

@@ -1,4 +1,5 @@
 import { left_tag, right_tag, As, Option, Result, Fn } from '../../../mod.ts'
+import { PartialEq } from '../../mod.ts'
 
 type EitherIntoFlag = 'option' | 'result'
 
