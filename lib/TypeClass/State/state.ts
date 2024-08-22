@@ -1,17 +1,50 @@
 import {
   type Fn,
-  type Refer,
   type Draft,
-  refer,
+  type Result,
+  type IllegalOperatError,
   state_tag,
   enableMapSet,
   enablePatches,
-  produce,
-} from '../../../mod.ts'
+  Immut,
+  Err,
+  Ok,
+} from '@chzky/fp'
 
-import type { State as STATE } from './interface.ts'
+export interface State<M, S> {
+  readonly _tag: typeof state_tag
 
-class State<M, S> implements STATE<M, S> {
+  /** State的数据 */
+  readonly struct: { main: M; effect: S }
+
+  /** ### `map` : 更新main数据  */
+  map: <R>(f: Fn<M, R>) => State<R, S>
+  /** ### `chain` : 更新,返回一个全新的State数据  */
+  chain: <O, R>(f: Fn<[M, S], [O, R]>) => State<O, R>
+  /** ### `ap` : 更新effect数据  */
+  ap: <R>(f: Fn<S, R>) => State<M, R>
+  /** ### `rep` : 替换effect数据 */
+  rep: <R>(effect: R) => State<M, R>
+
+  /** ### `draft` : 使用{@link Immut}以 *不可变数据结构* 的形式更新数据
+  + 产生的新数据和旧数据是相互独立的,不会相互影响
+  @example Uasge
+  ```
+  */
+  draft: <R = void>(
+    f: Fn<Draft<[M, S]>, R>
+  ) => Result<
+    R extends void ? State<M, S> : R extends [infer A, infer B] ? State<A, B> : never,
+    IllegalOperatError | TypeError
+  >
+
+  /** ### `unwrap` : 获取main数据*/
+  unwrap: () => M
+  /** ### `effect` : 获取effect数据*/
+  effect: () => S
+}
+
+class state<M, S> implements State<M, S> {
   readonly _tag: typeof state_tag = state_tag
 
   readonly struct: { main: M; effect: S }
@@ -22,29 +55,34 @@ class State<M, S> implements STATE<M, S> {
     this.struct = { main, effect }
   }
   static new<M, S>(main: M, effect: S): State<M, S> {
-    return new State(main, effect)
+    return new state(main, effect)
   }
 
   map<B>(f: Fn<M, B>): State<B, S> {
-    return State.new(f(this.struct.main), this.struct.effect)
+    return state.new(f(this.struct.main), this.struct.effect)
   }
   chain<B, R>(f: Fn<[M, S], [B, R]>): State<B, R> {
-    return State.new(...f([this.struct.main, this.struct.effect]))
+    return state.new(...f([this.struct.main, this.struct.effect]))
   }
   ap<B>(f: Fn<S, B>): State<M, B> {
-    return State.new(this.struct.main, f(this.struct.effect))
+    return state.new(this.struct.main, f(this.struct.effect))
   }
   rep<R>(effect: R): State<M, R> {
-    return State.new(this.struct.main, effect)
+    return state.new(this.struct.main, effect)
   }
-  draft<O = M, V = S>(f: Fn<[Draft<Refer<O>>, Draft<Refer<V>>], unknown>): State<O, V> {
-    const [main, effect] = produce(
-      [refer(this.struct.main), refer(this.struct.effect)],
-      (dratf: [Draft<Refer<O>>, Draft<Refer<V>>]) => {
-        f(dratf)
-      }
-    )
-    return State.new(main.value as unknown as O, effect.value as unknown as V)
+
+  draft<R = void>(
+    f: Fn<Draft<[M, S]>, R>
+  ): Result<
+    R extends void ? State<M, S> : R extends [infer A, infer B] ? State<A, B> : never,
+    IllegalOperatError | TypeError
+  > {
+    const clone = Immut<[M, S]>([this.struct.main, this.struct.effect]).produce(f)
+    if (clone.is_err) return clone as Result<never, IllegalOperatError>
+    const data = clone.unwrap().source
+    if (Array.isArray(data) && data.length === 2)
+      return Ok(state.new(data[0], data[1])) as Result<any, never>
+    return Err(new TypeError('draft function must return a tuple [X,Y]'))
   }
 
   unwrap(): M {
@@ -55,9 +93,10 @@ class State<M, S> implements STATE<M, S> {
   }
 }
 
-/** ## state : 主数据与状态/副作用数据进行隔离的数据结构
+/** ## `State` : 主数据与(状态/副作用)数据进行隔离的数据结构
 @example Usage1 : 用于简化多参数函数的调用
 ```ts
+  //正常情况下函数传入多个参数的情况
   function main(info: INFO, is_man: boolean) {
     if_then(is_man, () => {
       assertEquals(info, { name: 'jiojio', age: 18 })
@@ -73,7 +112,6 @@ class State<M, S> implements STATE<M, S> {
 @example Usage2 : 配合`pipe`函数存储过程数据  
 ```ts
 //pipe函数虽然让函数调用变得十分优雅,但是有一个问题就是只能返回一个值,但是有时候我们需要返回多个值(譬如不想多次计算的计算结果,这些数据属于状态数据,对于结果没有影响但是为了提高效率要用得到),这时候就可以使用State将主要数数据和副作用数据进分隔开
-
   function step1(info: INFO) {
     info.age += 1
     const comput_freq = 1
@@ -101,6 +139,6 @@ class State<M, S> implements STATE<M, S> {
 ```
 @category TypeClass
  */
-export function state<M, S>(main: M, effect: S): State<M, S> {
-  return State.new(main, effect)
+export function State<M, S>(main: M, effect: S): State<M, S> {
+  return state.new(main, effect)
 }

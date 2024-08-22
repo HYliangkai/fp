@@ -17,8 +17,6 @@ import {
   ok_tag,
   right_tag,
   some_tag,
-  Err,
-  Ok,
 } from '../../mod.ts'
 
 /** @ zod.option
@@ -96,6 +94,7 @@ export const either = <L extends z.Schema, R extends z.Schema>(
 type VisT<T extends { _type: unknown }> = (
   value: T['_type']
 ) => value is T extends z.Schema<infer R> ? R : never
+
 /**
 ### validate : 以科里化的方式进行zod的类型校验
 用于验证`value`是否符合`pattern`的类型    
@@ -109,4 +108,4 @@ assert(res)
 @category Ext - zod
  */
 export const validate = <T extends z.Schema<unknown>>(pattern: T): VisT<T> =>
-  ((value: T['_type']) => pattern.safeParse(value).success) as VisT<T>
+  ((value: unknown) => pattern.safeParse(value).success) as VisT<T>

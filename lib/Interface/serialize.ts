@@ -1,4 +1,4 @@
-import type { Result } from '../../mod.ts'
+import { type Result, zod } from '@chzky/fp'
 
 /** ## Serialize : 序列化
 @explain 正反序列化恒等性 : `Serialize<A, B> ==  `{@link DeSerialize}`<B, A>`
@@ -56,4 +56,10 @@ export interface MaybeSerialize<A, B, E> {
 export interface MaybeDeSerialize<B, A, E> {
   readonly deserialize: (data: B) => Result<A, E>
   readonly serialize: (data: A) => Result<B, E>
+}
+
+/** ## `implements_serialize` : duck type to judge Serialize type @category Interface */
+export function implements_serialize<A, B>(value: unknown): value is Serialize<A, B> {
+  return zod.object({ serialize: zod.function(), deserialize: zod.function() }).safeParse(value)
+    .success
 }

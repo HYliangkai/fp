@@ -1,4 +1,12 @@
-import { type AnyResult, type Debug, type PartialEq, type Default, Err, match } from '@chzky/fp'
+import {
+  type AnyResult,
+  type Debug,
+  type PartialEq,
+  type Default,
+  type Constructor,
+  Err,
+  match,
+} from '@chzky/fp'
 
 /** ## ErrorInfo : 错误信息 */
 type ErrorInfo = {
@@ -6,6 +14,19 @@ type ErrorInfo = {
   name: string
   cause: string
   strack: string
+}
+
+/** ## ERRCOLOR : 错误颜色 */
+enum ERRCOLOR {
+  WHITE = '#fff',
+  BLUE = '#409EFF',
+  REDWARN = '#F56C6C',
+  INFO = '#909399',
+  DEBUG = '#67C23A',
+  ERROR = '#E5133A',
+  WARN = '#E6A23C',
+  FATAL = '#BF062E',
+  PANIC = '#840021',
 }
 
 /** ## ErrorLevel : 错误级别
@@ -20,6 +41,7 @@ type ErrorInfo = {
   */
 export type ErrorLevel = 'Debug' | 'Info' | 'Warn' | 'Error' | 'Fatal' | 'Panic'
 const ERRORLEVELS = ['Debug', 'Info', 'Warn', 'Error', 'Fatal', 'Panic'] as const
+
 /** ## AnyError : 表示AnyError类型的错误
   @description
     + `type`：错误级别 - {@link ErrorLevel}
@@ -67,6 +89,11 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
     return this.type === other.type && this.cause === other.cause && this.name === other.name
   }
 
+  /** ### `instance_of` : `instanceof`语句的函数调用 */
+  instance_of(value: Constructor<unknown>): boolean {
+    return (this instanceof value) as boolean
+  }
+
   /** ## new : 实现{@link NewAble}接口 */
   static new<T extends ErrorLevel = 'Error'>(
     type?: T,
@@ -92,16 +119,15 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
 
   /** ### log : 实现{@link Debug}接口 */
   log(): void {
-    const type_color = match(this.type)
-      .case('Error', '#E5133A')
-      .case('Info', '#909399')
-      .case('Debug', '#67C23A')
-      .case('Warn', '#E6A23C')
-      .case('Fatal', '#BF062E')
-      .case('Panic', '#840021')
+    const color = match(this.type)
+      .case('Error', ERRCOLOR.ERROR)
+      .case('Info', ERRCOLOR.INFO)
+      .case('Debug', ERRCOLOR.DEBUG)
+      .case('Warn', ERRCOLOR.WARN)
+      .case('Fatal', ERRCOLOR.FATAL)
+      .case('Panic', ERRCOLOR.PANIC)
       .done()
       .unwrap()
-
     console.log(
       `%c------------------ ${'Error'} ------------------\n` +
         `%c${'*'} %ctype   : %c${this.type}\n` +
@@ -115,17 +141,17 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
         `%c${this.cause ? `${'*'} %ccause  : ${this.cause}\n` : ''}` +
         `%c${'*'} %cstrack : ${this.strack}\n` +
         `%c------------------ ${'End'} ------------------\n`,
-      'color:#F56C6C',
-      'color:#fff',
-      'color:#409EFF',
-      `color:${type_color}`,
-      'color:#fff',
-      'color:#67C23A',
-      'color:#fff',
-      'color:#E6A23C;',
-      'color:#fff',
-      'color:#909399',
-      'color:#F56C6C'
+      `color:${ERRCOLOR.REDWARN}`,
+      `color:${ERRCOLOR.WHITE}`,
+      `color:${ERRCOLOR.BLUE}`,
+      `color:${color}`,
+      `color:${ERRCOLOR.WHITE}`,
+      `color:${ERRCOLOR.DEBUG}`,
+      `color:${ERRCOLOR.WHITE}`,
+      `color:${ERRCOLOR.WARN}`,
+      `color:${ERRCOLOR.WHITE}`,
+      `color:${ERRCOLOR.INFO}`,
+      `color:${ERRCOLOR.REDWARN}`
     )
   }
 

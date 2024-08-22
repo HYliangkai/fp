@@ -1,10 +1,10 @@
-import { AnyError, if_then, pipe, produce, State, state, UnexpectedError } from '@chzky/fp'
+import { AnyError, if_then, pipe, produce, State, UnexpectedError } from '@chzky/fp'
 import { assert, assertEquals } from '@std/assert/mod.ts'
 
-Deno.test('state-base', () => {
+Deno.test('State-base', () => {
   const main = true
   const sub = { name: 'jiojio', age: 18 }
-  const s1 = state(main, sub)
+  const s1 = State(main, sub)
 
   assert(s1.unwrap())
   assertEquals(s1.effect().age, 18)
@@ -15,7 +15,7 @@ Deno.test('state-base', () => {
   assert(s1.ap(() => true).effect())
 })
 
-Deno.test('state-case', () => {
+Deno.test('State-case', () => {
   const man = true
   const info = { name: 'jiojio', age: 18 }
   type INFO = typeof info
@@ -28,9 +28,9 @@ Deno.test('state-case', () => {
     })
   }
   //在main函数中,不变的是info信息,而is_man是变化的,所以可以使用State-effect来存储is_man的状态
-  function main_change(state: State<INFO, IS_MAN>) {
-    if_then(state.effect(), () => {
-      assertEquals(state.unwrap(), info)
+  function main_change(State: State<INFO, IS_MAN>) {
+    if_then(State.effect(), () => {
+      assertEquals(State.unwrap(), info)
     })
   }
   /** **Usage2**  配合`pipe`函数存储过程数据  :  
@@ -39,23 +39,27 @@ Deno.test('state-case', () => {
   function step1(info: INFO) {
     info.age += 1
     const comput_freq = 1
-    return state(info, comput_freq)
+    return State(info, comput_freq)
   }
-  function step2(state: State<INFO, number>) {
-    if_then(state.unwrap().name == 'jiojio', () => {
-      main_change(state.rep(true))
+
+  function step2(State: State<INFO, number>) {
+    if_then(State.unwrap().name == 'jiojio', () => {
+      main_change(State.rep(true))
     }).unwrap()
+
     /** 更新数据,进行数据隔离 */
-    const as2 = state.draft(([main, effect]) => {
+    const as2 = State.draft((draft) => {
       //要更新数据必须先取出value值,然后进行操作
-      main.value.age += 1
-      effect.value = 2
+      draft[0].age += 1
+      draft[1] = 2
     })
-    /* 旧数据 */
-    assert(state.unwrap().age === 19)
-    /** 新数据 */
-    assert(as2.unwrap().age === 20)
-    assert(as2.effect() === 2)
+
+    /* 旧数据 <age> */
+    assert(State.unwrap().age === 19)
+    /** 新数据 <{age:20},2>  */
+    assert(as2.unwrap().unwrap().age === 20)
+    assert(as2.unwrap().effect() === 2)
   }
+
   pipe(info, step1, step2)
 })

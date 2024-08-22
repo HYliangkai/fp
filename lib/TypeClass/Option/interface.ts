@@ -4,17 +4,21 @@ import type {
   Either,
   Fn,
   FnReturn,
+  Monad,
   none_tag,
   NoneError,
   Option,
   PartialEq,
   Result,
   some_tag,
-} from '../../../mod.ts'
+} from '@chzky/fp'
 
 type OptionIntoFlag = 'result' | 'either'
 
-export interface option<T> extends As<boolean, 'boolean'>, PartialEq {
+export interface option<T>
+  extends Monad<typeof some_tag, typeof none_tag>,
+    As<boolean, 'boolean'>,
+    PartialEq {
   readonly _tag: typeof some_tag | typeof none_tag
 
   /** 是否为Some */

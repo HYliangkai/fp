@@ -1,5 +1,5 @@
-import { AnyError, Fn, left_tag, Ok, option, Option, Result } from '../../../mod.ts'
-import { Either } from './interface.ts'
+import { AnyError, left_tag, Ok, option, type Fn, type Option, type Result } from '@chzky/fp'
+import type { Either } from './interface.ts'
 import { Right } from './mod.ts'
 
 export interface Left<T> extends Either<T, never> {
@@ -9,12 +9,15 @@ export interface Left<T> extends Either<T, never> {
 
 export class left<T> implements Left<T> {
   readonly _tag: typeof left_tag = left_tag
+
   readonly left: T
   is_left = true
   is_right = false
+
   constructor(left: T) {
     this.left = left
   }
+
   merge(): T | never {
     return this.left
   }

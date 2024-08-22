@@ -1,8 +1,8 @@
-import { None, type Option, Some } from '@chzky/fp'
+import { None, type Option, Some, type Vector } from '@chzky/fp'
 
 /** ## ## Peekable : 可提前`前瞻`iterable下一个数据
 由于iterable具有一次消耗性,调用next()之后就无法返回.Peekable能提前`看`下一个数据,能解决这一问题场景
-@example:
+@example Uasge
 ```ts
   const arr: Iterable<number> = [1, 2, 33, 4, 5]
   const peek = new Peekable(arr)
@@ -44,5 +44,9 @@ export class Peekable<V, T extends Iterable<V> | Iterator<V>> {
       ? None
       : Some(this.peek_value.value)
     return pd
+  }
+
+  from<I>(val: Vector<I>): Peekable<I, Iterator<I>> {
+    return new Peekable(val, true)
   }
 }

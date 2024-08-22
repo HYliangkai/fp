@@ -3,15 +3,15 @@ import {
   type Either,
   type Fn,
   type FnReturn,
-  Left,
-  None,
   type NoneError,
-  Ok,
   type Option,
   type Result,
+  type PartialEq,
   some_tag,
   zod,
-  PartialEq,
+  Ok,
+  Left,
+  None,
 } from '@chzky/fp'
 import type { option } from './interface.ts'
 

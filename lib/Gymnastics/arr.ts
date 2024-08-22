@@ -2,3 +2,5 @@
   @category Gymnastics
 */
 export type NonEmptyArr<T> = [T, ...T[]]
+
+export type EmptyArr = []

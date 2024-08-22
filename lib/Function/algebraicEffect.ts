@@ -1,4 +1,4 @@
-import { Err, is_result, Ok, Fns, Result } from '@chzky/fp'
+import { Err, is_result, Ok, type Fns, type Result } from '@chzky/fp'
 
 const weak_states: WeakMap<Fns<any>, 'pending' | 'fulfulled' | 'error'> = new WeakMap()
 const weak_datas: WeakMap<Fns<any>, any> = new WeakMap()

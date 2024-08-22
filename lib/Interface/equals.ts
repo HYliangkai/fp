@@ -20,7 +20,7 @@ export interface Equal<A> {
   readonly equals: (val: A) => boolean
 }
 
-/** ## implements_equal : duck type to judge Equal type 
+/** ## `implements_equal` : duck type to judge Equal type 
   @category Interface
 */
 export function implements_equal(value: unknown): value is Equal<unknown> {

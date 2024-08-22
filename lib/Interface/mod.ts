@@ -10,3 +10,5 @@ export * from './semiGroup.ts' /* 实现数据合并 */
 export * from './partialEq.ts' /* 实现相等判断 */
 export * from './serialize.ts' /* 实现序列化和反序列化 */
 export * from './middleware.ts' /* 实现中间件函数 */
+export * from './sum.ts'
+export * from './monad.ts' /* 实现Monad */

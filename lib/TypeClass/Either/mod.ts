@@ -1,4 +1,4 @@
-import { Either } from './interface.ts'
+import type { Either } from './interface.ts'
 import { Right } from './right.ts'
 import { Left } from './left.ts'
 

@@ -1,36 +1,32 @@
 import {
-  option,
-  Copy,
-  match_return_tag,
-  implements_equal,
-  implements_partial_eq,
-  IllegalOperatError,
-  type Option,
+  type Fn,
   type Condition,
-  type JudeCondition,
+  type Copy,
+  type Debug,
+  type NonEmptyArr,
+  type Option,
+  zod,
+  IllegalOperatError,
+  match_return_tag,
 } from '@chzky/fp'
+import { type_protect, matching, match_return } from './core.ts'
+import { type CaseInfo, ErrorCase } from './type.ts'
 
-enum ErrorCase {
-  WHRN_TYPE_ERROR = 'Match.when() second argument must be a function',
-  NO_ARRAY = 'Must pass in an array',
-  EMPTY_ARRAY = 'Array is empty',
-}
-
-type CaseInfo = {
-  immediate: boolean /* 如果case是个函数是否立刻执行 */
-  every?: boolean /* 用于区分some函数还是every函数的标志 */
-}
-export class Matcher<T, R = never> implements Copy {
+export class Matcher<T, R = never> implements Copy, Debug {
   private cases: Array<[Condition<T> | Array<Condition<T>>, any, CaseInfo]>
   private match_value: T
 
   constructor(
-    match_value: T,
+    match_value: NonNullable<T>,
     cases: Array<[Condition<T> | Array<Condition<T>>, R, CaseInfo]> = []
   ) {
+    type_protect(match_value)
+
     this.cases = cases
     this.match_value = match_value
   }
+
+  /** @matching */
 
   /** ### case : 条件匹配
   @param condition : 匹配条件 
@@ -41,14 +37,16 @@ export class Matcher<T, R = never> implements Copy {
   4. 实现了Equal的数据结构 : 调用`equals`方法进行比较
   @param value : 匹配结果,直接返回
    */
-  case<V>(condition: Condition<T>, value: V): Matcher<T, V | R> {
+  case<V>(condition: Condition<T>, value: NonNullable<V>): Matcher<T, V | R> {
+    type_protect(value)
+
     this.cases.push([condition, value, { immediate: false }])
-    return new Matcher(this.match_value, this.cases)
+    return this
   }
 
   /** ### when : 条件匹配,用于解决返回值是个函数的情况,能直接执行函数
   @param condition : 匹配条件
-  @param call_back : 执行函数,函数返回值即为匹配结果值
+  @param call_back : 执行函数,函数返回值即为匹配结果值 - 为了匹配能正确获取结果,函数必须返回一个值;如果实在没有需要返回的值,使用{@link Default.default()}包装表示此匹配无返回值
   @example
   ```ts
   const result = match('JioJio')
@@ -60,9 +58,11 @@ export class Matcher<T, R = never> implements Copy {
   assert(result)
   ```
    */
-  when<U>(condition: Condition<T>, call_back: (value?: T) => U): Matcher<T, U | R> {
-    if (typeof call_back !== 'function') throw new TypeError(ErrorCase.WHRN_TYPE_ERROR)
+  when<U>(condition: Condition<T>, call_back: Fn<T, NonNullable<U>>): Matcher<T, U | R> {
+    if (!zod.function().safeParse(call_back).success) throw new TypeError(ErrorCase.WHRN_TYPE_ERROR)
+
     this.cases.push([condition, call_back, { immediate: true }])
+
     return this
   }
   /** ### some : 多个条件,只要满足一项即匹配结果
@@ -80,7 +80,10 @@ export class Matcher<T, R = never> implements Copy {
   assert(res)
   ```
   */
-  some<V>(conditions: [Condition<T>, ...Array<Condition<T>>], value: V): Matcher<T, V | R> {
+  some<V>(
+    conditions: [Condition<T>, ...Array<Condition<T>>],
+    value: NonNullable<V>
+  ): Matcher<T, V | R> {
     if (!Array.isArray(conditions)) throw new TypeError(ErrorCase.NO_ARRAY)
     if (conditions.length === 0) throw new IllegalOperatError(ErrorCase.EMPTY_ARRAY)
     this.cases.push([conditions, value, { immediate: false, every: false }])
@@ -114,12 +117,14 @@ export class Matcher<T, R = never> implements Copy {
     .unwrap()  
   ```
   */
-  every<V>(conditions: [Condition<T>, ...Array<Condition<T>>], value: V): Matcher<T, V | R> {
+  every<V>(conditions: NonEmptyArr<Condition<T>>, value: NonNullable<V>): Matcher<T, V | R> {
     if (!Array.isArray(conditions)) throw new TypeError(ErrorCase.NO_ARRAY)
     if (conditions.length === 0) throw new IllegalOperatError(ErrorCase.EMPTY_ARRAY)
     this.cases.push([conditions, value, { immediate: false, every: true }])
     return this
   }
+
+  /** @result */
 
   /** ### rematch : 获取match的值,进行重新匹配 --> 用于解决多分支匹配问题 
   @example Usage
@@ -155,31 +160,26 @@ export class Matcher<T, R = never> implements Copy {
   assertEquals(resfp, respd)  
   ```
   */
-  rematch<V = undefined>(def = undefined as V): Matcher<V extends undefined ? Option<R> : R | V> {
-    return new Matcher(this.done(def))
+  rematch<V = undefined>(
+    def = undefined as V
+  ): Matcher<V extends undefined | null ? Option<R> : R | V> {
+    return new Matcher(this.done(def)!)
   }
 
-  /** ### clone : 实现{@link Copy}接口,创建一个新的匹配模式
+  /** ### `done_else` : 获取结果,如果没有结果使用`fn(match_value)`替代 
+  @tips 如果进行匹配的结果是`underfind`或`null`,也会直接返回`fn(match_value)`的结果
   ```ts
-  const cola = match('jiojio').case('dio', 'isdio')
-
-  // New Matcher
-  const colb = cola.clone().case('jiojio', 'isjiojio').done().unwrap()
-  assert(colb === 'isjiojio')
-
-  // Original Matcher
-  assert(cola.done().unwrap_or(true))  
   ```
   */
-  clone(): Matcher<T, R> {
-    return new Matcher(this.match_value, this.cases)
+  done_else<RR>(fn: Fn<T, RR>): R | RR {
+    return this.done().unwrap_or_else(() => fn(this.match_value))
   }
 
-  /** ### done : 获取match结果
+  /** ### `done` : 获取match结果
   @param def : 默认值,如果不传递默认值,则返回`Option<R>`,否则返回`R|V` 
   @tips 如果进行匹配的值是`underfind`或`null`,会直接返回`None`/`def`
   */
-  done<V = undefined>(def = undefined as V): V extends undefined ? Option<R> : R | V {
+  done<V = undefined>(def = undefined as V): V extends undefined | null ? Option<R> : R | V {
     if (this.match_value !== undefined && this.match_value !== null) {
       for (const index in this.cases) {
         const [condition, result, caseinfo] = this.cases[index]
@@ -208,48 +208,33 @@ export class Matcher<T, R = never> implements Copy {
     /** 兜底处理 */
     return match_return('None', def, this.match_value, undefined, { immediate: false })
   }
-}
 
-/** 核心匹配语句 */
-function matching<T>(match_value: any, condition: Condition<T>, flag: symbol): symbol | null {
-  /** @case1 : 全等 */
-  if (condition === match_value) return flag
+  /** @implacement */
 
-  /** @case2 : 函数回调结果为true */
-  if (typeof condition === 'function' && (condition as JudeCondition<any>)(match_value) === true) {
-    return flag
+  /** ### clone : 实现{@link Copy}接口,创建一个新的匹配模式
+  ```ts
+  const cola = match('jiojio').case('dio', 'isdio')
+
+  // New Matcher
+  const colb = cola.clone().case('jiojio', 'isjiojio').done().unwrap()
+  assert(colb === 'isjiojio')
+
+  // Original Matcher
+  assert(cola.done().unwrap_or(true))  
+  ```
+  */
+  clone(): Matcher<T, R> {
+    return new Matcher(this.match_value!, this.cases)
   }
 
-  /** @case3 : 实现PartialEq */
-  if (
-    implements_partial_eq(match_value) &&
-    implements_partial_eq(condition) &&
-    match_value['eq'](condition as any) === true
-  )
-    return flag
-
-  /** @case4 : 实现Equal */
-  if (implements_equal(match_value) && match_value['equals'](condition) === true) return flag
-
-  return null
-}
-
-/** 返回match的值 */
-function match_return(
-  type: 'Some' | 'None',
-  def: any /* 默认值 : 用户判断是否返回option还是解包后类型 */,
-  match_value: any,
-  result: any,
-  caseinfo: CaseInfo
-): any {
-  return def === undefined
-    ? option(type === 'Some' ? match_result(match_value, result, caseinfo) : null)
-    : type === 'Some'
-    ? match_result(match_value, result, caseinfo)
-    : def
-}
-
-/** 解析配置信息`caseinfo`并生成正确的返回值 */
-function match_result(match_value: any, result: any, info: CaseInfo): any {
-  return info.immediate ? result(match_value) : result
+  /** ### debug : 实现{@link Debug}接口,用于输出匹配信息 */
+  log: () => void = () => {
+    console.log(`---------------Match-----------------`)
+    console.log('Match : ', this.match_value)
+    this.cases.forEach(([condition, value]) => {
+      console.log(`-  Case : ${condition}`)
+      console.log(`-- Value: ${value}`)
+    })
+    console.log(`-------------Match  End---------------`)
+  }
 }

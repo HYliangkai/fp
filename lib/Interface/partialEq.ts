@@ -21,9 +21,7 @@ export interface PartialEq {
   readonly eq: (other: this) => boolean
 }
 
-/** ## implements_partial_eq : duck type to judge PartialEq type 
-  @category Interface
-  */
+/** ## implements_partial_eq : duck type to judge PartialEq type  @category Interface */
 export function implements_partial_eq(value: unknown): value is PartialEq {
   return zod.object({ eq: zod.function() }).safeParse(value).success
 }

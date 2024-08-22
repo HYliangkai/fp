@@ -1,17 +1,21 @@
 import { assert, assertEquals, assertThrows } from '@std/assert/mod.ts'
 import { $0, Equal, functor, match, PartialEq, zod, Some, reversal, Copy } from '@chzky/fp'
 
-Deno.test('matcher-test', () => {
+Deno.test('matcher-test', async ({ step }) => {
   const match_value = { name: 'jiojio', age: 18 }
 
-  assert(match(match_value).done().is_none)
+  await step('base', () => {
+    assert(match(match_value).done().is_none)
+  })
 
-  assert(
-    match(match_value)
-      .case(functor`${$0.name}==='jiojio'`, 'dio')
-      .done()
-      .unwrap_or('jiojio') === 'dio'
-  )
+  await step('case2', () => {
+    assert(
+      match(match_value)
+        .case(functor`${$0.name}==='jiojio'`, 'dio')
+        .done()
+        .unwrap_or('jiojio') === 'dio'
+    )
+  })
 
   class Typer implements PartialEq {
     constructor(public name: string) {}
@@ -62,7 +66,7 @@ Deno.test('matcher-test-2', () => {
 })
 
 Deno.test('matcher-test-when', () => {
-  const result = match('JioJio')
+  const result = match('JioJio' as string)
     .case('dio', false)
     .when('diojio', functor<boolean>`false`)
     .when('JioJio', () => true)
@@ -103,7 +107,7 @@ Deno.test('matcher-test-every', () => {
 })
 
 Deno.test('matcher-test-copy', () => {
-  const cola = match('jiojio').case('dio', 'isdio')
+  const cola = match('jiojio' as string).case('dio', 'isdio')
 
   // New Matcher
   const colb = cola.clone().case('jiojio', 'isjiojio').done().unwrap()
@@ -143,4 +147,23 @@ Deno.test('matcher-test-rematch', () => {
   }
 
   assertEquals(resfp, respd)
+})
+
+Deno.test('matcher-test-done_else', () => {
+  const name: string = 'jiojio'
+
+  const v = match(name)
+    .case('unkonw', false)
+    .when('dio', () => false)
+    .when('dijio', () => false)
+    .done_else(() => true)
+
+  assert(v)
+})
+
+Deno.test('Matcher-test-log', () => {
+  match('jiojio' as string)
+    .case('dio', 'aadd')
+    .when('nvo', () => 'vmow')
+    .log()
 })

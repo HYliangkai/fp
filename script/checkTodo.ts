@@ -13,7 +13,7 @@ const TARGET_TAG = 'todo'
 const VERSION_TAG = 'version'
 const DESC_TAG = 'desc'
 
-const PATH = [join(import.meta.dirname!, '../lib'),join(import.meta.dirname!, '../src')]
+const PATH = [join(import.meta.dirname!, '../lib')]
 const NOW_VERSION = (pack.version || '0.0.0').split('.')
 const READ_ALL = Deno.args[0] === '--all'
 

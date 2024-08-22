@@ -1,9 +1,14 @@
 export * from './functor.ts'
 
-/** ##  Default : global default value 
+/** ##  Default : 全局的默认实现Value
+如何获得?
+1. 调用`Default.default()`
+2. 直接调用
   @category Constant
 */
 export const Def = Symbol('default')
+export type Def = typeof Def
+
 /** @category Constant */
 export const error_tag = Symbol('error')
 
@@ -33,3 +38,5 @@ export const future_tag = Symbol('future')
 
 /** @category Constant */
 export const match_return_tag = Symbol('match_return')
+
+

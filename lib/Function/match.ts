@@ -70,7 +70,7 @@ assert(res)//true
 
 @category Function
 */
-export function match<T>(match_value: T): Matcher<T, never>
+export function match<T>(match_value: NonNullable<T>): Matcher<T, never>
 export function match<T, V>(match_value: T, ab: [typeof Def, V]): V
 export function match<T, V, C>(match_value: T, ab: [Condition<T>, V], bc: [typeof Def, C]): V | C
 export function match<T, V, C, D>(
@@ -159,7 +159,7 @@ export function match<T>(
   match_value: T,
   ...args: ([Condition<any>, unknown] | [typeof Def, unknown])[]
 ): any {
-  if (args.length === 0) return new Matcher(match_value, [])
+  if (args.length === 0) return new Matcher(match_value!, [])
 
   let def = null
   for (const index in args) {

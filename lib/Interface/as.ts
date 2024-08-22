@@ -16,7 +16,7 @@ export interface As<T, K = unknown> {
   as(flag?: K): T
 }
 
-/** ## implements_as : duck type to judge As type
+/** ## `implements_as` : duck type to judge As type
 @category Interface
   */
 export function implements_as(value: unknown): value is As<unknown, unknown> {

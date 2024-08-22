@@ -1,4 +1,4 @@
-import { Fn } from '@chzky/fp'
+import type { AnyFunc, Fn } from '@chzky/fp'
 
 type FuncRemainArgs<T extends object, K extends keyof T> = T[K] extends (...args: infer P) => any
   ? P
@@ -34,8 +34,8 @@ export function reversal<T extends object, K extends keyof T = keyof T>(
   ...args: FuncRemainArgs<T, K>
 ): Fn<T, FuncReturnType<T, K>> {
   return (target: T): FuncReturnType<T, K> => {
-    if (typeof target[key] === 'function') return (target[key] as Function)(...args)
-    else if (typeof target[key] !== undefined) return target[key] as FuncReturnType<T, K>
+    if (typeof target[key] === 'function') return (target[key] as AnyFunc)(...args)
+    else if (typeof target[key] !== 'undefined') return target[key] as FuncReturnType<T, K>
     throw new TypeError(`doesn't exist ${String(key)} in ${target}`)
   }
 }

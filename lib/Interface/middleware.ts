@@ -1,4 +1,4 @@
-import type { Fn } from '../../mod.ts'
+import type { Fn } from '@chzky/fp'
 
 /** ## MiddleWare : 实现了中间件功能的函数
 ### 该接口的特性定义为:

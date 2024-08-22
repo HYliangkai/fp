@@ -1,5 +1,4 @@
-import { left_tag, right_tag, As, Option, Result, Fn } from '../../../mod.ts'
-import { PartialEq } from '../../mod.ts'
+import type { left_tag, right_tag, As, Option, Result, Fn, Monad } from '@chzky/fp'
 
 type EitherIntoFlag = 'option' | 'result'
 
@@ -8,7 +7,9 @@ type EitherIntoFlag = 'option' | 'result'
 比较常见的用法是用来表示一个值可能是两种类型中的一种。  
 一个经典的例子是`boolean`类型，它的值可能是`true`或者`false`。
 */
-export interface Either<L, R> extends As<boolean, 'boolean'> {
+export interface Either<L, R>
+  extends Monad<typeof left_tag, typeof right_tag>,
+    As<boolean, 'boolean'> {
   readonly _tag: typeof left_tag | typeof right_tag
 
   readonly is_left: boolean

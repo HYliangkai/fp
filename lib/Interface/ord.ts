@@ -1,4 +1,4 @@
-import type { Equal } from '@chzky/fp'
+import { zod, type Equal } from '@chzky/fp'
 
 /** ## OrdResult : 两个数据的比较结果
 @case LT = -1 小于
@@ -41,3 +41,7 @@ export interface Ord<T> extends Equal<T> {
 
 /** ## OrdSelf : `Ord`的特化版本,表示和自身比较的能力 ; 君子协议,ts不能进行规范 */
 export interface OrdSelf<T> extends Ord<T> {}
+
+export function implements_ord(value: unknown): value is Ord<unknown> {
+  return zod.object({ compare: zod.function() }).safeParse(value).success
+}

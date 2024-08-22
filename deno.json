@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.10",
+  "version": "0.8.11",
   "exports": {
     "./type-class": "./lib/TypeClass/mod.ts",
     "./interface": "./lib/Interface/mod.ts",
@@ -16,6 +16,7 @@
   "imports": {
     "@/": "./src/",
     "@chzky/fp": "./mod.ts",
+    "@std/cli": "jsr:@std/cli",
     "@std/": "https://deno.land/std@0.206.0/"
   },
 
@@ -49,7 +50,6 @@
         "getter-return",
         "no-array-constructor",
         "explicit-function-return-type",
-        "explicit-module-boundary-types",
         "no-const-assign",
         "no-cond-assign",
         "no-async-promise-executor",
@@ -81,7 +81,6 @@
         "no-irregular-whitespace",
         "no-new-symbol",
         "no-non-null-asserted-optional-chain",
-        "no-non-null-assertion",
         "no-obj-calls",
         "no-octal",
         "no-redeclare",

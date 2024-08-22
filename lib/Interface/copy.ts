@@ -1,3 +1,5 @@
+import { zod } from '@chzky/fp'
+
 /** ## Copy : 提供一个自定义克隆接口,`深度遍历`
 * - clone():Copy 
 @example
@@ -15,4 +17,9 @@ assert(a!=b)
 */
 export interface Copy {
   readonly clone: () => Copy
+}
+
+/** ## `implements_copy` : duck type to judge Copy type @category Interface */
+export function implements_copy(value: unknown): value is Copy {
+  return zod.object({ clone: zod.function() }).safeParse(value).success
 }

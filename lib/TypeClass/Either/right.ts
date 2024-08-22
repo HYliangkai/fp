@@ -1,5 +1,5 @@
-import { AnyError, Err, Fn, None, Option, Result, right_tag } from '../../../mod.ts'
-import { Either } from './interface.ts'
+import { AnyError, Err, type Fn, None, type Option, type Result, right_tag } from '@chzky/fp'
+import type { Either } from './interface.ts'
 import { Left } from './mod.ts'
 
 export interface Right<T> extends Either<never, T> {

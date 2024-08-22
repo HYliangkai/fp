@@ -4,6 +4,12 @@
 */
 export type FnReturn<T> = () => T
 
+/** ## FnReturnAsync
+  参数为空,返回值为`Promise<T>`的函数
+  @category Gymnastics
+*/
+export type FnReturnAsync<T> = () => Promise<T>
+
 /** ## Fn<T,R>
   参数为单个的`T`,返回值为`R`的函数
   @category Gymnastics
@@ -31,3 +37,15 @@ export type ValueOrFunc<T> = T | (() => T)
   @category Gymnastics
  */
 export type AnyFunc = (...args: any[]) => any
+
+/** ## PromiseResolve
+  Promise的resolve函数
+  @category Gymnastics
+ */
+export type PromiseResolve = Fn<unknown, void>
+
+/** ## PromiseReject
+  Promise的reject函数
+  @category Gymnastics
+ */
+export type PromiseReject = Fn<unknown, void>

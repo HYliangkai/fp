@@ -5,6 +5,7 @@ import type {
   Either,
   error_tag,
   Fn,
+  Monad,
   NoneError,
   ok_tag,
   Option,
@@ -17,7 +18,9 @@ export type ResultIntoFlag = 'option' | 'either'
 它是一个具有变量的TypeClass， `Ok(O)`表示成功并包含一个值， `Err(E)`表示错误并包含一个错误值。
 只要错误是预期的和可恢复的，函数就返回`Result`
 */
-export interface Result<O, E> extends As<boolean, 'boolean'> {
+export interface Result<O, E>
+  extends Monad<typeof error_tag, typeof ok_tag>,
+    As<boolean, 'boolean'> {
   readonly _tag: typeof error_tag | typeof ok_tag
   readonly value: O | E
   readonly is_ok: boolean
