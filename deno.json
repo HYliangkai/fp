@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.11",
+  "version": "0.8.12",
   "exports": {
     "./type-class": "./lib/TypeClass/mod.ts",
     "./interface": "./lib/Interface/mod.ts",
@@ -28,7 +28,7 @@
     "build": "deno run -A ./script/esbuild.ts",
     "update": "deno run -A ./script/updateVersion.ts",
     "publish": "deno publish",
-    "test:build": "deno task buikd && deno task test",
+    "test:build": "deno task test && deno task build",
     "npm:publish": "cd ./dist && npm publish",
     "check:todo": "deno run  -A --unstable-sloppy-imports ./script/checkTodo.ts ",
     "check:alltodo": "deno run  -A --unstable-sloppy-imports ./script/checkTodo.ts --all",
