@@ -9,7 +9,12 @@ import {
   type Either,
   type Default,
 } from '../../../mod.ts'
-import type { Result, ResultIntoFlag, Ok } from './interface.ts'
+import type { Result, ResultIntoFlag } from './interface.ts'
+
+export interface Ok<O> extends Result<O, never> {
+  readonly _tag: typeof ok_tag
+  readonly value: O
+}
 
 class ok<O = void> implements Ok<O> {
   readonly value: O

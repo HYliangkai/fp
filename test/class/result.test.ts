@@ -1,19 +1,5 @@
-import {
-  AnyErr,
-  AnyError,
-  AnyResult,
-  Default,
-  Err,
-  flow,
-  functor,
-  None,
-  Ok,
-  panic,
-  result,
-  Result,
-  Some,
-} from '@chzky/fp'
-import { assertEquals, assertThrows } from '../mod.ts'
+import { AnyErr, AnyError, AnyResult, Default, None, Ok, panic, result, Some } from '@chzky/fp'
+import { assertThrows } from '../mod.ts'
 import { assert } from '@std/assert/mod.ts'
 
 Deno.test('result-method', () => {

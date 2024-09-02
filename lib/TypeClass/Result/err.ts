@@ -7,7 +7,12 @@ import {
   error_tag,
   type Default,
 } from '../../../mod.ts'
-import type { Result, ResultIntoFlag, Err } from './interface.ts'
+import type { Result, ResultIntoFlag } from './interface.ts'
+
+export interface Err<E> extends Result<never, E> {
+  readonly _tag: typeof error_tag
+  readonly value: E
+}
 
 class err<E> implements Err<E> {
   readonly value: E
@@ -76,4 +81,8 @@ class err<E> implements Err<E> {
 /** ## Err(E) : 表示错误并包含一个错误值 */
 export function Err<E>(value: E): Result<never, E> {
   return new err(value)
+}
+
+export function is_err<E = unknown>(value: unknown): value is Err<E> {
+  return value instanceof err
 }

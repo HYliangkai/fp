@@ -15,8 +15,8 @@ export interface Either<L, R>
   readonly is_left: boolean
   readonly is_right: boolean
 
-  /** ### merge : 获取值 */
-  merge: () => L | R
+  /** ### unwrap : 获取值 */
+  unwrap: () => L | R
 
   /** ### unwrap : 获取`left`值,如果不存在抛出异常 */
   unwrap_left: () => L

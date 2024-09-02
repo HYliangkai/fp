@@ -17,26 +17,26 @@ export class right<T> implements Right<T> {
     this.right = right
   }
 
-  merge(): T {
+  unwrap(): T {
     return this.right
   }
   unwrap_left(): never {
     throw AnyError.new('Error', 'cannot unwrap_left from right', 'EitherError')
   }
   unwrap_right(): T {
-    return this.merge()
+    return this.unwrap()
   }
   unwrap_lor<O>(or: O): O {
     return or
   }
   unwrap_ror<O>(_or: O): T {
-    return this.merge()
+    return this.unwrap()
   }
   exchange(): Either<T, never> {
-    return Left(this.merge())
+    return Left(this.unwrap())
   }
   right_do(callback: (val: T) => void): void {
-    callback(this.merge())
+    callback(this.unwrap())
   }
   left_do: Fn<Fn<never, void>, void> = () => {}
   match(_left: Fn<never, void>, right: Fn<T, void>): void {
@@ -51,7 +51,7 @@ export class right<T> implements Right<T> {
     ? Result<never, R>
     : never {
     if (flag === 'option') return None as any
-    if (flag === 'result') return Err(this.merge()) as any
+    if (flag === 'result') return Err(this.unwrap()) as any
     throw new TypeError('not match into')
   }
 

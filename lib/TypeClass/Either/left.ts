@@ -18,17 +18,17 @@ export class left<T> implements Left<T> {
     this.left = left
   }
 
-  merge(): T | never {
+  unwrap(): T | never {
     return this.left
   }
   unwrap_left(): T {
-    return this.merge()
+    return this.unwrap()
   }
   unwrap_right(): never {
     throw AnyError.new('Error', 'cannot unwrap_right from left', 'EitherError')
   }
   unwrap_lor<O>(_or: O): T | O {
-    return this.merge()
+    return this.unwrap()
   }
   unwrap_ror<O>(or: O): O {
     return or
@@ -47,7 +47,7 @@ export class left<T> implements Left<T> {
   into<R extends 'option' | 'result'>(
     flag: R
   ): R extends 'option' ? Option<T> : R extends 'result' ? Result<T, never> : never {
-    if (flag === 'option') return option(this.merge()!) as any
+    if (flag === 'option') return option(this.unwrap()!) as any
     if (flag === 'result') return Ok(this.left) as any
     throw new TypeError('not match into')
   }
@@ -57,8 +57,6 @@ export class left<T> implements Left<T> {
     throw new TypeError('not match as')
   }
 }
-
-console.log(new left(1).merge())
 
 export function Left<T>(val: T): Left<T> {
   return new left<T>(val)

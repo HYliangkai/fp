@@ -65,6 +65,7 @@ export class Matcher<T, R = never> implements Copy, Debug {
 
     return this
   }
+
   /** ### some : 多个条件,只要满足一项即匹配结果
   @param conditions : 匹配条件
   @param value
@@ -183,10 +184,10 @@ export class Matcher<T, R = never> implements Copy, Debug {
     if (this.match_value !== undefined && this.match_value !== null) {
       for (const index in this.cases) {
         const [condition, result, caseinfo] = this.cases[index]
+        const { every = null } = caseinfo
 
         if (Array.isArray(condition)) {
           /** @case : some/every 函数处理 */
-          const { every = null } = caseinfo
           if (
             (every &&
               condition.every(
@@ -199,9 +200,9 @@ export class Matcher<T, R = never> implements Copy, Debug {
           ) {
             return match_return('Some', def, this.match_value, result, caseinfo)
           }
-        } else {
-          if (matching(this.match_value, condition, match_return_tag) === match_return_tag)
-            return match_return('Some', def, this.match_value, result, caseinfo)
+        } else if (matching(this.match_value, condition, match_return_tag) === match_return_tag) {
+          /** @case : 普通函数处理 */
+          return match_return('Some', def, this.match_value, result, caseinfo)
         }
       }
     }

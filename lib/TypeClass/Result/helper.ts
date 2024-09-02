@@ -20,15 +20,20 @@ async function _async_result<T, E = unknown>(fn: () => Promise<T>): AsyncResult<
   }
 }
 
-function _form<T>(val: Option<T>): Result<T, NoneError> {
+function _from<T>(val: Option<T>): Result<T, NoneError> {
   if (val.is_none) return Err(NoneError.new())
   if (val.is_some) return Ok(val.unwrap())
   throw UnexpectedError.new('Option is not Some or None')
 }
 
+/** ## `result` : 从函数中生成`Result`类型数据
+@description 将一个可能throw的普通语句/代码/函数 转化为Result<(return value),(throw value)>类型
+ */
 export const result = Object.assign(_result, {
   async: _async_result,
-  from: _form,
+
+  /** ### from` : 从`Option`转化成`Result` */
+  from: _from,
 }) as ResultConstructor
 
 /**  ## async_result : {@link result}的异步版本

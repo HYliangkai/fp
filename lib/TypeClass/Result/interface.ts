@@ -86,15 +86,6 @@ export interface Result<O, E>
   as<R extends 'boolean'>(flag: R): R extends 'boolean' ? boolean : never
 }
 
-export interface Ok<O> extends Result<O, never> {
-  readonly _tag: typeof ok_tag
-  readonly value: O
-}
-export interface Err<E> extends Result<never, E> {
-  readonly _tag: typeof error_tag
-  readonly value: E
-}
-
 /** ## AsyncResult : 对Result类型的异步封装
   @category TypeClass */
 export type AsyncResult<O, E> = Promise<Result<O, E>>

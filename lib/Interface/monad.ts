@@ -6,5 +6,6 @@
 结果是`unit`(唯一)并且可以`bind`(链式调用)的类型构造子即为Monad
  */
 export interface Monad<A, B> {
-  readonly _tag: A|B
+  readonly _tag: A | B
+  unwrap(): unknown
 }

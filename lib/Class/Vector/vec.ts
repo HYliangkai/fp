@@ -2,7 +2,6 @@ import {
   type Option,
   type Vector,
   type Fn,
-  type Result,
   type OrdSelf,
   type OrdResult,
   type AnyResult,
@@ -12,7 +11,6 @@ import {
   Some,
   None,
   option,
-  result,
   Peekable,
   VectorSize,
   VectorState,
@@ -45,8 +43,6 @@ import {
   state_check,
   intersperse,
   init_from_iter,
-  type VertorUsedError,
-  type VectorInfiniteLengthError,
   zip,
   find,
   sum,
@@ -58,7 +54,6 @@ class vector<T> implements Vector<T> {
   state: VectorState
   size: VectorSize
   gen: Generator<T>
-
   private range: [number, Option<number>]
 
   constructor(gen: Generator<T>, size: VectorSize, range: [number, Option<number>]) {
@@ -66,6 +61,10 @@ class vector<T> implements Vector<T> {
     this.size = size
     this.gen = gen
     this.range = range
+  }
+
+  [Symbol.iterator](): Generator<T> {
+    return this.gen
   }
 
   /** @Pend */
@@ -109,7 +108,7 @@ class vector<T> implements Vector<T> {
       this.range[1].map((n) => Math.max(Math.floor(n / step), 0)),
     ]
     this.gen = step_by(this.gen, step)
-    return this
+    return this as unknown as Vector<T>
   }
 
   chain<R>(other: Vector<R>): Vector<T | R> {
@@ -194,11 +193,11 @@ class vector<T> implements Vector<T> {
     return (this.collect() as Array<R | T>).concat(target)
   }
 
-  reduce<R>(cb: (acc: R | T, cur: T) => R | T, init: R | T): R | T {
+  reduce<R>(cb: (acc: R | T, cur: T) => R | T, init?: R | T): R | T | Option<R> {
     state_check(this.state)
     size_check(this.size)
     this.state = VectorState.DONE
-    return reduce(this.gen, cb, init)
+    return reduce(this.gen, cb, init) as unknown as R | T | Option<R>
   }
 
   unzip(): T extends [infer A, infer B] ? [Vector<A>, Vector<B>] : never {
@@ -210,13 +209,11 @@ class vector<T> implements Vector<T> {
     ] as unknown as T extends [infer A, infer B] ? [Vector<A>, Vector<B>] : never
   }
 
-  join(separator: string): Result<string, VectorInfiniteLengthError | VertorUsedError> {
-    return result(() => {
-      state_check(this.state)
-      size_check(this.size)
-      this.state = VectorState.DONE
-      return join(this.gen, separator)
-    })
+  join(separator: string): string {
+    state_check(this.state)
+    size_check(this.size)
+    this.state = VectorState.DONE
+    return join(this.gen, separator)
   }
 
   next_chunk(): Option<T> {
@@ -325,7 +322,7 @@ class vector<T> implements Vector<T> {
     each(this.gen, cb)
   }
 
-  stream(cb: (item: T, next: Fn<void, void>) => unknown): Promise<void> {
+  stream(cb: (item: T, next: Fn<void, void>, cancel: Fn<void, void>) => unknown): Promise<void> {
     state_check(this.state)
     this.state = VectorState.DONE
     return stream(this.gen, cb)
@@ -355,10 +352,6 @@ class vector<T> implements Vector<T> {
 
   static from<T>(val: Array<T>): Vector<T> {
     return new vector(init_from_iter(val), VectorSize.LIMITED, [val.length, Some(val.length)])
-  }
-
-  [Symbol.iterator](): Generator<T> {
-    return this.gen
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.13",
+  "version": "0.8.15",
   "exports": {
     "./type-class": "./lib/TypeClass/mod.ts",
     "./interface": "./lib/Interface/mod.ts",

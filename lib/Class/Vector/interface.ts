@@ -11,8 +11,10 @@ import type {
   OrdSelf,
   OrdResult,
   Sum,
+  TryAble,
 } from '@chzky/fp'
 import type { VectorInfiniteLengthError, VertorUsedError } from './core.ts'
+
 export enum VectorState {
   DONE /* 已进行过消费 */,
   PEND /* 未进行过消费 */,
@@ -28,6 +30,10 @@ export enum VectorSize {
 + `Vector`是一种具有惰性求值的可迭代数据结构,其内部的数据只有在被消费的时候才会进行计算.可以有效的减少不必要的计算,提高性能
 + 相比Array增加了许多的链式操作API,可以方便的对数据进行处理
 + 允许创建无限列表
+
+### `@done` 标签的方法
++ 如果Vector的方法有`@done`标签,则表示此方法会消费Vector,消费后的Vector将无法再次被使用,如果再次使用则会抛出{@link VertorUsedError}错误
++ 并且如果Vector的长度为无限,调用`@done`标签的方法,则会抛出{@link VectorInfiniteLengthError}错误
 
 ### 性能场景
 1. 对于数据量大但是需求量少的场景有着很好的性能优势,常见的场景譬如:列表分页处理,数据筛选等
@@ -73,9 +79,10 @@ export enum VectorSize {
 @category Class
 */
 export interface Vector<T>
-  extends As<Array<T>, 'array'>,
-    Copy,
+  extends Copy,
     Sum<T>,
+    TryAble<'collect'>,
+    As<Array<T>, 'array'>,
     Into<Peekable<T, Iterator<T>>, 'peek'> {
   /** ### `state` : Vector所属状态 */
   state: VectorState
@@ -145,16 +152,18 @@ export interface Vector<T>
   */
   collect_into: <R>(target: Array<R>) => Array<R | T>
 
-  /** ### `reduce` : 将Vector进行reduce操作 
+  /** ### `reduce` : 通过重复应用缩减操作，将元素缩减为单个元素。 
+  + 如果没有传递`init`参数,则第一个元素作为初始值 - 如果Vector为空则返回`None`,否则返回`Some<R>`
   @done : 此操作会将会消费Vector
   */
+  reduce<R>(cb: (acc: T | R, cur: T) => R): Option<R>
   reduce<R>(cb: (acc: R, cur: T) => R, init: R): R
   reduce(cb: (acc: T, cur: T) => T, init: T): T
 
-  /** ### `join` : 将Vector按照separator转化为string ; 如果长度是无限的就返回Err
+  /** ### `join` : 将Vector按照`separator`转化为`string` ; 如果长度是无限就报错
   @done : 此操作会将会消费Vector
   */
-  join: (separator: string) => Result<string, VectorInfiniteLengthError | VertorUsedError>
+  join: (separator: string) => string
 
   /** ### `partition` : 将Vector按照条件进行分割
   @done : 此操作会将会消费Vector
@@ -196,7 +205,7 @@ export interface Vector<T>
   /** ### `max_by` : 返回比较结果后最大的元素
   @done : 此操作会将会消费Vector
    */
-  max_by: <R>(cb: Fn<T, OrdResult>) => T
+  max_by: (cb: Fn<T, OrdResult>) => T
 
   /** ### `find` : 生成的第一个满足提供的测试函数的元素。如果没有值满足测试函数，则返回 None
   @done : 此操作会将会消费Vector
@@ -245,10 +254,23 @@ export interface Vector<T>
       next()
     }, 500)
   })
+
+  //use cancel()
+  let idx = 0
+  await vec.clone().stream((i, next, cancel) => {
+    setTimeout(() => {
+      if (idx >= 2) cancel()
+      else {
+        idx++
+        next()
+      }
+    }, 50)
+  })
+  assert(idx === 2)
   ```
   @done : 此操作会将会消费Vector
   */
-  stream: (cb: (item: T, next: Fn<void, void>) => unknown) => Promise<void>
+  stream: (cb: (item: T, next: Fn<void, void>, cancel: Fn<void, void>) => unknown) => Promise<void>
 
   [Symbol.iterator](): Generator<T>
 }

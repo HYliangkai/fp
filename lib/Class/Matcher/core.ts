@@ -56,6 +56,7 @@ export function match_result(match_value: any, result: any, info: CaseInfo): any
   return info.immediate ? result(match_value) : result
 }
 
+/** 类型守卫 */
 export function type_protect(value: unknown): void | never {
   if (zod.undefined().or(zod.null()).safeParse(value).success)
     throw new TypeError('match value cannot be null or undefined')

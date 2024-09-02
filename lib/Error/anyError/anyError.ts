@@ -9,7 +9,7 @@ import {
 } from '@chzky/fp'
 
 /** ## ErrorInfo : 错误信息 */
-type ErrorInfo = {
+export type ErrorInfo = {
   type: ErrorLevel
   name: string
   cause: string
@@ -58,8 +58,8 @@ const ERRORLEVELS = ['Debug', 'Info', 'Warn', 'Error', 'Fatal', 'Panic'] as cons
  */
 export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialEq {
   public type: ErrorLevel
-  protected name: string | symbol
-  protected cause: string
+  protected _name: string | symbol
+  protected _cause: string
   protected strack: string
 
   constructor(
@@ -67,13 +67,52 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
     cause?: string,
     name?: string | symbol /** @Default - AnyError */
   ) {
-    this.cause = cause || ''
-    this.name = name || 'AnyError'
+    this._cause = cause || ''
+    this._name = name || 'AnyError'
     this.type = type || 'Error'
     this.strack = new Error().stack || 'no stack'
     if (!ERRORLEVELS.some((i) => i === this.type)) {
       throw new Error('ErrorLevel not found')
     }
+  }
+
+  /** ## err : 快速生成`Err`类型数据 */
+  static err<T extends ErrorLevel = 'Error'>(
+    type?: T,
+    cause?: string,
+    name?: string
+  ): AnyResult<never, 'Error'> {
+    return Err(new AnyError<ErrorLevel>(type, cause, name))
+  }
+
+  /** ### value : return format value */
+  value(): ErrorInfo {
+    return {
+      type: this.type,
+      name: typeof this._name === 'symbol' ? this._name.description || 'symbol' : this._name,
+      cause: this._cause,
+      strack: this.strack,
+    }
+  }
+
+  /** call stack trace */
+  stack_trace(): string {
+    return this.strack
+  }
+
+  /** throw value with format*/
+  throw(): never {
+    throw this.value()
+  }
+
+  /** ### `cause` : 获取错误原因 */
+  cause(): string {
+    return this._cause
+  }
+
+  /** ### `name` : 获取错误名称 */
+  name(): string {
+    return this._name.toString()
   }
 
   /**
@@ -86,7 +125,7 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
   ```
    */
   eq(other: this): boolean {
-    return this.type === other.type && this.cause === other.cause && this.name === other.name
+    return this.type === other.type && this.cause === other.cause && this._name === other._name
   }
 
   /** ### `instance_of` : `instanceof`语句的函数调用 */
@@ -95,21 +134,13 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
   }
 
   /** ## new : 实现{@link NewAble}接口 */
+
   static new<T extends ErrorLevel = 'Error'>(
     type?: T,
     cause?: string,
     name?: string
   ): AnyError<ErrorLevel> {
     return new AnyError<ErrorLevel>(type, cause, name)
-  }
-
-  /** ## err : 快速生成`Err`类型数据 */
-  static err<T extends ErrorLevel = 'Error'>(
-    type?: T,
-    cause?: string,
-    name?: string
-  ): AnyResult<never, 'Error'> {
-    return Err(new AnyError<ErrorLevel>(type, cause, name))
   }
 
   /** ## default : 实现{@link Default}接口 */
@@ -132,9 +163,9 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
       `%c------------------ ${'Error'} ------------------\n` +
         `%c${'*'} %ctype   : %c${this.type}\n` +
         `${
-          this.name
+          this._name
             ? `%c${'*'} %cname   : ${
-                typeof this.name === 'symbol' ? this.name.description || 'symbol' : this.name
+                typeof this._name === 'symbol' ? this._name.description || 'symbol' : this._name
               }\n`
             : ''
         }` +
@@ -153,25 +184,5 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
       `color:${ERRCOLOR.INFO}`,
       `color:${ERRCOLOR.REDWARN}`
     )
-  }
-
-  /** ### value : return format value */
-  value(): ErrorInfo {
-    return {
-      type: this.type,
-      name: typeof this.name === 'symbol' ? this.name.description || 'symbol' : this.name,
-      cause: this.cause,
-      strack: this.strack,
-    }
-  }
-
-  /** call stack trace */
-  stack_trace(): string {
-    return this.strack
-  }
-
-  /** throw value with format*/
-  throw(): never {
-    throw this.value()
   }
 }

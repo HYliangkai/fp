@@ -8,7 +8,7 @@ import {
 } from '@chzky/fp'
 
 interface AutoPipe {
-  /** ## pipe : 函数嵌套参数化运行
+  /** ## pipe : 函数嵌套参数化运行; [point free](https://wiki.haskell.org/Pointfree)在Ts中的实现
   @example
   ```ts
 
@@ -249,7 +249,7 @@ const async_pipe = async (...fns: Array<Fn<any, any>>) => {
 const auto_pipe = (...fns: Array<PFn<any, any>>): any =>
   fns.some((i) => is_async_func(i)) ? async_pipe(...fns) : sync_pipe(...fns)
 
-/** ## pipe : 函数嵌套参数化运行
+/** ## pipe : 函数嵌套参数化运行; [point free](https://wiki.haskell.org/Pointfree)在Ts中的实现
   @example
   ```ts
 

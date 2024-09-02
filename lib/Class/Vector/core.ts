@@ -7,7 +7,10 @@ import {
   type Fn,
   type Ord,
   type Option,
+  None,
+  option,
 } from '@chzky/fp'
+import { tee } from './tee.ts'
 
 /** ## `VertorUsedError` : Vertor已经被使用,不能再次被消费 */
 export class VertorUsedError extends AnyError<'Error'> {
@@ -78,22 +81,7 @@ export function* inspect<T>(gen: Generator<T>, cb: Fn<T, unknown>): Generator<T>
 }
 
 export function copy<T>(gen: Generator<T>): [Generator<T>, Generator<T>] {
-  const queue: T[] = []
-  const idxs: [number, number] = [0, 0]
-
-  function* genc(idx: number): Generator<T> {
-    while (true) {
-      if (queue.length > idxs[idx]) yield queue[idxs[idx]]
-      else {
-        const { done, value } = gen.next()
-        if (done) return
-        queue.push(value)
-        yield value
-      }
-      idxs[idx]++
-    }
-  }
-  return [genc(0), genc(1)]
+  return tee(gen)
 }
 
 export function* drop<T>(gen: Generator<T>, num: number): Generator<T> {
@@ -191,13 +179,20 @@ export function* intersperse<T, R>(gen: Generator<T>, separator: R): Generator<T
 export function reduce<T, R>(
   gen: Generator<T>,
   cb: (acc: R | T, cur: T) => R | T,
-  init: R | T
-): R | T {
-  let ini = init
+  init?: R | T
+): R | T | Option<R> {
+  let ini
+  if (init === undefined) {
+    const { value, done } = gen.next()
+    if (done) return None
+    ini = value as R | T
+  } else {
+    ini = init
+  }
   for (const item of gen) {
     ini = cb(ini, item)
   }
-  return ini
+  return init === undefined ? (option(ini) as Option<R>) : ini
 }
 
 export function join(gen: Generator, separator: string): string {
@@ -322,7 +317,7 @@ export function sum(gen: Generator<number>): number {
 
 export async function stream<T>(
   gen: Generator<T>,
-  cb: (item: T, next: Fn<void, void>) => unknown
+  cb: (item: T, next: Fn<void, void>, cancel: Fn<void, void>) => unknown
 ): Promise<void> {
   const { value, done } = gen.next()
   if (done) return
@@ -337,7 +332,11 @@ export async function stream<T>(
       else nval = value
       resolve(void 0)
     }
-    cb(nval, dcb)
+    const cancel = () => {
+      RETURN = true
+      resolve(void 0)
+    }
+    cb(nval, dcb, cancel)
     await promise
   }
 }

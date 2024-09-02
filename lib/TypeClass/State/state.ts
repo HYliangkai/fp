@@ -142,3 +142,8 @@ class state<M, S> implements State<M, S> {
 export function State<M, S>(main: M, effect: S): State<M, S> {
   return state.new(main, effect)
 }
+
+/** ## `instance_of_state` : 判断是否是State数据结构 */
+export function instance_of_state<M, S>(val: unknown): val is State<M, S> {
+  return val instanceof state
+}

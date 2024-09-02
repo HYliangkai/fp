@@ -9,7 +9,7 @@ assert(refer.value === 2)
 @category TypeClass
 */
 export interface Refer<T> {
-  value: T
+  readonly value: T
 
   /** `### update` : 更新value数据 */
   update: (value: T) => void
