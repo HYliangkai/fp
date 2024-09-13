@@ -1,15 +1,24 @@
 import {
   type Fn,
   type PFn,
-  type PipeResult,
+  type PipeShunt,
   type PromiseChange,
-  type PromiseLine,
+  type CollPipeShunt,
+  type PipeShuntReturn,
+  type PromisePipeShunt,
+  type PromiseCollPipeShunt,
+  type PromisePipeShuntReturn,
+  type AutoPipeShuntReturn,
+  type AutoPipeShunt,
+  type AutoCollPipeShunt,
   is_async_func,
+  is_mainstream,
+  is_reflux,
 } from '@chzky/fp'
 
 interface AutoPipe {
   /** ## pipe : 函数嵌套参数化运行; [point free](https://wiki.haskell.org/Pointfree)在Ts中的实现
-  @example
+  @example Usage
   ```ts
 
   //Synchronization function
@@ -29,6 +38,7 @@ interface AutoPipe {
   ))
   assertEquals(res2, 'sab')
   ```
+
   @tips
   1. 最好有三个及以上的函数调用才能体现出pipe的优势
   2. 能自动解包Promise作为参数传递运行的情况 :
@@ -39,60 +49,78 @@ interface AutoPipe {
   @category Function
   */
   <A>(a: A): A
-  <A, B>(a: A, b: PFn<A, B>): PipeResult<B, A>
-  <A, B, C>(a: A, b: PFn<A, B>, c: PFn<B, C>): PipeResult<C, B>
-  <A, B, C, D>(a: A, b: PFn<A, B>, c: PFn<B, C>, d: PFn<C, D>): PipeResult<D, PromiseLine<C, B>>
-  <A, B, C, D, E>(a: A, b: PFn<A, B>, c: PFn<B, C>, d: PFn<C, D>, e: PFn<D, E>): PipeResult<
-    E,
-    PromiseLine<D, PromiseLine<C, B>>
-  >
+  <A, B>(a: A, b: PFn<A, B>): AutoPipeShuntReturn<null, B>
+  <A, B, C>(a: A, b: PFn<A, B>, c: PFn<AutoPipeShunt<B>, C>): AutoPipeShuntReturn<B, C>
+  <A, B, C, D>(
+    a: A,
+    b: PFn<A, B>,
+    c: PFn<AutoPipeShunt<B>, C>,
+    d: PFn<AutoPipeShunt<C>, D>
+  ): AutoPipeShuntReturn<AutoCollPipeShunt<B, C>, D>
+  <A, B, C, D, E>(
+    a: A,
+    b: PFn<A, B>,
+    c: PFn<AutoPipeShunt<B>, C>,
+    d: PFn<AutoPipeShunt<C>, D>,
+    e: PFn<AutoPipeShunt<D>, E>
+  ): AutoPipeShuntReturn<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>
   <A, B, C, D, E, F>(
     a: A,
     b: PFn<A, B>,
-    c: PFn<B, C>,
-    d: PFn<C, D>,
-    e: PFn<D, E>,
-    f: PFn<E, F>
-  ): PipeResult<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>
+    c: PFn<AutoPipeShunt<B>, C>,
+    d: PFn<AutoPipeShunt<C>, D>,
+    e: PFn<AutoPipeShunt<D>, E>,
+    f: PFn<AutoPipeShunt<E>, F>
+  ): AutoPipeShuntReturn<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>
   <A, B, C, D, E, F, G>(
     a: A,
     b: PFn<A, B>,
-    c: PFn<B, C>,
-    d: PFn<C, D>,
-    e: PFn<D, E>,
-    f: PFn<E, F>,
-    g: PFn<F, G>
-  ): PipeResult<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+    c: PFn<AutoPipeShunt<B>, C>,
+    d: PFn<AutoPipeShunt<C>, D>,
+    e: PFn<AutoPipeShunt<D>, E>,
+    f: PFn<AutoPipeShunt<E>, F>,
+    g: PFn<AutoPipeShunt<F>, G>
+  ): AutoPipeShuntReturn<
+    AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>,
+    G
+  >
   <A, B, C, D, E, F, G, H>(
     a: A,
     b: PFn<A, B>,
-    c: PFn<B, C>,
-    d: PFn<C, D>,
-    e: PFn<D, E>,
-    f: PFn<E, F>,
-    g: PFn<F, G>,
-    h: PFn<G, H>
-  ): PipeResult<
-    H,
-    PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+    c: PFn<AutoPipeShunt<B>, C>,
+    d: PFn<AutoPipeShunt<C>, D>,
+    e: PFn<AutoPipeShunt<D>, E>,
+    f: PFn<AutoPipeShunt<E>, F>,
+    g: PFn<AutoPipeShunt<F>, G>,
+    h: PFn<AutoPipeShunt<G>, H>
+  ): AutoPipeShuntReturn<
+    AutoCollPipeShunt<
+      AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>,
+      G
+    >,
+    H
   >
   <A, B, C, D, E, F, G, H, I>(
     a: A,
     b: PFn<A, B>,
-    c: PFn<B, C>,
-    d: PFn<C, D>,
-    e: PFn<D, E>,
-    f: PFn<E, F>,
-    g: PFn<F, G>,
-    h: PFn<G, H>,
-    i: PFn<H, I>
-  ): PipeResult<
-    I,
-    PromiseLine<
-      H,
-      PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
-    >
+    c: PFn<AutoPipeShunt<B>, C>,
+    d: PFn<AutoPipeShunt<C>, D>,
+    e: PFn<AutoPipeShunt<D>, E>,
+    f: PFn<AutoPipeShunt<E>, F>,
+    g: PFn<AutoPipeShunt<F>, G>,
+    h: PFn<AutoPipeShunt<G>, H>,
+    i: PFn<AutoPipeShunt<H>, I>
+  ): AutoPipeShuntReturn<
+    AutoCollPipeShunt<
+      AutoCollPipeShunt<
+        AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>,
+        G
+      >,
+      H
+    >,
+    I
   >
+
   (...fns: Array<PFn<any, any>>): unknown
 }
 
@@ -118,41 +146,68 @@ interface SyncPipe {
   @category Function
  */
   <A>(a: A): A
-  <A, B>(a: A, ab: Fn<A, B>): B
-  <A, B, C>(a: A, ab: Fn<A, B>, bc: Fn<B, C>): C
-  <A, B, C, D>(a: A, ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>): D
-  <A, B, C, D, E>(a: A, ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>): E
-  <A, B, C, D, E, F>(a: A, ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>, ef: Fn<E, F>): F
+  <A, B>(a: A, ab: Fn<A, B>): PipeShuntReturn<null, B>
+  <A, B, C>(a: A, ab: Fn<A, B>, bc: Fn<PipeShunt<B>, C>): PipeShuntReturn<B, C>
+  <A, B, C, D>(
+    a: A,
+    ab: Fn<A, B>,
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>
+  ): PipeShuntReturn<CollPipeShunt<B, C>, D>
+  <A, B, C, D, E>(
+    a: A,
+    ab: Fn<A, B>,
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>
+  ): PipeShuntReturn<CollPipeShunt<CollPipeShunt<B, C>, D>, E>
+  <A, B, C, D, E, F>(
+    a: A,
+    ab: Fn<A, B>,
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>
+  ): PipeShuntReturn<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>
   <A, B, C, D, E, F, G>(
     a: A,
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>,
-    fg: Fn<F, G>
-  ): G
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>,
+    fg: Fn<PipeShunt<F>, G>
+  ): PipeShuntReturn<CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>, G>
   <A, B, C, D, E, F, G, H>(
     a: A,
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>,
-    fg: Fn<F, G>,
-    gh: Fn<G, H>
-  ): H
+    cd: Fn<PipeShunt<B>, C>,
+    de: Fn<PipeShunt<C>, D>,
+    ef: Fn<PipeShunt<D>, E>,
+    fg: Fn<PipeShunt<E>, F>,
+    gh: Fn<PipeShunt<F>, H>
+  ): PipeShuntReturn<
+    CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>, G>,
+    H
+  >
   <A, B, C, D, E, F, G, H, I>(
     a: A,
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>,
-    fg: Fn<F, G>,
-    gh: Fn<G, H>,
-    hi: Fn<H, I>
-  ): I
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>,
+    fg: Fn<PipeShunt<F>, G>,
+    gh: Fn<PipeShunt<G>, H>,
+    hi: Fn<PipeShunt<H>, I>
+  ): PipeShuntReturn<
+    CollPipeShunt<
+      CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>, G>,
+      H
+    >,
+    I
+  >
+
   (...fns: Array<Fn<any, any>>): unknown
 }
 
@@ -174,54 +229,90 @@ interface AsyncPipe {
   @category Function
   */
   <A>(a: A): PromiseChange<A>
-  <A, B>(a: A, ab: PFn<A, B>): PromiseChange<B>
-  <A, B, C>(a: A, ab: PFn<A, B>, bc: PFn<B, C>): PromiseChange<C>
-  <A, B, C, D>(a: A, ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>): PromiseChange<D>
+  <A, B>(a: A, ab: PFn<A, B>): PromisePipeShuntReturn<null, B>
+  <A, B, C>(a: A, ab: PFn<A, B>, bc: PFn<PromisePipeShunt<B>, C>): PromisePipeShuntReturn<B, C>
+  <A, B, C, D>(
+    a: A,
+    ab: PFn<A, B>,
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>
+  ): PromisePipeShuntReturn<PromiseCollPipeShunt<B, C>, D>
   <A, B, C, D, E>(
     a: A,
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>
-  ): PromiseChange<E>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>
+  ): PromisePipeShuntReturn<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>
   <A, B, C, D, E, F>(
     a: A,
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>
-  ): PromiseChange<F>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>
+  ): PromisePipeShuntReturn<
+    PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+    F
+  >
   <A, B, C, D, E, F, G>(
     a: A,
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>
-  ): PromiseChange<G>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>,
+    fg: PFn<PromisePipeShunt<F>, G>
+  ): PromisePipeShuntReturn<
+    PromiseCollPipeShunt<
+      PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+      F
+    >,
+    G
+  >
   <A, B, C, D, E, F, G, H>(
     a: A,
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>,
-    gh: PFn<G, H>
-  ): PromiseChange<H>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>,
+    fg: PFn<PromisePipeShunt<F>, G>,
+    gh: PFn<PromisePipeShunt<G>, H>
+  ): PromisePipeShuntReturn<
+    PromiseCollPipeShunt<
+      PromiseCollPipeShunt<
+        PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+        F
+      >,
+      G
+    >,
+    H
+  >
   <A, B, C, D, E, F, G, H, I>(
     a: A,
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>,
-    gh: PFn<G, H>,
-    hi: PFn<H, I>
-  ): PromiseChange<I>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>,
+    fg: PFn<PromisePipeShunt<F>, G>,
+    gh: PFn<PromisePipeShunt<G>, H>,
+    hi: PFn<PromisePipeShunt<H>, I>
+  ): PromisePipeShuntReturn<
+    PromiseCollPipeShunt<
+      PromiseCollPipeShunt<
+        PromiseCollPipeShunt<
+          PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+          F
+        >,
+        G
+      >,
+      H
+    >,
+    I
+  >
+
   (...fns: Array<Fn<any, any>>): Promise<unknown>
 }
 
@@ -234,6 +325,8 @@ const sync_pipe = (...fns: Array<Fn<any, any>>): any => {
   let ret = fns[0]
   for (let idx = 1; idx < fns.length; idx++) {
     ret = fns[idx](ret)
+    if (is_reflux(ret)) return ret.unwrap()
+    if (is_mainstream(ret)) ret = ret.unwrap()
   }
   return ret
 }
@@ -242,6 +335,8 @@ const async_pipe = async (...fns: Array<Fn<any, any>>) => {
   let ret = fns[0]
   for (let idx = 1; idx < fns.length; idx++) {
     ret = await Promise.resolve(fns[idx](ret))
+    if (is_reflux(ret)) return ret.unwrap()
+    if (is_mainstream(ret)) ret = ret.unwrap()
   }
   return ret
 }
@@ -250,7 +345,7 @@ const auto_pipe = (...fns: Array<PFn<any, any>>): any =>
   fns.some((i) => is_async_func(i)) ? async_pipe(...fns) : sync_pipe(...fns)
 
 /** ## pipe : 函数嵌套参数化运行; [point free](https://wiki.haskell.org/Pointfree)在Ts中的实现
-  @example
+  @example  basic
   ```ts
 
   //Synchronization function
@@ -269,6 +364,36 @@ const auto_pipe = (...fns: Array<PFn<any, any>>): any =>
     async (x: string) => x + 'b',
   ))
   assertEquals(res2, 'sab')
+  ```
+  @example  pipe配合 Shunt 数据结构,做到 '截流' 操作
+  ```ts
+  // 一个io操作:可能存在异常情况
+  const io_operate = (path: string): Result<string, IllegalOperatError> => {
+    if (path === 'mod.ts') return Ok(path)
+    return IllegalOperatError.err('your path is not exist')
+  }
+
+  // 截流操作 : 如果数据返回Err就直接返回,否则就进行解包然后进行下一步操作
+  const closure = (
+    result: Result<string, IllegalOperatError>
+  ): Shunt<string, Err<IllegalOperatError>> => {
+    if (result.is_ok) return Mainstream(result.unwrap())
+    return Reflux(result as Err<IllegalOperatError>)
+  }
+
+  // 读取到地址的后续操作
+  const io_then = (path: string) => {
+    assert(path === 'mod.ts')
+    return Ok(true)
+  }
+
+  // 'mos' --io_operate--> Result<string, IllegalOperatError> --closure--> Shunt<string, Err<IllegalOperatError>> -> if Mainstream -> io_then | if Reflux -> return
+
+  const resf: Result<boolean, IllegalOperatError> = pipe('mos', io_operate, closure, io_then)
+  assert((resf as Err<IllegalOperatError>).unwrap_err().instance_of(IllegalOperatError))
+
+  const rest: Result<boolean, IllegalOperatError> = pipe('mos', io_operate, closure, io_then)
+  assert(rest)
   ```
   @tips
   1. 最好有三个及以上的函数调用才能体现出pipe的优势

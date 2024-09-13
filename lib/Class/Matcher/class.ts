@@ -1,3 +1,4 @@
+
 import {
   type Fn,
   type Condition,
@@ -5,9 +6,11 @@ import {
   type Debug,
   type NonEmptyArr,
   type Option,
+  type State,
   zod,
   IllegalOperatError,
   match_return_tag,
+  state_tag,
 } from '@chzky/fp'
 import { type_protect, matching, match_return } from './core.ts'
 import { type CaseInfo, ErrorCase } from './type.ts'
@@ -47,6 +50,7 @@ export class Matcher<T, R = never> implements Copy, Debug {
   /** ### when : 条件匹配,用于解决返回值是个函数的情况,能直接执行函数
   @param condition : 匹配条件
   @param call_back : 执行函数,函数返回值即为匹配结果值 - 为了匹配能正确获取结果,函数必须返回一个值;如果实在没有需要返回的值,使用{@link Default.default()}包装表示此匹配无返回值
+  @throws 如果返回的类型不是函数,会抛出异常{@link TypeError}
   @example
   ```ts
   const result = match('JioJio')
@@ -63,6 +67,46 @@ export class Matcher<T, R = never> implements Copy, Debug {
 
     this.cases.push([condition, call_back, { immediate: true }])
 
+    return this
+  }
+
+  /** ### when_state : 条件匹配,当匹配类型是{@link State}类型的时候,会自动进行解包匹配
+  @description 此方法主要用于解决when方法匹配函数分的入参通常不是匹配条件的情况
+  @param condition : 匹配条件,使用`Main`端类型进行匹配
+  @param call_back : 执行函数,使用`Effect`端类型作为函数的入参,函数返回值即为匹配结果值 - 为了匹配能正确获取结果,函数必须返回一个值;如果实在没有需要返回的值,使用{@link Default.default()}包装表示此匹配无返回值  
+  @throws 如果匹配的类型不是{@link State}类型,会抛出异常{@link TypeError}
+  @throws 如果返回的类型不是函数,会抛出异常{@link TypeError}
+  @example Usage
+  ```ts
+  const { name, row } = { name: '编辑', row: { name: 'jiojio', age: 18, address: '翻斗花园' } }
+
+  const state = State(name, row)
+
+  const { age } = match(state)
+    .when_state('删除', delete_row)
+    .when_state('编辑', functor<typeof row>`{...${$0},age:19}`)
+    .done()
+    .unwrap()
+
+  assert(age === 19)
+
+  function delete_row(_row: typeof row) {
+    unreachable()
+    return _row
+  }
+  ```
+   */
+  when_state<U>(
+    condition: Condition<T extends State<infer M, unknown> ? M : never>,
+    call_back: Fn<T extends State<unknown, infer S> ? S : never, NonNullable<U>>
+  ): Matcher<T, U | R> {
+    if (!zod.object({ _tag: zod.symbol() }).safeParse(this.match_value).success)
+      throw new TypeError(ErrorCase.NEED_STATE)
+    if ((this.match_value as State<any, any>)['_tag'] !== state_tag)
+      throw new TypeError(ErrorCase.NEED_STATE)
+    if (!zod.function().safeParse(call_back).success) throw new TypeError(ErrorCase.WHRN_TYPE_ERROR)
+
+    this.cases.push([condition as Condition<any>, call_back, { immediate: true, state: true }])
     return this
   }
 
@@ -170,11 +214,14 @@ export class Matcher<T, R = never> implements Copy, Debug {
   /** ### `done_else` : 获取结果,如果没有结果使用`fn(match_value)`替代 
   @tips 如果进行匹配的结果是`underfind`或`null`,也会直接返回`fn(match_value)`的结果
   ```ts
+
   ```
   */
   done_else<RR>(fn: Fn<T, RR>): R | RR {
     return this.done().unwrap_or_else(() => fn(this.match_value))
   }
+
+  /** @todo : 当done默认值是false的时候会有bug */
 
   /** ### `done` : 获取match结果
   @param def : 默认值,如果不传递默认值,则返回`Option<R>`,否则返回`R|V` 
@@ -184,7 +231,7 @@ export class Matcher<T, R = never> implements Copy, Debug {
     if (this.match_value !== undefined && this.match_value !== null) {
       for (const index in this.cases) {
         const [condition, result, caseinfo] = this.cases[index]
-        const { every = null } = caseinfo
+        const { every = null, state = false } = caseinfo
 
         if (Array.isArray(condition)) {
           /** @case : some/every 函数处理 */
@@ -200,7 +247,13 @@ export class Matcher<T, R = never> implements Copy, Debug {
           ) {
             return match_return('Some', def, this.match_value, result, caseinfo)
           }
-        } else if (matching(this.match_value, condition, match_return_tag) === match_return_tag) {
+        } else if (
+          matching(
+            state ? (this.match_value as any as State<any, any>).unwrap() : this.match_value,
+            condition,
+            match_return_tag
+          ) === match_return_tag
+        ) {
           /** @case : 普通函数处理 */
           return match_return('Some', def, this.match_value, result, caseinfo)
         }

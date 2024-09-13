@@ -13,3 +13,4 @@ export * from './middleware.ts' /* 实现中间件函数 */
 export * from './sum.ts' /* 实现求和 */
 export * from './monad.ts' /* 实现Monad */
 export * from './tryAble.ts' /* 实现返回值为Result的函数命名 */
+export * from './newAble.ts'

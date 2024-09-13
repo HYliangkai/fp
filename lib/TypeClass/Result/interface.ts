@@ -72,7 +72,7 @@ export interface Result<O, E>
   /** ### into : 实现{@link Into}接口
   转换规则 :
   + `Ok(O)`  -> `Some<O>` | `Left<O>`
-  + `Err(E)` -> `None` | `Right<E>`
+  + `Err(E)` -> `None`    | `Right<E>`
    */
   into<R extends ResultIntoFlag>(
     flag: R
@@ -80,8 +80,8 @@ export interface Result<O, E>
 
   /** ### as : 实现{@link As}接口
   转换规则 :
-  + `Ok(O)`  -> `true`
-  + `Err(E)` -> `false`
+  + `Ok(O)`  -> `true`  | `Mainstream`
+  + `Err(E)` -> `false` | `Reflux`
   */
   as<R extends 'boolean'>(flag: R): R extends 'boolean' ? boolean : never
 }
@@ -108,7 +108,7 @@ export interface ResultConstructor {
   @category TypeClass
  */
   <O, E = unknown>(fn: () => O): Result<O, E>
-  /** ## result.async : {@link result}的异步版本
+  /** ### `async` : {@link result}的异步版本
 
   @description
     将一个可能throw的普通`异步` 语句/代码/函数 转化为Result<(return value),(throw value)>类型
@@ -129,6 +129,14 @@ export interface ResultConstructor {
   */
   async<O, E = unknown>(fn: () => Promise<O>): AsyncResult<O, E>
 
-  /** ### from : 实现{@link From}接口  */
+  /** ### `from` : 实现{@link From}接口  */
   from<T>(val: Option<T>): Result<T, NoneError>
+
+  /** ### `produce` : {@link result}的科里化版本版本 */
+  produce<O, E = unknown, P = never>(fn: (...args: P[]) => O): (...args: P[]) => Result<O, E>
+
+  /** ### `wait` : {@link result.async}的科里化版本版本 */
+  wait_for<O, E = unknown, P = never>(
+    fn: (...args: P[]) => Promise<O>
+  ): (...args: P[]) => AsyncResult<O, E>
 }

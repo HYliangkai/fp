@@ -1,5 +1,16 @@
-import { assertEquals, assertNotEquals } from '@std/assert/mod.ts'
-import { flow, lzpipe, pipe } from '@chzky/fp'
+import { assert, assertEquals, assertNotEquals } from '@std/assert/mod.ts'
+import {
+  Err,
+  flow,
+  IllegalOperatError,
+  lzpipe,
+  Mainstream,
+  Ok,
+  pipe,
+  Reflux,
+  Result,
+  Shunt,
+} from '@chzky/fp'
 
 Deno.test('auto-pipe', () => {
   const origin = 0
@@ -92,4 +103,34 @@ Deno.test('pipe.async', async () => {
 
   const res2 = await pipe.async(origin, third, first)
   assertEquals(res2, 12)
+})
+
+Deno.test('pipe-shunt-case', () => {
+  // 一个io操作:可能存在异常情况
+  const io_operate = (path: string): Result<string, IllegalOperatError> => {
+    if (path === 'mod.ts') return Ok(path)
+    return IllegalOperatError.err('your path is not exist')
+  }
+
+  // 截流操作 : 如果数据返回Err就直接返回,否则就进行解包然后进行下一步操作
+  const closure = (
+    result: Result<string, IllegalOperatError>
+  ): Shunt<string, Err<IllegalOperatError>> => {
+    if (result.is_ok) return Mainstream(result.unwrap())
+    return Reflux(result as Err<IllegalOperatError>)
+  }
+
+  // 读取到地址的后续操作
+  const io_then = (path: string) => {
+    assert(path === 'mod.ts')
+    return Ok(true)
+  }
+
+  // 'mos' --io_operate--> Result<string, IllegalOperatError> --closure--> Shunt<string, Err<IllegalOperatError>> -> if Mainstream -> io_then | if Reflux -> return
+
+  const resf: Result<boolean, IllegalOperatError> = pipe('mos', io_operate, closure, io_then)
+  assert((resf as Err<IllegalOperatError>).unwrap_err().instance_of(IllegalOperatError))
+
+  const rest: Result<boolean, IllegalOperatError> = pipe('mos', io_operate, closure, io_then)
+  assert(rest)
 })

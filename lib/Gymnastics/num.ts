@@ -53,3 +53,14 @@ export type NonZeroNegativeInteger<NZNI extends number> = `${NZNI}` extends `${n
 /** ## `Decimal<D>` : 限制数字类型为小数
 @category Gymnastics */
 export type Decimal<D extends number> = `${D}` extends `${number}.${number}` ? D : never
+
+/** ## `RangeNumber<N>` : 表示小于等于N的数字类型
+@example
+```ts
+type A = RangeNumber<3> // 0 | 1 | 2 | 3
+```
+@category Gymnastics
+ */
+export type RangeNumber<N extends number, Arr extends number[] = []> = Arr['length'] extends N
+  ? Arr[number]
+  : RangeNumber<N, [...Arr, Arr['length']]>

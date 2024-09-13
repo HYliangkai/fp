@@ -39,4 +39,8 @@ export const future_tag = Symbol('future')
 /** @category Constant */
 export const match_return_tag = Symbol('match_return')
 
+/** @category Constant */
+export const mainstream_tag = Symbol('mainstream')
 
+/** @category Constant */
+export const reflux_tag = Symbol('reflux')

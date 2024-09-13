@@ -1,5 +1,19 @@
 import { assert, assertEquals, assertThrows } from '@std/assert/mod.ts'
-import { $0, Equal, functor, match, PartialEq, zod, Some, reversal, Copy } from '@chzky/fp'
+import { unreachable, assert_throw } from '@chzky/cest'
+import {
+  $0,
+  Equal,
+  functor,
+  match,
+  PartialEq,
+  zod,
+  Some,
+  reversal,
+  Copy,
+  State,
+  Default,
+  Def,
+} from '@chzky/fp'
 
 Deno.test('matcher-test', async ({ step }) => {
   const match_value = { name: 'jiojio', age: 18 }
@@ -166,4 +180,38 @@ Deno.test('Matcher-test-log', () => {
     .case('dio', 'aadd')
     .when('nvo', () => 'vmow')
     .log()
+})
+
+Deno.test('Matcher-test-when-state', () => {
+  const { name, row } = { name: '编辑', row: { name: 'jiojio', age: 18, address: '翻斗花园' } }
+
+  const state = State(name, row)
+
+  const { age } = match(state)
+    .when_state('删除', delete_row)
+    .when_state('编辑', functor<typeof row>`{...${$0},age:19}`)
+    .done()
+    .unwrap()
+
+  assert(age === 19)
+
+  function delete_row(_row: typeof row) {
+    unreachable()
+    return _row
+  }
+
+  assert_throw(() => {
+    //@ts-ignore : test throw
+    match('11').when_state('ss', () => Default.default())
+  }, TypeError)
+})
+
+Deno.test('Mather-false-case', () => {
+  const A = Date.now() % 2 === 0 ? 5 : 0
+  const res = match(A)
+    .when(0, () => Default.default())
+    .when(5, () => Default.number)
+    .done(false)
+
+  console.log(res)
 })

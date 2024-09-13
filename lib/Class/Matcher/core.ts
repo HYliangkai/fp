@@ -1,10 +1,11 @@
 import {
+  type State,
   type Condition,
   type JudeCondition,
-  implements_partial_eq,
-  implements_equal,
-  option,
   zod,
+  option,
+  implements_equal,
+  implements_partial_eq,
 } from '@chzky/fp'
 import type { CaseInfo } from './type.ts'
 
@@ -53,7 +54,11 @@ export function match_return(
 
 /** 解析配置信息`caseinfo`并生成正确的返回值 */
 export function match_result(match_value: any, result: any, info: CaseInfo): any {
-  return info.immediate ? result(match_value) : result
+  return info.immediate
+    ? info.state
+      ? result((match_value as State<any, any>).effect())
+      : result(match_value)
+    : result
 }
 
 /** 类型守卫 */

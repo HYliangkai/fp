@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.15",
+  "version": "0.8.16",
   "exports": {
     "./type-class": "./lib/TypeClass/mod.ts",
     "./interface": "./lib/Interface/mod.ts",
@@ -16,6 +16,7 @@
   "imports": {
     "@/": "./src/",
     "@chzky/fp": "./mod.ts",
+    "internal/": "./lib/Internal/",
     "@std/cli": "jsr:@std/cli",
     "@std/": "https://deno.land/std@0.206.0/"
   },

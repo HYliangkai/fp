@@ -1,156 +1,260 @@
 import {
   type Fn,
   type PFn,
-  type FlowResult,
   type FlowReturn,
-  type PromiseLine,
-  type FlowPromiseChange,
+  type PipeShuntReturn,
+  type CollPipeShunt,
+  type PipeShunt,
+  type PromisePipeShuntReturn,
+  type PromisePipeShunt,
+  type PromiseCollPipeShunt,
+  type AutoPipeShuntReturn,
+  type AutoCollPipeShunt,
+  type AutoPipeShunt,
   pipe,
   is_async_func,
 } from '@chzky/fp'
 
 interface AutoFlow {
   /** ## FLow : pipe的科里化版本 */
-  <A, B>(ab: PFn<A, B>): FlowResult<A, B, A>
-  <A, B, C>(ab: PFn<A, B>, bc: PFn<B, C>): FlowResult<A, C, B>
-  <A, B, C, D>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>): FlowResult<A, D, PromiseLine<C, B>>
-  <A, B, C, D, E>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>, de: PFn<D, E>): FlowResult<
-    A,
-    E,
-    PromiseLine<D, PromiseLine<C, B>>
-  >
+  <A, B>(ab: PFn<A, B>): FlowReturn<A, AutoPipeShuntReturn<null, B>>
+  <A, B, C>(ab: PFn<A, B>, bc: PFn<AutoPipeShunt<B>, C>): FlowReturn<A, AutoPipeShuntReturn<B, C>>
+  <A, B, C, D>(
+    ab: PFn<A, B>,
+    bc: PFn<AutoPipeShunt<B>, C>,
+    cd: PFn<AutoPipeShunt<C>, D>
+  ): FlowReturn<A, AutoPipeShuntReturn<AutoCollPipeShunt<B, C>, D>>
+  <A, B, C, D, E>(
+    ab: PFn<A, B>,
+    bc: PFn<AutoPipeShunt<B>, C>,
+    cd: PFn<AutoPipeShunt<C>, D>,
+    de: PFn<AutoPipeShunt<D>, E>
+  ): FlowReturn<A, AutoPipeShuntReturn<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>>
   <A, B, C, D, E, F>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>
-  ): FlowResult<A, F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>
+    bc: PFn<AutoPipeShunt<B>, C>,
+    cd: PFn<AutoPipeShunt<C>, D>,
+    de: PFn<AutoPipeShunt<D>, E>,
+    ef: PFn<AutoPipeShunt<E>, F>
+  ): FlowReturn<
+    A,
+    AutoPipeShuntReturn<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>
+  >
   <A, B, C, D, E, F, G>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>
-  ): FlowResult<A, G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+    bc: PFn<AutoPipeShunt<B>, C>,
+    cd: PFn<AutoPipeShunt<C>, D>,
+    de: PFn<AutoPipeShunt<D>, E>,
+    ef: PFn<AutoPipeShunt<E>, F>,
+    fg: PFn<AutoPipeShunt<F>, G>
+  ): FlowReturn<
+    A,
+    AutoPipeShuntReturn<
+      AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>,
+      G
+    >
+  >
   <A, B, C, D, E, F, G, H>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>,
-    gh: PFn<G, H>
-  ): FlowResult<
+    bc: PFn<AutoPipeShunt<B>, C>,
+    cd: PFn<AutoPipeShunt<C>, D>,
+    de: PFn<AutoPipeShunt<D>, E>,
+    ef: PFn<AutoPipeShunt<E>, F>,
+    fg: PFn<AutoPipeShunt<F>, G>,
+    gh: PFn<AutoPipeShunt<G>, H>
+  ): FlowReturn<
     A,
-    H,
-    PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+    AutoPipeShuntReturn<
+      AutoCollPipeShunt<
+        AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>,
+        G
+      >,
+      H
+    >
   >
   <A, B, C, D, E, F, G, H, I>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>,
-    gh: PFn<G, H>,
-    hi: PFn<H, I>
-  ): FlowResult<
+    bc: PFn<AutoPipeShunt<B>, C>,
+    cd: PFn<AutoPipeShunt<C>, D>,
+    de: PFn<AutoPipeShunt<D>, E>,
+    ef: PFn<AutoPipeShunt<E>, F>,
+    fg: PFn<AutoPipeShunt<F>, G>,
+    gh: PFn<AutoPipeShunt<G>, H>,
+    hi: PFn<AutoPipeShunt<H>, I>
+  ): FlowReturn<
     A,
-    I,
-    PromiseLine<
-      H,
-      PromiseLine<G, PromiseLine<F, PromiseLine<E, PromiseLine<D, PromiseLine<C, B>>>>>
+    AutoPipeShuntReturn<
+      AutoCollPipeShunt<
+        AutoCollPipeShunt<
+          AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<AutoCollPipeShunt<B, C>, D>, E>, F>,
+          G
+        >,
+        H
+      >,
+      I
     >
   >
   (...fns: Array<PFn<any, any>>): (a: unknown) => unknown
 }
 
 interface SyncFlow {
-  <A, B>(ab: Fn<A, B>): FlowReturn<A, B>
-  <A, B, C>(ab: Fn<A, B>, bc: Fn<B, C>): FlowReturn<A, C>
-  <A, B, C, D>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>): FlowReturn<A, D>
-  <A, B, C, D, E>(ab: Fn<A, B>, bc: Fn<B, C>, cd: Fn<C, D>, de: Fn<D, E>): FlowReturn<A, E>
+  <A, B>(ab: Fn<A, B>): FlowReturn<A, PipeShuntReturn<null, B>>
+  <A, B, C>(ab: Fn<A, B>, bc: Fn<PipeShunt<B>, C>): FlowReturn<A, PipeShuntReturn<B, C>>
+  <A, B, C, D>(ab: Fn<A, B>, bc: Fn<PipeShunt<B>, C>, cd: Fn<PipeShunt<C>, D>): FlowReturn<
+    A,
+    PipeShuntReturn<CollPipeShunt<B, C>, D>
+  >
+  <A, B, C, D, E>(
+    ab: Fn<A, B>,
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>
+  ): FlowReturn<A, PipeShuntReturn<CollPipeShunt<CollPipeShunt<B, C>, D>, E>>
   <A, B, C, D, E, F>(
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>
-  ): FlowReturn<A, F>
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>
+  ): FlowReturn<A, PipeShuntReturn<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>>
   <A, B, C, D, E, F, G>(
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>,
-    fg: Fn<F, G>
-  ): FlowReturn<A, G>
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>,
+    fg: Fn<PipeShunt<F>, G>
+  ): FlowReturn<
+    A,
+    PipeShuntReturn<CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>, G>
+  >
   <A, B, C, D, E, F, G, H>(
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>,
-    fg: Fn<F, G>,
-    gh: Fn<G, H>
-  ): FlowReturn<A, H>
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>,
+    fg: Fn<PipeShunt<F>, G>,
+    gh: Fn<PipeShunt<G>, H>
+  ): FlowReturn<
+    A,
+    PipeShuntReturn<
+      CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>, G>,
+      H
+    >
+  >
   <A, B, C, D, E, F, G, H, I>(
     ab: Fn<A, B>,
-    bc: Fn<B, C>,
-    cd: Fn<C, D>,
-    de: Fn<D, E>,
-    ef: Fn<E, F>,
-    fg: Fn<F, G>,
-    gh: Fn<G, H>,
-    hi: Fn<H, I>
-  ): FlowReturn<A, I>
+    bc: Fn<PipeShunt<B>, C>,
+    cd: Fn<PipeShunt<C>, D>,
+    de: Fn<PipeShunt<D>, E>,
+    ef: Fn<PipeShunt<E>, F>,
+    fg: Fn<PipeShunt<F>, G>,
+    gh: Fn<PipeShunt<G>, H>,
+    hi: Fn<PipeShunt<H>, I>
+  ): FlowReturn<
+    A,
+    PipeShuntReturn<
+      CollPipeShunt<
+        CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<CollPipeShunt<B, C>, D>, E>, F>, G>,
+        H
+      >,
+      I
+    >
+  >
   (...fns: Array<Fn<any, any>>): (a: unknown) => unknown
 }
 
 interface AsyncFlow {
-  <A, B>(ab: PFn<A, B>): FlowPromiseChange<A, B>
-  <A, B, C>(ab: PFn<A, B>, bc: PFn<B, C>): FlowPromiseChange<A, C>
-  <A, B, C, D>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>): FlowPromiseChange<A, D>
-  <A, B, C, D, E>(ab: PFn<A, B>, bc: PFn<B, C>, cd: PFn<C, D>, de: PFn<D, E>): FlowPromiseChange<
+  <A, B>(ab: PFn<A, B>): FlowReturn<A, PromisePipeShuntReturn<null, B>>
+  <A, B, C>(ab: PFn<A, B>, bc: PFn<PromisePipeShunt<B>, C>): FlowReturn<
     A,
-    E
+    PromisePipeShuntReturn<B, C>
   >
+  <A, B, C, D>(
+    ab: PFn<A, B>,
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>
+  ): FlowReturn<A, PromisePipeShuntReturn<PromiseCollPipeShunt<B, C>, D>>
+  <A, B, C, D, E>(
+    ab: PFn<A, B>,
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>
+  ): FlowReturn<A, PromisePipeShuntReturn<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>>
   <A, B, C, D, E, F>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>
-  ): FlowPromiseChange<A, F>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>
+  ): FlowReturn<
+    A,
+    PromisePipeShuntReturn<
+      PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+      F
+    >
+  >
   <A, B, C, D, E, F, G>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>
-  ): FlowPromiseChange<A, G>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>,
+    fg: PFn<PromisePipeShunt<F>, G>
+  ): FlowReturn<
+    A,
+    PromisePipeShuntReturn<
+      PromiseCollPipeShunt<
+        PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+        F
+      >,
+      G
+    >
+  >
   <A, B, C, D, E, F, G, H>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>,
-    gh: PFn<G, H>
-  ): FlowPromiseChange<A, H>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>,
+    fg: PFn<PromisePipeShunt<F>, G>,
+    gh: PFn<PromisePipeShunt<G>, H>
+  ): FlowReturn<
+    A,
+    PromisePipeShuntReturn<
+      PromiseCollPipeShunt<
+        PromiseCollPipeShunt<
+          PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+          F
+        >,
+        G
+      >,
+      H
+    >
+  >
   <A, B, C, D, E, F, G, H, I>(
     ab: PFn<A, B>,
-    bc: PFn<B, C>,
-    cd: PFn<C, D>,
-    de: PFn<D, E>,
-    ef: PFn<E, F>,
-    fg: PFn<F, G>,
-    gh: PFn<G, H>,
-    hi: PFn<H, I>
-  ): FlowPromiseChange<A, I>
+    bc: PFn<PromisePipeShunt<B>, C>,
+    cd: PFn<PromisePipeShunt<C>, D>,
+    de: PFn<PromisePipeShunt<D>, E>,
+    ef: PFn<PromisePipeShunt<E>, F>,
+    fg: PFn<PromisePipeShunt<F>, G>,
+    gh: PFn<PromisePipeShunt<G>, H>,
+    hi: PFn<PromisePipeShunt<H>, I>
+  ): FlowReturn<
+    A,
+    PromisePipeShuntReturn<
+      PromiseCollPipeShunt<
+        PromiseCollPipeShunt<
+          PromiseCollPipeShunt<PromiseCollPipeShunt<PromiseCollPipeShunt<B, C>, D>, E>,
+          F
+        >,
+        G
+      >,
+      I
+    >
+  >
   (...fns: Array<PFn<any, any>>): (a: unknown) => Promise<unknown>
 }
 

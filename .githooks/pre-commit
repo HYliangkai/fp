@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-echo "检查代码中的 TODO..."
+echo "检查代码中的 @todo..."
 
 # deno task check:todo
 

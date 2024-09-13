@@ -26,14 +26,15 @@ export function implements_default(value: unknown): value is Default<unknown> {
 
 interface DefaultValue extends Default<typeof Def> {
   function: () => void
-  number: 0
-  string: ''
+  number: number
+  string: string
   object: EmptyObject
   array: EmptyArr
   bigint: bigint
   boolean: boolean
   null: null
   underfind: undefined
+
   match: <
     T extends
       | 'bigint'
