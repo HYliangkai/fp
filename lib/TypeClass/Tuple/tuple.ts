@@ -71,7 +71,6 @@ class tuple<T extends TupleItem, N extends number> implements Tuple<T, N> {
   }
 
   as(flag: 'array'): TupleArray<T, N> {
-    /** @todo : deep_clone 进行深度克隆 */
     if (flag === 'array') return this.source as TupleArray<T, N>
     throw new TypeError('Tuple.as() only support flag : array')
   }

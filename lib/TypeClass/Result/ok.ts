@@ -8,7 +8,9 @@ import {
   type Option,
   type Either,
   type Default,
-} from '../../../mod.ts'
+  type Shunt,
+  Mainstream,
+} from '@chzky/fp'
 import type { Result, ResultIntoFlag } from './interface.ts'
 
 export interface Ok<O> extends Result<O, never> {
@@ -27,11 +29,6 @@ class ok<O = void> implements Ok<O> {
     this._tag = ok_tag
     this.is_ok = true
     this.is_err = false
-  }
-
-  as<R extends 'boolean'>(flag: R): R extends 'boolean' ? true : never {
-    if (flag === 'boolean') return true as any
-    throw new TypeError('not match as')
   }
 
   unwrap(): O {
@@ -71,12 +68,22 @@ class ok<O = void> implements Ok<O> {
     ok(this.unwrap())
   }
 
+  /** @implements */
+
   into<R extends ResultIntoFlag>(
     flag: R
   ): R extends 'option' ? Option<O> : R extends 'either' ? Either<O, never> : never {
     if (flag == 'option') return option(this.unwrap()) as any
     else if (flag === 'either') return Left(this.unwrap()) as any
     throw new TypeError('not match into')
+  }
+
+  as<R extends 'boolean' | 'shunt'>(
+    flag: R
+  ): R extends 'boolean' ? true : R extends 'shunt' ? Shunt<O, never> : never {
+    if (flag === 'boolean') return true as any
+    if (flag === 'shunt') return Mainstream(this.value) as any
+    throw new TypeError('not match as')
   }
 }
 

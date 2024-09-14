@@ -115,7 +115,7 @@ export interface Vector<T>
   /** ### `skip_by` : 取符合步进规律的元素 */
   step_by: <I extends number>(step: NonZeroPositiveInteger<I>) => Vector<T>
 
-  /** ### `chain` : 将两个Vector进行链接 */
+  /** ### `chain` : 将两个Vector进行链接<Like : `merge`> */
   chain: <R>(other: Vector<R>) => Vector<R | T>
 
   /** ### `zip` : 将两个Vector进行拼接,返回的长度以最小的长度为准,多余的长度将被裁剪掉 */

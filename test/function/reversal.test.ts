@@ -6,7 +6,7 @@ Deno.test('reversal-base', () => {
 
   //在match中使用
   const mres = match(some)
-    .case(reversal('as', 'boolean'), true) // like :  case((val)=>val.as(),true)
+    .case((v) => v.as('boolean'), true) // like :  case((val)=>val.as(),true)
     .done(false)
   assert(mres)
 

@@ -10,7 +10,7 @@ import {
   None,
   option,
 } from '@chzky/fp'
-import { tee } from './tee.ts'
+import { tee } from './tee.core.ts'
 
 /** ## `VertorUsedError` : Vertor已经被使用,不能再次被消费 */
 export class VertorUsedError extends AnyError<'Error'> {

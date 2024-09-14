@@ -1,12 +1,15 @@
 import {
   type Fn,
+  type Shunt,
   type Either,
   type Option,
+  type Default,
   None,
   Right,
+  Reflux,
   error_tag,
-  type Default,
-} from '../../../mod.ts'
+} from '@chzky/fp'
+
 import type { Result, ResultIntoFlag } from './interface.ts'
 
 export interface Err<E> extends Result<never, E> {
@@ -24,11 +27,6 @@ class err<E> implements Err<E> {
     this._tag = error_tag
     this.is_err = true
     this.is_ok = false
-  }
-
-  as<R extends 'boolean'>(flag: R): R extends 'boolean' ? false : never {
-    if (flag === 'boolean') return false as any
-    throw new TypeError('not match as')
   }
 
   unwrap(): never {
@@ -69,12 +67,22 @@ class err<E> implements Err<E> {
     err(this.value)
   }
 
+  /** @implements */
+
   into<R extends ResultIntoFlag>(
     flag: R
   ): R extends 'option' ? Option<never> : R extends 'either' ? Either<never, E> : never {
     if (flag == 'option') return None as any
     else if (flag === 'either') return Right(this.value) as any
     throw new TypeError('not match into')
+  }
+
+  as<R extends 'boolean' | 'shunt'>(
+    flag: R
+  ): R extends 'boolean' ? false : R extends 'shunt' ? Shunt<never, Result<never, E>> : never {
+    if (flag === 'boolean') return false as any
+    if (flag === 'shunt') return Reflux(this) as any
+    throw new TypeError('not match as')
   }
 }
 

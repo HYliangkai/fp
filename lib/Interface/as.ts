@@ -4,16 +4,19 @@ import { zod } from '@chzky/fp'
 即 : `Into`通常表示一种双向转换，而`As`只是单向转换
 @example
 ```ts
-const str : As<number> = {
-  as(){ return 123 }  
+const str : As<number,'number'> = {
+  as(v:string){ return 123 }  
   }
-const num = str.as<number>()
+const num = str.as('number')
 assert(num === 123)
 ```
 @category Interface
  */
-export interface As<T, K = unknown> {
-  as(flag?: K): T
+export interface As<T, K = never> {
+  /**
+   * @param flag 运行时判断不同类型的标志
+   */
+  as: K extends never ? () => T : (flag: K) => T
 }
 
 /** ## `implements_as` : duck type to judge As type

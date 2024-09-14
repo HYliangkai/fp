@@ -5,13 +5,13 @@ import { BackTrack, backtrack } from './backtrack.ts'
 import { result, async_result } from './helper.ts'
 
 export {
-  type Result,
-  type AsyncResult,
-  BackTrack,
-  result,
   Ok,
   Err,
+  BackTrack,
+  result,
+  is_err,
   backtrack,
   async_result,
-  is_err,
+  type Result,
+  type AsyncResult,
 }

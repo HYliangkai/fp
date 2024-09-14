@@ -58,7 +58,7 @@ class record<T extends RecordObject> implements Record<T> {
     return equal(this.source, other.source)
   }
 
-  as(flag?: 'object'): T {
+  as(flag: 'object'): T {
     /** @todo : deep_clone 进行深度克隆 */
     if (flag === 'object') return this.source as T
     throw new TypeError('Record.as() only support flag : object')

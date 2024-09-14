@@ -1,4 +1,4 @@
-import { is_record, is_refer, ReadOnlyError, type Immutable } from '@chzky/fp'
+import { is_record, is_refer, is_tuple, ReadOnlyError, type Immutable } from '@chzky/fp'
 
 /** 对数据做不可变数据代理 : 单数据进行修改或赋值行为的时候进行抛出`ReadOnlyError`异常
 @excption `Refer` -- 如果数据源是Refer|Record|Tuple类型,则不进行代理
@@ -24,9 +24,7 @@ export function immer_proxy<T extends object>(obj: T): Immutable<T> {
         return value
 
       /* ref return */
-      if (is_refer(value)) return value
-      if (is_record(value)) return value
-      /** @todo : tuple */
+      if (is_refer(value) || is_record(value) || is_tuple(value)) return value
 
       /* ref type return  */
       if (typeof value === 'function' || typeof value === 'object') return immer_proxy(value)

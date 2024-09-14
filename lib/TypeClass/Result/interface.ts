@@ -9,7 +9,8 @@ import type {
   NoneError,
   ok_tag,
   Option,
-} from '../../../mod.ts'
+  Shunt,
+} from '@chzky/fp'
 
 export type ResultIntoFlag = 'option' | 'either'
 
@@ -20,7 +21,7 @@ export type ResultIntoFlag = 'option' | 'either'
 */
 export interface Result<O, E>
   extends Monad<typeof error_tag, typeof ok_tag>,
-    As<boolean, 'boolean'> {
+    As<boolean | Shunt<O, Result<never, E>>, 'boolean' | 'shunt'> {
   readonly _tag: typeof error_tag | typeof ok_tag
   readonly value: O | E
   readonly is_ok: boolean
@@ -71,8 +72,10 @@ export interface Result<O, E>
 
   /** ### into : 实现{@link Into}接口
   转换规则 :
-  + `Ok(O)`  -> `Some<O>` | `Left<O>`
-  + `Err(E)` -> `None`    | `Right<E>`
+  |   Ok(O)   |   Err(E)   |
+  | :-------: | :--------: |
+  | `Some<O>` |   `None`   |
+  | `Left<O>` | `Right<E>` |
    */
   into<R extends ResultIntoFlag>(
     flag: R
@@ -80,10 +83,14 @@ export interface Result<O, E>
 
   /** ### as : 实现{@link As}接口
   转换规则 :
-  + `Ok(O)`  -> `true`  | `Mainstream`
-  + `Err(E)` -> `false` | `Reflux`
+  |      Ok(O)       |      Err(E)      |
+  | :--------------: | :--------------: |
+  |      `true`      |     `false`      |
+  | `Shunt<O,never>` | `Shunt<never,E>` |
   */
-  as<R extends 'boolean'>(flag: R): R extends 'boolean' ? boolean : never
+  as<R extends 'boolean' | 'shunt'>(
+    flag: R
+  ): R extends 'boolean' ? boolean : R extends 'shunt' ? Shunt<O, Result<never, E>> : never
 }
 
 /** ## AsyncResult : 对Result类型的异步封装

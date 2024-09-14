@@ -1,4 +1,3 @@
-
 import {
   type Fn,
   type Condition,
@@ -220,8 +219,6 @@ export class Matcher<T, R = never> implements Copy, Debug {
   done_else<RR>(fn: Fn<T, RR>): R | RR {
     return this.done().unwrap_or_else(() => fn(this.match_value))
   }
-
-  /** @todo : 当done默认值是false的时候会有bug */
 
   /** ### `done` : 获取match结果
   @param def : 默认值,如果不传递默认值,则返回`Option<R>`,否则返回`R|V` 

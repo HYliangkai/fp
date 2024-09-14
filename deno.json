@@ -1,6 +1,6 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.16",
+  "version": "0.8.17",
   "exports": {
     "./type-class": "./lib/TypeClass/mod.ts",
     "./interface": "./lib/Interface/mod.ts",
@@ -12,7 +12,6 @@
     "./ext": "./lib/Ext/mod.ts",
     ".": "./mod.ts"
   },
-
   "imports": {
     "@/": "./src/",
     "@chzky/fp": "./mod.ts",
@@ -20,7 +19,6 @@
     "@std/cli": "jsr:@std/cli",
     "@std/": "https://deno.land/std@0.206.0/"
   },
-
   "tasks": {
     "dev": "deno run -A --unstable main.ts",
     "watch": "deno run -A --unstable --watch main.ts",
@@ -35,10 +33,11 @@
     "check:alltodo": "deno run  -A --unstable-sloppy-imports ./script/checkTodo.ts --all",
     "build:FFI": "deno_bindgen -o binding"
   },
-
   "lint": {
-    "include": ["**/src/", "**/lib/"],
-
+    "include": [
+      "**/src/",
+      "**/lib/"
+    ],
     "rules": {
       "tags": [],
       "include": [
@@ -102,6 +101,8 @@
       ]
     }
   },
-
-  "exclude": ["dist/", "node_modules/"]
+  "exclude": [
+    "dist/",
+    "node_modules/"
+  ]
 }
