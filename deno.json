@@ -1,6 +1,7 @@
 {
   "name": "@chzky/fp",
-  "version": "0.8.17",
+  "version": "0.8.18",
+  "license": "MIT",
   "exports": {
     "./type-class": "./lib/TypeClass/mod.ts",
     "./interface": "./lib/Interface/mod.ts",
@@ -34,10 +35,7 @@
     "build:FFI": "deno_bindgen -o binding"
   },
   "lint": {
-    "include": [
-      "**/src/",
-      "**/lib/"
-    ],
+    "include": ["**/src/", "**/lib/"],
     "rules": {
       "tags": [],
       "include": [
@@ -101,8 +99,5 @@
       ]
     }
   },
-  "exclude": [
-    "dist/",
-    "node_modules/"
-  ]
+  "exclude": ["dist/", "node_modules/"]
 }

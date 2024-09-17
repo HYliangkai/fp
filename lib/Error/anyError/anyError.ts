@@ -169,7 +169,7 @@ export class AnyError<T extends ErrorLevel = 'Error'> implements Debug, PartialE
               }\n`
             : ''
         }` +
-        `%c${this.cause ? `${'*'} %ccause  : ${this.cause}\n` : ''}` +
+        `%c${this.cause ? `${'*'} %ccause  : ${this.cause()}\n` : ''}` +
         `%c${'*'} %cstrack : ${this.strack}\n` +
         `%c------------------ ${'End'} ------------------\n`,
       `color:${ERRCOLOR.REDWARN}`,

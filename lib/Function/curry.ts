@@ -170,7 +170,11 @@ function curr_auto_rev(fn: Fns<any>, level = 1): any {
 ```
 @category Function
 */
-export const curry = Object.assign(curr, {
+export const curry: typeof curr & {
+  reverse: typeof currse
+  auto: typeof currauto
+  auto_reverse: typeof curr_auto_rev
+} = Object.assign(curr, {
   /** ### `reverse` : 参数顺序逆转的科里化函数,参数的调用顺序是从后到前
   @example Usage
   ```ts

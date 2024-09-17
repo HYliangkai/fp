@@ -80,7 +80,9 @@ function _tuple<T extends TupleItem, N extends number>(tuple_array: TupleArray<T
   return new tuple(tuple_array) as Tuple<T, N>
 }
 
-export const Tuple = Object.assign(_tuple, {
+export const Tuple: typeof _tuple & {
+  of: <T extends TupleItem, N extends number>(...items: TupleArray<T, N>) => Tuple<T, N>
+} = Object.assign(_tuple, {
   /** ### `of` : 创建一个Tuple实例
   @example Usage
   ```ts
